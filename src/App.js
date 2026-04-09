@@ -4,7 +4,7 @@ import { Content, Header, Footer } from "./components";
 import { Routes, Route } from "react-router";
 // import Home from "./components/pages/Home";
 import React, { Suspense } from "react";
-
+import { Box } from "@mui/material";
 import { entities } from "./entities";
 import AuthForm from "./components/pages/Auth";
 
@@ -23,7 +23,7 @@ function App() {
             {entities.map((item, index) => (
               <Route
                 path={item.link}
-                element={<h2 className="tmp-page">{item.page}</h2>}
+                element={<Box className="page-layout">{item.page}</Box>}
                 key={index}
               />
             ))}

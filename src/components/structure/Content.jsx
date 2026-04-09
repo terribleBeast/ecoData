@@ -8,7 +8,7 @@ function Content() {
     <Box>
       <main>
         <LeftMenu></LeftMenu>
-        <div className="tmp-page">
+        <div className="content-surface">
           <Outlet />
         </div>
       </main>

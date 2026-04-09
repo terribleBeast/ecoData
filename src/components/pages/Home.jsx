@@ -164,9 +164,9 @@ const chapters = [
 
 const Home = () => {
   return (
-    <Box className="main-page">
+    <Box className="page-layout">
       <Fade in timeout={TIMEOUT}>
-        <Typography className="main-page-title">Система EcoData</Typography>
+        <Typography className="page-title">Система EcoData</Typography>
       </Fade>
 
       <Box className="main-page-content">
