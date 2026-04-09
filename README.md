@@ -9,7 +9,7 @@ start test db
 ```
 npm run start-server
 ```
-Development steps 1.0v
+### Development steps 1.0v
 - [ ] Front-end
   - [ ] Fix error in design
     - [ ] Editing window size leads to offset main field
@@ -22,6 +22,9 @@ Development steps 1.0v
     - [ ] User profile
       - [ ] Create maket
       - [ ] Implement page
+  - [ ] Increase performance
+    - [ ] Opitmize rendering (RegPage, LoginPage, Analyzer)
+
 - [ ] Back-end
   - [ ] FastAPI
     - [ ] Endpoints
@@ -33,3 +36,6 @@ Development steps 1.0v
         - [ ] Download img
   - [ ] PostgreSQL
   - [ ] Docker
+
+### Comments
+Some errors in regisstration and login process.
