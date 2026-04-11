@@ -6,6 +6,7 @@ import { entities } from "../entities";
 const LeftMenu = () => {
   const currLocation = useLocation();
 
+  // TODO: Troubles with rendering list
   const menuItems = useMemo(
     () =>
       entities.map((item) => (

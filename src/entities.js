@@ -7,7 +7,7 @@ import {
   ImageSearch,
 } from "@mui/icons-material";
 import Research from "../src/components/pages/Research";
-import Analyzer from "./components/pages/Analyzer";
+import Analyzator from "./components/pages/Analyzator";
 
 export const entities = [
   {
@@ -32,7 +32,7 @@ export const entities = [
     name: "Анализатор",
     link: "analyzer",
     icon: <ImageSearch />,
-    page: <Analyzer />,
+    page: <Analyzator />,
   },
   {
     name: "Локации",

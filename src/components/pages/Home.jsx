@@ -43,7 +43,7 @@ const ChapterCards = () => {
   ];
 
   return (
-    <Box className="cards">
+    <Box className="cards-container">
       {cardsActions.map((card, index) => (
         <Paper
           elevation={1}

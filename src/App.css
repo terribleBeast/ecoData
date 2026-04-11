@@ -95,8 +95,6 @@
     border-style: solid;
 }
 
-/*cards*/
-
 .chapter.MuiPaper-root {
     /* background-color: var(--color-pastel-green); */
     background-color: var(--color-surface);
@@ -115,7 +113,8 @@
     color: var(--color-second);
 }
 
-.cards {
+.cards-container {
+    flex-wrap: wrap;
     width: 100%;
     display: flex;
     padding: 1rem;

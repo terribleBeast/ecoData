@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from "react";
 import {
   Box,
   Paper,
@@ -9,82 +9,86 @@ import {
   ListItemText,
   IconButton,
   Avatar,
-  Button
-} from '@mui/material';
-import { Delete, InsertDriveFile, CloudUpload } from '@mui/icons-material';
-import { useDropzone } from 'react-dropzone';
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+  Button,
+} from "@mui/material";
+import { Delete, InsertDriveFile, CloudUpload } from "@mui/icons-material";
+import { useDropzone } from "react-dropzone";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 
-interface UploadedFile {
-  id: string;
-  file: File;
-  preview?: string;
-}
+// interface UploadedFile {
+//   id: string;
+//   file: File;
+//   preview?: string;
+//   status: 'pending' | 'processing' | 'processed' | 'error'; // Добавляем статус
+//   result?: any; // Для хранения результатов обработки
+// }
 
-interface UploadedFile {
-  id: string;
-  file: File;
-  preview?: string;
-  status: 'pending' | 'processing' | 'processed' | 'error'; // Добавляем статус
-  result?: any; // Для хранения результатов обработки
-}
-
-
-const FileDragAndDrop: React.FC = () => {
+const FileDragAndDrop = () => {
   const [processing, setProcessing] = useState(false);
 
+  const [files, setFiles] = useState([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  const [files, setFiles] = useState<UploadedFile[]>([]);
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const newFiles = acceptedFiles.map(file => ({
+  const onDrop = useCallback((acceptedFiles) => {
+    const newFiles = acceptedFiles.map((file) => ({
       id: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       file,
-      preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : undefined,
-      status: 'pending'
+      preview: file.type.startsWith("image/")
+        ? URL.createObjectURL(file)
+        : undefined,
+      status: "pending",
     }));
-    setFiles(prev => [...prev, ...newFiles]);
+    setFiles((prev) => [...prev, ...newFiles]);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: {
-      'image/*': ['.jpeg', '.png', '.jpg'],
-    }
+      "image/*": [".jpeg", ".png", ".jpg"],
+    },
   });
 
-  const handleDragEnd = (result: DropResult) => {
+  const handleDragEnd = (result) => {
     const { source, destination } = result;
 
     if (!destination) return;
 
     if (source.droppableId === destination.droppableId) {
-      const list = source.droppableId === 'files' ? [...files] : [...uploadedFiles];
+      const list =
+        source.droppableId === "files" ? [...files] : [...uploadedFiles];
       const [removed] = list.splice(source.index, 1);
       list.splice(destination.index, 0, removed);
 
-      source.droppableId === 'files' ? setFiles(list) : setUploadedFiles(list);
+      source.droppableId === "files" ? setFiles(list) : setUploadedFiles(list);
     } else {
-      const sourceList = source.droppableId === 'files' ? [...files] : [...uploadedFiles];
-      const destList = destination.droppableId === 'files' ? [...files] : [...uploadedFiles];
+      const sourceList =
+        source.droppableId === "files" ? [...files] : [...uploadedFiles];
+      const destList =
+        destination.droppableId === "files" ? [...files] : [...uploadedFiles];
       const [removed] = sourceList.splice(source.index, 1);
       destList.splice(destination.index, 0, removed);
 
-      setFiles(source.droppableId === 'files' ? sourceList : destList);
-      setUploadedFiles(destination.droppableId === 'uploaded' ? destList : sourceList);
+      setFiles(source.droppableId === "files" ? sourceList : destList);
+      setUploadedFiles(
+        destination.droppableId === "uploaded" ? destList : sourceList,
+      );
     }
   };
 
-  const removeFile = (list: 'files' | 'uploaded', id: string) => {
-    if (list === 'files') {
-      setFiles(files.filter(file => file.id !== id));
+  const removeFile = (list, id) => {
+    if (list === "files") {
+      setFiles(files.filter((file) => file.id !== id));
     } else {
-      setUploadedFiles(uploadedFiles.filter(file => file.id !== id));
+      setUploadedFiles(uploadedFiles.filter((file) => file.id !== id));
     }
   };
 
-  const processFiles = async (filesToProcess: UploadedFile[]) => {
+  const processFiles = async (filesToProcess) => {
     setProcessing(true);
 
     try {
@@ -93,30 +97,33 @@ const FileDragAndDrop: React.FC = () => {
           try {
             // Здесь ваша логика обработки
             const formData = new FormData();
-            formData.append('file', fileItem.file);
+            formData.append("file", fileItem.file);
 
             // Пример API-запроса (замените на ваш эндпоинт)
-            const response = await fetch('https://your-api-endpoint/process', {
-              method: 'POST',
-              body: formData
+            const response = await fetch("https://your-api-endpoint/process", {
+              method: "POST",
+              body: formData,
             });
 
             const result = await response.json();
 
             return {
               ...fileItem,
-              status: 'processed',
-              result
+              status: "processed",
+              result,
             };
           } catch (error) {
-            console.error(`Error processing file ${fileItem.file.name}:`, error);
+            console.error(
+              `Error processing file ${fileItem.file.name}:`,
+              error,
+            );
             return {
               ...fileItem,
-              status: 'error',
-              result: error.message
+              status: "error",
+              result: error.message,
             };
           }
-        })
+        }),
       );
 
       setUploadedFiles(processedFiles);
@@ -125,19 +132,19 @@ const FileDragAndDrop: React.FC = () => {
     }
   };
 
-  const renderFileList = (items: UploadedFile[], droppableId: string) => (
+  const renderFileList = (items, droppableId) => (
     <Droppable droppableId={droppableId}>
       {(provided) => (
         <List
           ref={provided.innerRef}
           {...provided.droppableProps}
           sx={{
-            minHeight: '200px',
-            bgcolor: 'background.paper',
-            border: '1px dashed',
-            borderColor: 'divider',
+            minHeight: "200px",
+            bgcolor: "background.paper",
+            border: "1px dashed",
+            borderColor: "divider",
             borderRadius: 1,
-            p: 1
+            p: 1,
           }}
         >
           {items.map((item, index) => (
@@ -149,15 +156,19 @@ const FileDragAndDrop: React.FC = () => {
                   {...provided.dragHandleProps}
                   sx={{
                     mb: 1,
-                    border: '1px solid',
-                    borderColor: 'divider',
+                    border: "1px solid",
+                    borderColor: "divider",
                     borderRadius: 1,
-                    '&:hover': { bgcolor: 'action.hover' },
+                    "&:hover": { bgcolor: "action.hover" },
                   }}
                 >
                   <ListItemIcon>
                     {item.preview ? (
-                      <Avatar src={item.preview} variant="rounded" sx={{ width: 40, height: 40 }} />
+                      <Avatar
+                        src={item.preview}
+                        variant="rounded"
+                        sx={{ width: 40, height: 40 }}
+                      />
                     ) : (
                       <InsertDriveFile color="primary" />
                     )}
@@ -168,7 +179,7 @@ const FileDragAndDrop: React.FC = () => {
                   />
                   <IconButton
                     edge="end"
-                    onClick={() => removeFile(droppableId as 'files' | 'uploaded', item.id)}
+                    onClick={() => removeFile(droppableId, item.id)}
                   >
                     <Delete color="error" />
                   </IconButton>
@@ -184,27 +195,35 @@ const FileDragAndDrop: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box {...getRootProps()} sx={{
-        border: '2px dashed',
-        borderColor: isDragActive ? 'primary.main' : 'divider',
-        borderRadius: 2,
-        p: 4,
-        textAlign: 'center',
-        mb: 3,
-        cursor: 'pointer',
-        bgcolor: isDragActive ? 'action.hover' : 'background.paper'
-      }}>
+      <Box
+        {...getRootProps()}
+        sx={{
+          border: "2px dashed",
+          borderColor: isDragActive ? "primary.main" : "divider",
+          borderRadius: 2,
+          p: 4,
+          textAlign: "center",
+          mb: 3,
+          cursor: "pointer",
+          bgcolor: isDragActive ? "action.hover" : "background.paper",
+        }}
+      >
         <input {...getInputProps()} />
-        <CloudUpload fontSize="large" color={isDragActive ? 'primary' : 'action'} />
+        <CloudUpload
+          fontSize="large"
+          color={isDragActive ? "primary" : "action"}
+        />
         <Typography>
-          {isDragActive ? 'Отпустите файлы здесь' : 'Перетащите файлы сюда или кликните для выбора'}
+          {isDragActive
+            ? "Отпустите файлы здесь"
+            : "Перетащите файлы сюда или кликните для выбора"}
         </Typography>
         <Typography variant="caption" color="text.secondary">
           Поддерживаются изображения, PDF и текстовые файлы
         </Typography>
       </Box>
 
-      <DragDropContext onDragEnd={handleDragEnd}>
+      {/* <DragDropContext onDragEnd={handleDragEnd}>
         <Box sx={{ display: 'flex', gap: 4 }}>
           <Paper sx={{ p: 2, width: '100%' }}>
             <Typography variant="h6" gutterBottom>
@@ -220,8 +239,8 @@ const FileDragAndDrop: React.FC = () => {
             {renderFileList(uploadedFiles, 'uploaded')}
           </Paper>
         </Box>
-      </DragDropContext>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+      </DragDropContext>*/}
+      {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
         <Button
           variant="contained"
           onClick={() => processFiles(files)}
@@ -229,8 +248,7 @@ const FileDragAndDrop: React.FC = () => {
         >
           {processing ? 'Обработка...' : 'Начать обработку'}
         </Button>
-      </Box>
-
+      </Box>*/}
     </Box>
   );
 };
