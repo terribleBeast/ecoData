@@ -1,5 +1,5 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
-import { getImages } from "../../mock_images.js";
+import { getImages, getPrediction } from "../../mock_images.js";
 import { Delete } from "@mui/icons-material";
 import { useState } from "react";
 import FileDragAndDrop from "../DND";
@@ -12,16 +12,15 @@ interface ImageProps {
 };
 
 const handleProcessImages = (images) => {
+
+
+
   for (let i = 0; i < images.length; i++) {
-    images[i].status = 'processing';
+    images[i].status = 'processed';
+    images[i].prediction = getPrediction(images[i].src);
   }
 
-  setTimeout(() => {
-    for (let i = 0; i < images.length; i++) {
-      images[i].status = 'processed';
-    }
-    // setImages([...images]);
-  }, 10);
+
   return images;
 };
 
@@ -64,7 +63,12 @@ const Analyzator = () => {
         style={{
           padding: "0.5rem",
           width: "120px",
-          boxShadow: borderStyle
+          boxShadow: borderStyle,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          // alignItems: "center",
+          // flexGrow: 1
         }}>
         <Box
           style={{
@@ -88,13 +92,13 @@ const Analyzator = () => {
         <Box className="image-overlay">
           <Typography
             className="image-title"
-            style={{ overflowWrap: "break-word" }}
+            style={{ overflowWrap: "break-word",}}
           >
             {image.src.split('/')[1]}
           </Typography>
           <Typography className="image-prediction">{image.prediction}</Typography>
         </Box>
-        <Box style={{ display: "flex", justifyContent: "end" }}>
+        <Box style={{display: "flex", justifyContent: "end" }}>
           <Delete
             style={{
               color: "red",
@@ -109,6 +113,7 @@ const Analyzator = () => {
       </Paper>
     );
   };
+
   return (
     <>
       <Typography className="page-title">Анализатор</Typography>
