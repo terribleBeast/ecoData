@@ -1,12 +1,24 @@
-export function getImages() {
+export function getMockImages(defaultStatus) {
   let images = [
     "test_images/Image_1002 (1).jpg",
     "test_images/Image_1002.jpg",
     "test_images/beast.jpg",
-    "test_images/Image_954.jpg",
+    undefined,
   ];
-
-  return images;
+  var imagesObjects = [];
+  for (let i = 0; i < 1; i++) {
+    images.forEach((image) => {
+      imagesObjects.push({
+        src: image,
+        name: image,
+        key: image + i.toString(),
+        predictions: null,
+        status: defaultStatus,
+        selectedClassifier: "Яблоня",
+      });
+    });
+  }
+  return imagesObjects;
 }
 export function getMockStatus() {
   const statuses = {

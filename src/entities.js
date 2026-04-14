@@ -7,7 +7,7 @@ import {
   ImageSearch,
 } from "@mui/icons-material";
 import Research from "../src/components/pages/Research";
-import Analyzator from "./components/pages/Analyzator";
+import Analyzator from "./components/pages/Analyzator/Analyzator";
 
 export const entities = [
   {

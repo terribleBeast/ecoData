@@ -20,15 +20,7 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 
-// interface UploadedFile {
-//   id: string;
-//   file: File;
-//   preview?: string;
-//   status: 'pending' | 'processing' | 'processed' | 'error'; // Добавляем статус
-//   result?: any; // Для хранения результатов обработки
-// }
-
-const FileDragAndDrop = ({ updateImages }) => {
+const FileDragAndDrop = ({ updateImages, defaultState }) => {
   const [processing, setProcessing] = useState(false);
 
   const [files, setFiles] = useState([]);
@@ -37,18 +29,13 @@ const FileDragAndDrop = ({ updateImages }) => {
   const onDrop = useCallback((acceptedFiles) => {
     console.log("acceptedFiles");
     const newFiles = acceptedFiles.map((file) => ({
-      // id: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      // file,
-      // preview: file.type.startsWith("image/")
-      //   ? URL.createObjectURL(file)
-      //   : undefined,
       src: file.type.startsWith("image/")
         ? URL.createObjectURL(file)
         : undefined,
       name: file.name,
       key: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       predictions: null,
-      status: "Загружен",
+      status: defaultState,
       selectedClassifier: "Яблоня",
     }));
     // setFiles((prev) => [...prev, ...newFiles]);
