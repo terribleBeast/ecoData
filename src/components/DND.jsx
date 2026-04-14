@@ -28,22 +28,32 @@ import {
 //   result?: any; // Для хранения результатов обработки
 // }
 
-const FileDragAndDrop = () => {
+const FileDragAndDrop = ({ updateImages }) => {
   const [processing, setProcessing] = useState(false);
 
   const [files, setFiles] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
   const onDrop = useCallback((acceptedFiles) => {
+    console.log("acceptedFiles");
     const newFiles = acceptedFiles.map((file) => ({
-      id: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      file,
-      preview: file.type.startsWith("image/")
+      // id: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      // file,
+      // preview: file.type.startsWith("image/")
+      //   ? URL.createObjectURL(file)
+      //   : undefined,
+      src: file.type.startsWith("image/")
         ? URL.createObjectURL(file)
         : undefined,
-      status: "pending",
+      name: file.name,
+      key: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      predictions: null,
+      status: "Загружен",
+      selectedClassifier: "Яблоня",
     }));
-    setFiles((prev) => [...prev, ...newFiles]);
+    // setFiles((prev) => [...prev, ...newFiles]);
+
+    updateImages(newFiles);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -219,24 +229,24 @@ const FileDragAndDrop = () => {
             : "Перетащите файлы сюда или кликните для выбора"}
         </Typography>
         <Typography variant="caption" color="text.secondary">
-          Поддерживаются изображения, PDF и текстовые файлы
+          Поддерживаются изображения
         </Typography>
       </Box>
 
       {/* <DragDropContext onDragEnd={handleDragEnd}>
-        <Box sx={{ display: 'flex', gap: 4 }}>
-          <Paper sx={{ p: 2, width: '100%' }}>
+        <Box sx={{ display: "flex", gap: 4 }}>
+          <Paper sx={{ p: 2, width: "100%" }}>
             <Typography variant="h6" gutterBottom>
               Загруженные файлы ({files.length})
             </Typography>
-            {renderFileList(files, 'files')}
+            {renderFileList(files, "files")}
           </Paper>
 
-          <Paper sx={{ p: 2, width: '100%' }}>
+          <Paper sx={{ p: 2, width: "100%" }}>
             <Typography variant="h6" gutterBottom>
               Обработанные файлы ({uploadedFiles.length})
             </Typography>
-            {renderFileList(uploadedFiles, 'uploaded')}
+            {renderFileList(uploadedFiles, "uploaded")}
           </Paper>
         </Box>
       </DragDropContext>*/}

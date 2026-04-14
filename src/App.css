@@ -11,10 +11,10 @@
   color: var(--color-text);
 } */
 
-.App {
+:root {
     /* font-size: 16px; */
 
-    margin: 0;
+    /*margin: 0;*/
 
     /* Цвета */
     --color-primary: #2e7d32;
@@ -112,7 +112,6 @@
     font-weight: 600;
     color: var(--color-second);
 }
-
 .cards-container {
     flex-wrap: wrap;
     width: 100%;
@@ -135,6 +134,7 @@
 
 main {
     min-height: 875pt;
+    /*height: 100vh;*/
     display: flex;
     background-color: var(--color-background-color);
     font-family: var(--font-family);
@@ -373,4 +373,19 @@ img {
     align-items: center;
 }
 
-/*.images*/
+.button.MuiButton-root {
+    background-color: var(--color-primary);
+    /*color: white;*/
+    font-size: 0.825rem;
+    padding: 0.75rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+
+.button:hover {
+    background-color: var(--color-primary-dark);
+}
