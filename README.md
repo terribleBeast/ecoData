@@ -9,21 +9,21 @@ start test db
 ```
 npm run start-server
 ```
-### Development steps 1.0v
+### Development steps
 - [ ] Front-end
   - [ ] Fix error in design
-    - [ ] Editing window size leads to offset main field
     - [ ] Login / Sign in
-    - [ ] Create template for pages
   - [ ] Pages
     - [ ] Analyzator
-      - [ ] Create maket
+      - [x] Create maket
       - [ ] Implement page
+      - [ ] to implement keystroke processing for moving between images
+      - [ ] to optimize rendering 
     - [ ] User profile
       - [ ] Create maket
       - [ ] Implement page
   - [ ] Increase performance
-    - [ ] Opitmize rendering (RegPage, LoginPage, Analyzer)
+    - [ ] Opitmize rendering (RegPage, LoginPage, Analyzator)
 
 - [ ] Back-end
   - [ ] FastAPI
