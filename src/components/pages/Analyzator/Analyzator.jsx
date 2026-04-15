@@ -1,7 +1,19 @@
-import { Box, Button, Dialog, Paper, Typography } from "@mui/material";
-import { useState } from "react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Dialog,
+  FormControlLabel,
+  FormGroup,
+  Paper,
+  Typography,
+} from "@mui/material";
+
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { useState, useCallback } from "react";
 import { getPrediction } from "../../../api/api.js";
-import { getMockImages, getPredictions } from "../../../mock_images.js";
+import { getMockImages } from "../../../mock_images.js";
 import FileDragAndDrop from "./DND";
 import { ImageCard, ImageFullInfo, imageStatus } from "./Image.jsx";
 
@@ -14,7 +26,7 @@ const ImagesContainer = ({
     className="cards-container"
     style={{
       maxHeight: "900px",
-      overflowY: "scroll",
+      overflowY: "auto",
     }}
   >
     {images.map((image) => (
@@ -27,11 +39,55 @@ const ImagesContainer = ({
   </Box>
 );
 
+const ClassifiersMenu = ({ selectedClassifier, setSelectedClassifier }) => {
+  const classifiers = ["Яблоня", "Вишня", "Береза", "Дуб"];
+  const handleClassifierChange = useCallback(
+    (item) => {
+      setSelectedClassifier(item);
+    },
+    [setSelectedClassifier],
+  );
+  return (
+    <Paper
+      elevation={2}
+      className="chapter"
+      style={{
+        width: "100%",
+        display: "flex",
+        justifyContent: "space-between",
+        flexDirection: "column",
+      }}
+    >
+      <Typography className="chapter-title" style={{ fontSize: "32px" }}>
+        Классификаторы
+      </Typography>
+      <FormGroup style={{ maxHeight: "200px", overflowY: "auto" }} row={true}>
+        {classifiers.map((item, index) => (
+          <FormControlLabel
+            control={
+              <Checkbox
+                key={index}
+                checked={item === selectedClassifier}
+                onChange={() => handleClassifierChange(item)}
+                icon={<RadioButtonUncheckedIcon />}
+                checkedIcon={<RadioButtonCheckedIcon />}
+              />
+            }
+            label={item}
+          />
+        ))}
+      </FormGroup>
+    </Paper>
+  );
+};
+
 const Analyzator = () => {
   const [isOpenFileMenu, setIsOpenFileMenu] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [images, setImages] = useState(getMockImages(imageStatus.LOADING));
+  const [images, setImages] = useState(getMockImages(imageStatus.LOADING, 50));
+  const [selectedClassifier, setSelectedClassifier] = useState("Вишня");
 
+  console.log(selectedClassifier);
   const handleAddImages = (newImages) => {
     setImages((images) => [...newImages, ...images]);
   };
@@ -110,10 +166,21 @@ const Analyzator = () => {
           </Box>
         </Box>
         {isOpenFileMenu && (
-          <FileDragAndDrop
-            updateImages={handleAddImages}
-            defaultState={imageStatus.LOADING}
-          />
+          <Box style={{ display: "flex" }}>
+            <Box style={{ width: "80%" }}>
+              <FileDragAndDrop
+                updateImages={handleAddImages}
+                defaultState={imageStatus.LOADING}
+                selectedClassifier={selectedClassifier}
+              />
+            </Box>
+            <Box style={{ display: "flex", width: "20%" }}>
+              <ClassifiersMenu
+                selectedClassifier={selectedClassifier}
+                setSelectedClassifier={setSelectedClassifier}
+              />
+            </Box>
+          </Box>
         )}
         <ImagesContainer
           images={images}

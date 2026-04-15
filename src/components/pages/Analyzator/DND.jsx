@@ -20,28 +20,36 @@ import {
   DropResult,
 } from "react-beautiful-dnd";
 
-const FileDragAndDrop = ({ updateImages, defaultState }) => {
+const FileDragAndDrop = ({
+  updateImages,
+  defaultState,
+  selectedClassifier,
+}) => {
   const [processing, setProcessing] = useState(false);
 
   const [files, setFiles] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    console.log("acceptedFiles");
-    const newFiles = acceptedFiles.map((file) => ({
-      src: file.type.startsWith("image/")
-        ? URL.createObjectURL(file)
-        : undefined,
-      name: file.name,
-      key: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      predictions: null,
-      status: defaultState,
-      selectedClassifier: "Яблоня",
-    }));
-    // setFiles((prev) => [...prev, ...newFiles]);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      console.log("acceptedFiles");
+      console.log(selectedClassifier);
+      const newFiles = acceptedFiles.map((file) => ({
+        src: file.type.startsWith("image/")
+          ? URL.createObjectURL(file)
+          : undefined,
+        name: file.name,
+        key: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        predictions: null,
+        status: defaultState,
+        selectedClassifier: selectedClassifier,
+      }));
+      // setFiles((prev) => [...prev, ...newFiles]);
 
-    updateImages(newFiles);
-  }, []);
+      updateImages(newFiles);
+    },
+    [selectedClassifier],
+  );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

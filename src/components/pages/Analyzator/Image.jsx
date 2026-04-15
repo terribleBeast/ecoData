@@ -105,7 +105,7 @@ export const ImageCard = ({
               " (" +
               prediction.probability.toFixed(2) +
               "%)"
-            : "Не определено"}
+            : "Нет предсказаний"}
         </Typography>
       </Box>
       <Box style={{ display: "flex", justifyContent: "end" }}>

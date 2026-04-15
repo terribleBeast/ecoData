@@ -1,4 +1,4 @@
-export function getMockImages(defaultStatus) {
+export function getMockImages(defaultStatus, imagesNumber) {
   let images = [
     "test_images/Image_1002 (1).jpg",
     "test_images/Image_1002.jpg",
@@ -6,7 +6,7 @@ export function getMockImages(defaultStatus) {
     undefined,
   ];
   var imagesObjects = [];
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < imagesNumber; i++) {
     images.forEach((image) => {
       imagesObjects.push({
         src: image,
@@ -33,7 +33,7 @@ export function getMockStatus() {
   return status;
 }
 
-export function getPredictions(image) {
+export async function getMockPrediction(image) {
   const statuses = [
     // uploaded: "Загружен",
     // processing: "В обработке",

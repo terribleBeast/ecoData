@@ -102,7 +102,7 @@
     padding-left: 1.5rem;
     padding-right: 1.5rem;
 
-    border-radius: inherit;
+    border-radius: var(--border-radius);
     margin-bottom: 2rem;
 }
 
