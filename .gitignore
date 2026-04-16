@@ -10,6 +10,7 @@
 db.json
 links.md
 test_images
+mock_data.js
 
 # production
 /build

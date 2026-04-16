@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 // import { toLogIn } from "../features/user/userSlice"
 // import { createUser, getUser } from "../database/CRUD"
-import { useLazyGetUserQuery, useCreateUserMutation } from "../api";
+import { useLazyGetUserQuery, useCreateUserMutation } from "../../api/usersAPI";
 import { toLogIn } from "../../user/userSlice";
 
 const RegisterForm = () => {

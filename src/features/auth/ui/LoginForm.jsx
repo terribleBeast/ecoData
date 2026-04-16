@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 
 // import { toLogIn } from "../features/user/userSlice"
-import { useLazyGetUserQuery } from "../api";
+import { useLazyGetUserQuery } from "../../api/usersAPI";
 import { toLogIn } from "../../user/userSlice";
 
 // import './../App.css'

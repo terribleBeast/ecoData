@@ -6,6 +6,7 @@ import {
   Assignment,
   ImageSearch,
 } from "@mui/icons-material";
+import Reaserchers from "./components/pages/Reaserchers";
 import Research from "../src/components/pages/Research";
 import Analyzator from "./components/pages/Analyzator/Analyzator";
 
@@ -20,7 +21,7 @@ export const entities = [
     name: "Исследователи",
     link: "researchers",
     icon: <PeopleAlt />,
-    page: <div> Исследователи </div>,
+    page: <Reaserchers />,
   },
   {
     name: "Растения",

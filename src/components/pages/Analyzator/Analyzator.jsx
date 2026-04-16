@@ -13,7 +13,7 @@ import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { useState, useCallback } from "react";
 import { getPrediction } from "../../../api/api.js";
-import { getMockImages } from "../../../mock_images.js";
+import { getMockImages, getMockPrediction } from "../../../mock_data.js";
 import FileDragAndDrop from "./DND";
 import { ImageCard, ImageFullInfo, imageStatus } from "./Image.jsx";
 
@@ -29,11 +29,12 @@ const ImagesContainer = ({
       overflowY: "auto",
     }}
   >
-    {images.map((image) => (
+    {images.map((image, index) => (
       <ImageCard
         onOpen={(image) => handleOpenImageFullInfo(image)}
         onDelete={handleDeleteImage}
         image={image}
+        key={index}
       />
     ))}
   </Box>
@@ -61,7 +62,10 @@ const ClassifiersMenu = ({ selectedClassifier, setSelectedClassifier }) => {
       <Typography className="chapter-title" style={{ fontSize: "32px" }}>
         Классификаторы
       </Typography>
-      <FormGroup style={{ maxHeight: "200px", overflowY: "auto" }} row={true}>
+      <FormGroup
+        style={{ maxHeight: "200px", overflowY: "auto", padding: "1rem" }}
+        row={true}
+      >
         {classifiers.map((item, index) => (
           <FormControlLabel
             control={
@@ -80,6 +84,10 @@ const ClassifiersMenu = ({ selectedClassifier, setSelectedClassifier }) => {
     </Paper>
   );
 };
+
+function getAllPrediction(images) {
+  // TODO: implement function creating csv file
+}
 
 const Analyzator = () => {
   const [isOpenFileMenu, setIsOpenFileMenu] = useState(false);
@@ -107,10 +115,9 @@ const Analyzator = () => {
     for (let i = 0; i < images.length; i++) {
       if (images[i].status === imageStatus.UPLOADED)
         images[i].status = imageStatus.PROCESSED;
-      images[i].predictions = await getPrediction(images[i]).then(
+      images[i].predictions = await getMockPrediction(images[i]).then(
         (data) => data,
       );
-      console.log(images[i].predictions);
 
       setImages([...images]);
     }
