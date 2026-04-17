@@ -7,7 +7,7 @@ import {
   ImageSearch,
 } from "@mui/icons-material";
 import Reaserchers from "./components/pages/Reaserchers";
-import Research from "../src/components/pages/Research";
+import Researches from "../src/components/pages/Researches";
 import Analyzator from "./components/pages/Analyzator/Analyzator";
 
 export const entities = [
@@ -15,7 +15,7 @@ export const entities = [
     name: "Исследования",
     link: "researches",
     icon: <Assignment />,
-    page: <Research />,
+    page: <Researches />,
   },
   {
     name: "Исследователи",

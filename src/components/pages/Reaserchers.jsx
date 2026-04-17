@@ -16,6 +16,11 @@ import {
 } from "material-react-table";
 import { useMemo, useState } from "react";
 import { getMockReaserchers } from "../../mock_data";
+import {
+  ChapterContentTemplate,
+  ChapterHeaderTemplate,
+  ChaptersPaper,
+} from "../ChapterTemplate";
 import { DialogPanel } from "../DialogPanel";
 
 const REASERCHES_LIST_LEN = 1;
@@ -59,19 +64,9 @@ const ReasercherFullInfo = ({ reasercher }) => {
   ];
   return (
     <DialogPanel>
-      <Paper
-        elevation={3}
-        style={{
-          width: "50%",
-          display: "flex",
-          flexDirection: "column",
-          padding: "1rem",
-        }}
-      >
-        <Typography className="chapter-title" style={{ alignSelf: "center" }}>
-          Исследования
-        </Typography>
-        <Card elevation={3}>
+      <ChaptersPaper>
+        <ChapterHeaderTemplate chapterTitle="Исследования" />
+        <Card style={{ overflowY: "auto", maxHeight: "60vh" }}>
           <List>
             {reasercher.reaserches.map((item, index) => (
               <ListItemButton
@@ -82,39 +77,11 @@ const ReasercherFullInfo = ({ reasercher }) => {
             ))}
           </List>
         </Card>
-      </Paper>
-      <Paper
-        elevation={3}
-        style={{
-          width: "50%",
-          display: "flex",
-          flexDirection: "column",
-          padding: "1rem",
-        }}
-      >
-        <Typography className="chapter-title" style={{ alignSelf: "center" }}>
-          Профиль исследователя
-        </Typography>
-        {chaptersInfo.map((chapterData, index) => (
-          <Card
-            elevation={2}
-            style={{ marginBottom: "16px" }}
-            key={chapterData.title + index}
-          >
-            <CardHeader title={chapterData.title} />
-            <CardContent>
-              {chapterData.fields.map((field, index) => (
-                <Typography style={{ fontWeight: "bold" }}>
-                  {field.name}:{" "}
-                  <Typography style={{ display: "inline" }}>
-                    {field.value}
-                  </Typography>
-                </Typography>
-              ))}
-            </CardContent>
-          </Card>
-        ))}
-      </Paper>
+      </ChaptersPaper>
+      <ChaptersPaper>
+        <ChapterHeaderTemplate chapterTitle="Профиль исследователя" />
+        <ChapterContentTemplate chaptersInfo={chaptersInfo} />
+      </ChaptersPaper>
     </DialogPanel>
   );
 };
@@ -179,31 +146,35 @@ const ReaserchersTable = ({ setSelectedReasercher }) => {
       accessorKey: "reaserches",
       header: "Исследования",
       Cell: ({ row }) => (
-        <List>
-          {row.original.reaserches
-            .slice(
-              0,
-              reaserchesListState[row.id]
-                ? REASERCHES_LIST_LEN
-                : row.original.reaserches.length,
-            )
-            .map((item, index) => (
-              <ListItemButton
-                key={index}
-                to={`/researcher?reaserch_id=${row.original.reaserches[index].id}`}
-              >
-                {index + 1}.&nbsp;<Link>{item}</Link>
-              </ListItemButton>
-            ))}
+        <Box style={{ overflowY: "auto", maxHeight: "20vh" }}>
+          <List>
+            {row.original.reaserches
+              .slice(
+                0,
+                reaserchesListState[row.id]
+                  ? REASERCHES_LIST_LEN
+                  : row.original.reaserches.length,
+              )
+              .map((item, index) => (
+                <ListItemButton
+                  key={index}
+                  to={`/researcher?reaserch_id=${row.original.reaserches[index].id}`}
+                >
+                  {index + 1}.&nbsp;<Link>{item}</Link>
+                </ListItemButton>
+              ))}
 
-          {row.original.reaserches.length > 3 ? (
-            <ListItemButton onClick={() => handleToggleReaserches(row.id)}>
-              <Typography>{reaserchesListState[row.id] ? ">" : "<"}</Typography>
-            </ListItemButton>
-          ) : (
-            <></>
-          )}
-        </List>
+            {row.original.reaserches.length > 3 ? (
+              <ListItemButton onClick={() => handleToggleReaserches(row.id)}>
+                <Typography>
+                  {reaserchesListState[row.id] ? ">" : "<"}
+                </Typography>
+              </ListItemButton>
+            ) : (
+              <></>
+            )}
+          </List>
+        </Box>
       ),
     },
   ];
@@ -236,7 +207,7 @@ const Reaserchers = () => {
         )}
       </Dialog>
       <Typography className="page-title">Исследователи</Typography>
-      <Paper elevation={3} className="chapter">
+      <Paper className="chapter">
         <Typography className="chapter-title">НАЗВАНИЕ</Typography>
         <ReaserchersTable setSelectedReasercher={setSelectedReasercher} />
       </Paper>

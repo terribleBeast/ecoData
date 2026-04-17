@@ -46,7 +46,6 @@ const ChapterCards = () => {
     <Box className="cards-container">
       {cardsActions.map((card, index) => (
         <Paper
-          elevation={1}
           className="card"
           key={index}
           sx={{
@@ -175,7 +174,7 @@ const Home = () => {
 
       <Box className="main-page-content">
         {chapters.map((chapter, index) => (
-          <Paper elevation={3} className="chapter" key={index}>
+          <Paper className="chapter" key={index}>
             <Fade in timeout={(index + 1) * TIMEOUT}>
               <Typography className="chapter-title">{chapter.title}</Typography>
             </Fade>
