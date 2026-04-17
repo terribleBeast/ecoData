@@ -16,12 +16,14 @@ npm run start-server
   - [ ] Pages
     - [ ] Analyzator
       - [x] Create maket
-      - [ ] Implement page
+      - [x] Implement page
       - [ ] to implement keystroke processing for moving between images
       - [ ] to optimize rendering 
     - [ ] User profile
       - [ ] Create maket
       - [ ] Implement page
+    - [ ] Loading page
+    - [ ] Not valide page
   - [ ] Increase performance
     - [ ] Opitmize rendering (RegPage, LoginPage, Analyzator)
 

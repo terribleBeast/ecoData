@@ -9,7 +9,9 @@ import { Provider } from "react-redux";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./app/theme";
 import { CssBaseline } from "@mui/material";
+import { generateMockDB } from "./mock_data";
 
+generateMockDB();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <React.StrictMode>

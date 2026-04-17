@@ -15,7 +15,7 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import { useMemo, useState } from "react";
-import { getMockReaserchers } from "../../mock_data";
+import { getMockReaserchers, getMockReaserches } from "../../mock_data";
 import {
   ChapterContentTemplate,
   ChapterHeaderTemplate,
@@ -68,9 +68,9 @@ const ReasercherFullInfo = ({ reasercher }) => {
         <ChapterHeaderTemplate chapterTitle="Исследования" />
         <Card style={{ overflowY: "auto", maxHeight: "60vh" }}>
           <List>
-            {reasercher.reaserches.map((item, index) => (
+            {reasercher.reaserches_id.map((item, index) => (
               <ListItemButton
-                to={`/researcher?reaserch_id=${reasercher.reaserches[index].id}`}
+                to={`/researcher?reaserch_id=${reasercher.reaserches_id[index].id}`}
               >
                 {index + 1}.&nbsp;<Link>{item}</Link>
               </ListItemButton>
@@ -87,11 +87,12 @@ const ReasercherFullInfo = ({ reasercher }) => {
 };
 
 const ReaserchersTable = ({ setSelectedReasercher }) => {
-  const [data, setData] = useState(getMockReaserchers(15));
+  // TODO: optimizing this
+  const [data, setData] = useState(getMockReaserchers());
+  const [reasercherData, setReasercherData] = useState(getMockReaserches());
   const [reaserchesListState, setReaserchesListState] = useState(
     Array(data.length).fill(true),
   );
-
   const handleToggleReaserches = (reaserchIndex) =>
     setReaserchesListState(
       reaserchesListState.map((item, index) => {
@@ -148,23 +149,23 @@ const ReaserchersTable = ({ setSelectedReasercher }) => {
       Cell: ({ row }) => (
         <Box style={{ overflowY: "auto", maxHeight: "20vh" }}>
           <List>
-            {row.original.reaserches
+            {row.original.reaserches_id
               .slice(
                 0,
                 reaserchesListState[row.id]
                   ? REASERCHES_LIST_LEN
-                  : row.original.reaserches.length,
+                  : row.original.reaserches_id.length,
               )
               .map((item, index) => (
                 <ListItemButton
                   key={index}
-                  to={`/researcher?reaserch_id=${row.original.reaserches[index].id}`}
+                  to={`/researcher?reaserch_id=${reasercherData[item].id}`}
                 >
-                  {index + 1}.&nbsp;<Link>{item}</Link>
+                  {index + 1}.&nbsp;<Link>{reasercherData[item].title}</Link>
                 </ListItemButton>
               ))}
 
-            {row.original.reaserches.length > 3 ? (
+            {row.original.reaserches_id.length > 3 ? (
               <ListItemButton onClick={() => handleToggleReaserches(row.id)}>
                 <Typography>
                   {reaserchesListState[row.id] ? ">" : "<"}

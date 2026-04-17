@@ -9,7 +9,7 @@ export default class ReasercherModel {
     patronomic,
     job,
     phone,
-    reaserches,
+    reaserches_id,
   }) {
     this.id = id;
     this.email = email;
@@ -20,6 +20,6 @@ export default class ReasercherModel {
     this.patronomic = patronomic;
     this.job = job;
     this.phone = phone;
-    this.reaserches = reaserches;
+    this.reaserches_id = reaserches_id;
   }
 }
