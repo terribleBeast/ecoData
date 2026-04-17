@@ -1,7 +1,3 @@
-
-
-
-
 export default class ReasercherModel {
   constructor({
     id,
@@ -11,8 +7,9 @@ export default class ReasercherModel {
     name,
     surname,
     patronomic,
-    job_id,
+    job,
     phone,
+    reaserches,
   }) {
     this.id = id;
     this.email = email;
@@ -21,7 +18,8 @@ export default class ReasercherModel {
     this.name = name;
     this.surname = surname;
     this.patronomic = patronomic;
-    this.job_id = job_id;
+    this.job = job;
     this.phone = phone;
+    this.reaserches = reaserches;
   }
 }

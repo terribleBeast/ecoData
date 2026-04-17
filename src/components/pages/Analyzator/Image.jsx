@@ -12,6 +12,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import { DialogPanel } from "../../DialogPanel";
 
 export const imageStatus = {
   LOADING: "Загрузка",
@@ -125,18 +126,19 @@ export const ImageCard = ({
 export const ImageFullInfo = ({ image }) => {
   console.log("image FULL");
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      // if (event.ctrlKey && event.key === Key.K) {
-      //   event.preventDefault(); // Prevent default browser behavior
-      // }
-    };
+  // TODO: implement handle keydown
+  // useEffect(() => {
+  //   const handleKeyDown = (event) => {
+  //     // if (event.ctrlKey && event.key === Key.K) {
+  //     //   event.preventDefault(); // Prevent default browser behavior
+  //     // }
+  //   };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, []);
   const columns = [
     {
       Header: "Классификатор",
@@ -155,14 +157,7 @@ export const ImageFullInfo = ({ image }) => {
       : null;
 
   return (
-    <Box
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        gap: "1rem",
-        margin: "1rem",
-      }}
-    >
+    <DialogPanel>
       <Paper
         elevation={3}
         style={{
@@ -288,6 +283,6 @@ export const ImageFullInfo = ({ image }) => {
           </Card>
         </Box>
       </Paper>
-    </Box>
+    </DialogPanel>
   );
 };

@@ -95,7 +95,6 @@ const Analyzator = () => {
   const [images, setImages] = useState(getMockImages(imageStatus.LOADING, 50));
   const [selectedClassifier, setSelectedClassifier] = useState("Вишня");
 
-  console.log(selectedClassifier);
   const handleAddImages = (newImages) => {
     setImages((images) => [...newImages, ...images]);
   };

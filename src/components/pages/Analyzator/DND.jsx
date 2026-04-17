@@ -32,8 +32,6 @@ const FileDragAndDrop = ({
 
   const onDrop = useCallback(
     (acceptedFiles) => {
-      console.log("acceptedFiles");
-      console.log(selectedClassifier);
       const newFiles = acceptedFiles.map((file) => ({
         src: file.type.startsWith("image/")
           ? URL.createObjectURL(file)
