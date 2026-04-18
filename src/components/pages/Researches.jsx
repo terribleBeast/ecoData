@@ -9,6 +9,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Button,
 } from "@mui/material";
 import {
   MaterialReactTable,
@@ -23,26 +24,33 @@ import {
 } from "../ChapterTemplate";
 import { DialogPanel } from "../DialogPanel";
 
-const ReaserchFullInfo = () => {
+const ReaserchFullInfo = ({ reaserch }) => {
   const chaptersInfo = [
-    { title: "Общая информация", fields: [{ name: "TMP", value: "TMP" }] },
+    {
+      title: "Общая информация",
+      fields: [
+        { name: "Название", value: reaserch.title },
+        { name: "Цель", value: reaserch.goal },
+        { name: "Статус", value: reaserch.status },
+      ],
+    },
   ];
 
   return (
     <DialogPanel>
       <ChaptersPaper>
-        <ChapterHeaderTemplate chapterTitle="Исследования" />
+        <ChapterHeaderTemplate chapterTitle="Таблица результатов" />
         <Card style={{ overflowY: "auto", maxHeight: "60vh" }}></Card>
       </ChaptersPaper>
       <ChaptersPaper>
-        <ChapterHeaderTemplate chapterTitle="Профиль исследователя" />
+        <ChapterHeaderTemplate chapterTitle="Данные об исследовании" />
         <ChapterContentTemplate chaptersInfo={chaptersInfo} />
       </ChaptersPaper>
     </DialogPanel>
   );
 };
 
-const ReaserchesTable = () => {
+const ReaserchesTable = ({ setSelectedReaserch }) => {
   const [data, setData] = useState(getMockReaserches());
   const [reaserchersData, setReaserchersData] = useState(getMockReaserchers());
   const columns = [
@@ -59,6 +67,14 @@ const ReaserchesTable = () => {
     {
       accessorKey: "title",
       header: "Название",
+      Cell: ({ row }) => (
+        <Typography
+          onClick={() => setSelectedReaserch(row.original)}
+          style={{ cursor: "pointer" }}
+        >
+          {row.original.title}
+        </Typography>
+      ),
     },
     {
       accessorKey: "goal",
@@ -96,7 +112,12 @@ const ReaserchesTable = () => {
                   key={index}
                   to={`/researcher?reasercher_id=${reaserchersData[item].id}`}
                 >
-                  {index + 1}.&nbsp;<Link>{reaserchersData[item].surname}</Link>
+                  {index + 1}.&nbsp;
+                  <Link>
+                    {reaserchersData[item].surname}{" "}
+                    {reaserchersData[item].name[0]}.{" "}
+                    {reaserchersData[item].patronomic[0]}.
+                  </Link>
                 </ListItemButton>
               ))}
 
@@ -135,13 +156,13 @@ const Research = () => {
         maxWidth="xl"
       >
         {selectedReaserch !== null && (
-          <ReaserchFullInfo reasercher={selectedReaserch} />
+          <ReaserchFullInfo reaserch={selectedReaserch} />
         )}
       </Dialog>
       <Typography className="page-title">Исследования</Typography>
       <Paper className="chapter">
         <Typography className="chapter-title">НАЗВАНИЕ</Typography>
-        <ReaserchesTable setSelectedReasercher={setSelectedReaserch} />
+        <ReaserchesTable setSelectedReaserch={setSelectedReaserch} />
       </Paper>
     </>
   );

@@ -150,12 +150,12 @@ const ReaserchersTable = ({ setSelectedReasercher }) => {
         <Box style={{ overflowY: "auto", maxHeight: "20vh" }}>
           <List>
             {row.original.reaserches_id
-              .slice(
-                0,
-                reaserchesListState[row.id]
-                  ? REASERCHES_LIST_LEN
-                  : row.original.reaserches_id.length,
-              )
+              // .slice(
+              //   0,
+              //   reaserchesListState[row.id]
+              //     ? REASERCHES_LIST_LEN
+              //     : row.original.reaserches_id.length,
+              // )
               .map((item, index) => (
                 <ListItemButton
                   key={index}
@@ -165,7 +165,7 @@ const ReaserchersTable = ({ setSelectedReasercher }) => {
                 </ListItemButton>
               ))}
 
-            {row.original.reaserches_id.length > 3 ? (
+            {/* {row.original.reaserches_id.length > 3 ? (
               <ListItemButton onClick={() => handleToggleReaserches(row.id)}>
                 <Typography>
                   {reaserchesListState[row.id] ? ">" : "<"}
@@ -173,7 +173,7 @@ const ReaserchersTable = ({ setSelectedReasercher }) => {
               </ListItemButton>
             ) : (
               <></>
-            )}
+            )}*/}
           </List>
         </Box>
       ),

@@ -10,7 +10,7 @@ import Reaserchers from "./components/pages/Reaserchers";
 import Researches from "../src/components/pages/Researches";
 import Analyzator from "./components/pages/Analyzator/Analyzator";
 
-export const entities = [
+export const pages = [
   {
     name: "Исследования",
     link: "researches",
@@ -46,5 +46,23 @@ export const entities = [
     link: "laboratories",
     icon: <Biotech />,
     page: <div> Лаборатории </div>,
+  },
+];
+
+export const classifiers = [
+  {
+    plant: "Яблоня",
+    varieties: [
+      "Феникс Уральское",
+      "Уральское наливное",
+      "Сувенир Алтая",
+      "Подарок садоводам",
+      "Заветное",
+      "Жебровское",
+      "Жар-птица",
+      "Алтайское румяное",
+      "Алтайское зимнее",
+      "Алтайская красавица",
+    ],
   },
 ];

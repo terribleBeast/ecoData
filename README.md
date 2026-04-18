@@ -26,6 +26,8 @@ npm run start-server
     - [ ] Not valide page
   - [ ] Increase performance
     - [ ] Opitmize rendering (RegPage, LoginPage, Analyzator)
+  - [ ] Roling model 
+    - [ ] Add some additible elements (add new classifier)
 
 - [ ] Back-end
   - [ ] FastAPI
@@ -36,6 +38,7 @@ npm run start-server
         - [ ] Edit profile
       - [ ] Analyzer
         - [ ] Download img
+        - [ ] Processing on server (TOP)
   - [ ] PostgreSQL
   - [ ] Docker
 

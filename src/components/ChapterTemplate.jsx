@@ -15,29 +15,30 @@ export const ChapterHeaderTemplate = ({ chapterTitle }) => (
   </>
 );
 
-export const ChapterContentTemplate = ({ chaptersInfo }) => (
-  <Box style={{ overflowY: "auto", maxHeight: "60vh" }}>
-    {chaptersInfo.map((chapterData, index) => (
-      <Card
-        elevation={3}
-        style={{ marginBottom: "16px" }}
-        key={chapterData.title + index}
-      >
-        <CardHeader title={chapterData.title} />
-        <CardContent>
-          {chapterData.fields.map((field, index) => (
-            <Typography style={{ fontWeight: "bold" }}>
-              {field.name}:{" "}
-              <Typography style={{ display: "inline" }}>
-                {field.value}
+export const ChapterContentTemplate = ({ chaptersInfo }) => {
+  console.log(chaptersInfo);
+  if (chaptersInfo === null) return;
+
+  return (
+    <Box style={{ overflowY: "auto", maxHeight: "60vh" }}>
+      {chaptersInfo.map((chapterData, index) => (
+        <Card style={{ marginBottom: "16px" }} key={chapterData.title + index}>
+          <CardHeader title={chapterData.title} />
+          <CardContent key={index}>
+            {chapterData.fields.map((field, index) => (
+              <Typography style={{ fontWeight: "bold" }} key={index}>
+                {field.name}:{" "}
+                <Typography style={{ display: "inline" }}>
+                  {field.value}
+                </Typography>
               </Typography>
-            </Typography>
-          ))}
-        </CardContent>
-      </Card>
-    ))}
-  </Box>
-);
+            ))}
+          </CardContent>
+        </Card>
+      ))}
+    </Box>
+  );
+};
 
 export const ChaptersPaper = ({ children }) => (
   <Paper

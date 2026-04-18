@@ -5,7 +5,7 @@ import { Routes, Route } from "react-router";
 // import Home from "./components/pages/Home";
 import React, { Suspense } from "react";
 import { Box } from "@mui/material";
-import { entities } from "./entities";
+import { pages } from "./entities";
 import AuthForm from "./components/pages/Auth";
 
 const Home = React.lazy(() => import("./components/pages/Home"));
@@ -20,7 +20,7 @@ function App() {
           <Route path="/" element={<Content />}>
             <Route index element={<Home />} />
 
-            {entities.map((item, index) => (
+            {pages.map((item, index) => (
               <Route
                 path={item.link}
                 element={<Box className="page-layout">{item.page}</Box>}

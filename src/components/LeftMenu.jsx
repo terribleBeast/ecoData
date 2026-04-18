@@ -1,7 +1,7 @@
 import { Box, List, ListItemButton, Typography } from "@mui/material";
 import { useMemo } from "react";
 import { Link, useLocation } from "react-router";
-import { entities } from "../entities";
+import { pages } from "../entities";
 
 const LeftMenu = () => {
   const currLocation = useLocation();
@@ -9,7 +9,7 @@ const LeftMenu = () => {
   // TODO: Troubles with rendering list
   const menuItems = useMemo(
     () =>
-      entities.map((item) => (
+      pages.map((item) => (
         <ListItemButton
           component={Link}
           to={item.link}
