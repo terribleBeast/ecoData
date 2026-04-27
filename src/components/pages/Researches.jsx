@@ -1,7 +1,6 @@
 import {
   Typography,
   Box,
-  Paper,
   Dialog,
   ListItemButton,
   List,
@@ -19,18 +18,10 @@ import {
 } from "material-react-table";
 import { useState, useEffect } from "react";
 import { getResearchPrediction } from "../../api/api";
-import { classifiers } from "../../entities";
-import {
-  getMockPrediction,
-  getMockResearchers,
-  getMockResearches,
-} from "../../mock_data";
-import {
-  ChapterInfoTemplate,
-  ChapterHeaderTemplate,
-  ChaptersPaper,
-} from "../ChapterTemplate";
+import { getMockResearchers, getMockResearches } from "../../mock_data";
+import { ChapterInfoTemplate, DialogChapters, PageChapter } from "../Templates";
 import { DialogPanel } from "../DialogPanel";
+import { LoadingPage } from "./InformationPages";
 
 const ResearchFullInfo = ({ research }) => {
   const researchers = getMockResearchers();
@@ -59,7 +50,7 @@ const ResearchFullInfo = ({ research }) => {
       setTimeout(2000000);
       getPrediction();
     }, []);
-    if (loading) return <div>Loading ...</div>;
+    if (loading) return <LoadingPage />;
 
     const header = rows[0];
     // rows.map((item) => console.log(item));
@@ -79,10 +70,10 @@ const ResearchFullInfo = ({ research }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.slice(1).map((row) => (
-            <TableRow>
-              {row.map((value) => (
-                <TableCell>{value}</TableCell>
+          {rows.slice(1).map((row, index) => (
+            <TableRow key={index}>
+              {row.map((value, index) => (
+                <TableCell key={index}>{value}</TableCell>
               ))}
             </TableRow>
           ))}
@@ -124,18 +115,16 @@ const ResearchFullInfo = ({ research }) => {
 
   return (
     <DialogPanel>
-      <ChaptersPaper>
-        <ChapterHeaderTemplate chapterTitle="Таблица результатов" />
+      <DialogChapters title="Таблица результатов">
         <Card
           style={{ overflowY: "auto", overflowX: "auto", maxHeight: "60vh" }}
         >
           <ResultTable />
         </Card>
-      </ChaptersPaper>
-      <ChaptersPaper>
-        <ChapterHeaderTemplate chapterTitle="Данные об исследовании" />
+      </DialogChapters>
+      <DialogChapters title="Данные об исследовании">
         <ChapterInfoTemplate chaptersInfo={chaptersInfo} />
-      </ChaptersPaper>
+      </DialogChapters>
     </DialogPanel>
   );
 };
@@ -232,11 +221,10 @@ const Researches = () => {
           <ResearchFullInfo research={selectedResearch} />
         )}
       </Dialog>
-      <Typography className="page-title">Исследования</Typography>
-      <Paper className="chapter">
-        <Typography className="chapter-title">Таблица исследований</Typography>
+
+      <PageChapter title="Таблица исследований">
         <ResearchesTable setSelectedResearch={setSelectedResearch} />
-      </Paper>
+      </PageChapter>
     </>
   );
 };

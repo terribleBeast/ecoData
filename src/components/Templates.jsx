@@ -8,11 +8,9 @@ import {
 } from "@mui/material";
 
 export const ChapterHeaderTemplate = ({ chapterTitle }) => (
-  <>
-    <Typography className="chapter-title" style={{ alignSelf: "center" }}>
-      {chapterTitle}
-    </Typography>
-  </>
+  <Typography className="chapter-title" style={{ alignSelf: "center" }}>
+    {chapterTitle}
+  </Typography>
 );
 
 export const ChapterContentTemplate = ({ content }) => {
@@ -45,7 +43,7 @@ export const ChapterInfoTemplate = ({ chaptersInfo }) => {
   );
 };
 
-export const ChaptersPaper = ({ children }) => (
+export const DialogChapters = ({ title, children }) => (
   <Paper
     elevation={3}
     style={{
@@ -55,6 +53,28 @@ export const ChaptersPaper = ({ children }) => (
       padding: "1rem",
     }}
   >
+    <Typography className="chapter-title" style={{ alignSelf: "center" }}>
+      {title}
+    </Typography>
+    <ChapterContentTemplate content={children} />
+  </Paper>
+);
+
+export const Page = ({ title, children }) => (
+  <Box className="page-layout">
+    <Typography className="page-title">{title}</Typography>
+    {children}
+  </Box>
+);
+
+export const PageChapter = ({ title, headerComponent, children }) => (
+  <Paper elevation={3} className="chapter">
+    {headerComponent !== undefined ? (
+      headerComponent
+    ) : (
+      <Typography className="chapter-title">{title}</Typography>
+    )}
+
     {children}
   </Paper>
 );

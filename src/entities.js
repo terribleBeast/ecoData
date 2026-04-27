@@ -8,44 +8,44 @@ import {
 } from "@mui/icons-material";
 import Researchers from "./components/pages/Researchers";
 import Researches from "../src/components/pages/Researches";
-import Analyzator from "./components/pages/Analyzator/Analyzator";
+import Analyzer from "./components/pages/Analyzator/Analyzator";
 
 export const pages = [
   {
     name: "Исследования",
     link: "researches",
     icon: <Assignment />,
-    page: <Researches />,
+    component: <Researches />,
   },
   {
     name: "Исследователи",
     link: "researchers",
     icon: <PeopleAlt />,
-    page: <Researchers />,
+    component: <Researchers />,
   },
   {
     name: "Растения",
     link: "plants",
     icon: <Grass />,
-    page: <div> Растения </div>,
+    component: null,
   },
   {
     name: "Анализатор",
     link: "analyzer",
     icon: <ImageSearch />,
-    page: <Analyzator />,
+    component: <Analyzer />,
   },
   {
     name: "Локации",
     link: "locations",
     icon: <LocationOn />,
-    page: <div> Локации </div>,
+    component: null,
   },
   {
     name: "Лаборатории",
     link: "laboratories",
     icon: <Biotech />,
-    page: <div> Лаборатории </div>,
+    component: null,
   },
 ];
 

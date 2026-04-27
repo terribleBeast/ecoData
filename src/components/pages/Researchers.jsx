@@ -1,29 +1,20 @@
 import {
   Typography,
   Box,
-  Paper,
   Dialog,
   ListItemButton,
   List,
   Link,
   Card,
-  CardContent,
-  CardHeader,
 } from "@mui/material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { getMockResearchers, getMockResearches } from "../../mock_data";
-import {
-  ChapterInfoTemplate,
-  ChapterHeaderTemplate,
-  ChaptersPaper,
-} from "../ChapterTemplate";
+import { ChapterInfoTemplate, DialogChapters, PageChapter } from "../Templates";
 import { DialogPanel } from "../DialogPanel";
-
-const REASERCHES_LIST_LEN = 1;
 
 const ResearcherFullInfo = ({ researcher, researches }) => {
   const chaptersInfo = [
@@ -64,8 +55,7 @@ const ResearcherFullInfo = ({ researcher, researches }) => {
   ];
   return (
     <DialogPanel>
-      <ChaptersPaper>
-        <ChapterHeaderTemplate chapterTitle="Исследования" />
+      <DialogChapters title={"Исследования"}>
         <Card style={{ overflowY: "auto", maxHeight: "60vh" }}>
           <List>
             {researcher.researches_id.map((item, index) => (
@@ -78,11 +68,10 @@ const ResearcherFullInfo = ({ researcher, researches }) => {
             ))}
           </List>
         </Card>
-      </ChaptersPaper>
-      <ChaptersPaper>
-        <ChapterHeaderTemplate chapterTitle="Профиль исследователя" />
+      </DialogChapters>
+      <DialogChapters title="Профиль исследователя">
         <ChapterInfoTemplate chaptersInfo={chaptersInfo} />
-      </ChaptersPaper>
+      </DialogChapters>
     </DialogPanel>
   );
 };
@@ -211,13 +200,9 @@ const Researchers = () => {
           />
         )}
       </Dialog>
-      <Typography className="page-title">Исследователи</Typography>
-      <Paper className="chapter">
-        <Typography className="chapter-title">
-          Таблица исследователей
-        </Typography>
+      <PageChapter title="Таблица исследователей">
         <ResearchersTable setSelectedResearcher={setSelectedResearcher} />
-      </Paper>
+      </PageChapter>
     </>
   );
 };

@@ -1,45 +1,13 @@
-import {
-  Box,
-  Button,
-  Dialog,
-  Paper,
-  Typography,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
+import { Box, Button, Dialog, Paper, Typography } from "@mui/material";
 
 import { useState } from "react";
-import { getPrediction, getSpecies } from "../../../api/api.js";
-import { getMockImages, getMockPrediction } from "../../../mock_data.js";
+import { getPrediction } from "../../../api/api.js";
+import { getMockImages } from "../../../mock_data.js";
 import FileDragAndDrop from "./DND";
 import { ImageCard, ImageFullInfo, imageStatus } from "./Image.jsx";
-import {
-  ChapterInfoTemplate,
-  ChapterHeaderTemplate,
-} from "../../ChapterTemplate.jsx";
+import { ChapterHeaderTemplate, PageChapter } from "../../Templates.jsx";
 import { classifiers } from "../../../entities.js";
-import { useEffect } from "react";
-
-const DropDownGenusMenu = ({ handleSelectClassifier }) => {
-  return (
-    <FormControl style={{ minWidth: "15%" }}>
-      <InputLabel>Род растения</InputLabel>
-      <Select defaultValue={"Яблоня"}>
-        {classifiers.map((item, index) => (
-          <MenuItem
-            key={index}
-            value={item.plant}
-            onClick={() => handleSelectClassifier(index)}
-          >
-            {item.plant}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
-  );
-};
+import { ClassifiersChapter, DropDownGenusMenu } from "./components";
 
 const ImagesContainer = ({
   images,
@@ -87,47 +55,7 @@ function getAllPrediction(images) {
   // TODO: implement function creating csv file
 }
 
-const ClassifiersChapter = () => {
-  const chaptersInfo = [];
-  // const classifiers = [];
-  // const [species, setSpecies] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // useEffect(async () => {
-  //   const response = await getSpecies("Яблоня");
-  //   console.log(response);
-  //   setSpecies(response.map((item) => item.species));
-
-  //   setLoading(false);
-  // }, []);
-  for (let i = 0; i < classifiers.length; i++) {
-    chaptersInfo.push({
-      title: classifiers[i].plant,
-      fields: [
-        {
-          name: "Сорта",
-          value: classifiers[i].varieties.join(", "),
-        },
-      ],
-    });
-  }
-  const [selectedGenus, setSelectedGenus] = useState([chaptersInfo[0]]);
-  // if (loading) return <div>Loading</div>;
-
-  return (
-    <Paper className="chapter">
-      <Box style={{ display: "flex", justifyContent: "space-between" }}>
-        <ChapterHeaderTemplate chapterTitle={"Роды и сорта растений"} />
-        <DropDownGenusMenu
-          handleSelectClassifier={(classifier_index) =>
-            setSelectedGenus([chaptersInfo[classifier_index]])
-          }
-        />
-      </Box>
-      <ChapterInfoTemplate chaptersInfo={selectedGenus} />
-    </Paper>
-  );
-};
-const Analyzator = () => {
+const Analyzer = () => {
   const [isOpenFileMenu, setIsOpenFileMenu] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [images, setImages] = useState(getMockImages(imageStatus.LOADING, 0));
@@ -147,6 +75,7 @@ const Analyzator = () => {
   const handleOpenImageFullInfo = (image) => {
     setSelectedImage(image);
   };
+
   const handleDownloadResult = (e) => {
     e.preventDefault();
 
@@ -220,41 +149,46 @@ const Analyzator = () => {
       >
         {selectedImage !== null && <ImageFullInfo image={selectedImage} />}
       </Dialog>
-      <Typography className="page-title">Анализатор</Typography>
       <ClassifiersChapter />
-      <Paper elevation={3} className="chapter">
-        <Box
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <ChapterHeaderTemplate chapterTitle="Изображения" />
-          <Box style={{ display: "flex", gap: "1rem" }}>
-            <Button
-              color="success"
-              variant="contained"
-              onClick={() => setIsOpenFileMenu(!isOpenFileMenu)}
-            >
-              <Typography>{isOpenFileMenu ? "Закрыть" : "Добавить"}</Typography>
-            </Button>
-            <Button
-              color="success"
-              variant="contained"
-              onClick={() => handleProcessImages(images)}
-            >
-              <Typography>Обработать</Typography>
-            </Button>
-            <Button
-              color="success"
-              variant="contained"
-              onClick={handleDownloadResult}
-            >
-              <Typography>Выгрузить</Typography>
-            </Button>
+
+      <PageChapter
+        headerComponent={
+          <Box
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <ChapterHeaderTemplate chapterTitle={"Изображения"} />
+            <Box style={{ display: "flex", gap: "1rem" }}>
+              <Button
+                color="success"
+                variant="contained"
+                onClick={() => setIsOpenFileMenu(!isOpenFileMenu)}
+              >
+                <Typography>
+                  {isOpenFileMenu ? "Закрыть" : "Добавить"}
+                </Typography>
+              </Button>
+              <Button
+                color="success"
+                variant="contained"
+                onClick={() => handleProcessImages(images)}
+              >
+                <Typography>Обработать</Typography>
+              </Button>
+              <Button
+                color="success"
+                variant="contained"
+                onClick={handleDownloadResult}
+              >
+                <Typography>Выгрузить</Typography>
+              </Button>
+            </Box>
           </Box>
-        </Box>
+        }
+      >
         {isOpenFileMenu && (
           <Box style={{ display: "flex" }}>
             <Box style={{ width: "80%" }}>
@@ -276,9 +210,9 @@ const Analyzator = () => {
           onOpen={handleOpenImageFullInfo}
           onDelete={handleDeleteImage}
         />
-      </Paper>
+      </PageChapter>
     </>
   );
 };
 
-export default Analyzator;
+export default Analyzer;

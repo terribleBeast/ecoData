@@ -1,7 +1,6 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
   Box,
-  Paper,
   Typography,
   List,
   ListItem,
@@ -9,16 +8,10 @@ import {
   ListItemText,
   IconButton,
   Avatar,
-  Button,
 } from "@mui/material";
 import { Delete, InsertDriveFile, CloudUpload } from "@mui/icons-material";
 import { useDropzone } from "react-dropzone";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 
 const FileDragAndDrop = ({
   updateImages,
