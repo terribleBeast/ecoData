@@ -15,8 +15,11 @@ export const ChapterHeaderTemplate = ({ chapterTitle }) => (
   </>
 );
 
-export const ChapterContentTemplate = ({ chaptersInfo }) => {
-  console.log(chaptersInfo);
+export const ChapterContentTemplate = ({ content }) => {
+  return <Box>{content}</Box>;
+};
+
+export const ChapterInfoTemplate = ({ chaptersInfo }) => {
   if (chaptersInfo === null) return;
 
   return (
@@ -25,14 +28,16 @@ export const ChapterContentTemplate = ({ chaptersInfo }) => {
         <Card style={{ marginBottom: "16px" }} key={chapterData.title + index}>
           <CardHeader title={chapterData.title} />
           <CardContent key={index}>
-            {chapterData.fields.map((field, index) => (
-              <Typography style={{ fontWeight: "bold" }} key={index}>
-                {field.name}:{" "}
-                <Typography style={{ display: "inline" }}>
-                  {field.value}
-                </Typography>
-              </Typography>
-            ))}
+            {Array.isArray(chapterData.fields)
+              ? chapterData.fields.map((field, index) => (
+                  <Typography style={{ fontWeight: "bold" }} key={index}>
+                    {field.name}:{" "}
+                    <Typography style={{ display: "inline" }}>
+                      {field.value}
+                    </Typography>
+                  </Typography>
+                ))
+              : chapterData.fields}
           </CardContent>
         </Card>
       ))}

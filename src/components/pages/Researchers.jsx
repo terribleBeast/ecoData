@@ -15,9 +15,9 @@ import {
   useMaterialReactTable,
 } from "material-react-table";
 import { useMemo, useState } from "react";
-import { getMockReaserchers, getMockReaserches } from "../../mock_data";
+import { getMockResearchers, getMockResearches } from "../../mock_data";
 import {
-  ChapterContentTemplate,
+  ChapterInfoTemplate,
   ChapterHeaderTemplate,
   ChaptersPaper,
 } from "../ChapterTemplate";
@@ -25,26 +25,26 @@ import { DialogPanel } from "../DialogPanel";
 
 const REASERCHES_LIST_LEN = 1;
 
-const ReasercherFullInfo = ({ reasercher }) => {
+const ResearcherFullInfo = ({ researcher, researches }) => {
   const chaptersInfo = [
     {
       title: "Общая информация",
       fields: [
         {
           name: "Фамилия",
-          value: reasercher.surname,
+          value: researcher.surname,
         },
         {
           name: "Имя",
-          value: reasercher.name,
+          value: researcher.name,
         },
         {
           name: "Отчество",
-          value: reasercher.patronomic,
+          value: researcher.patronymic,
         },
         {
           name: "Должность",
-          value: reasercher.job,
+          value: researcher.job,
         },
       ],
     },
@@ -53,11 +53,11 @@ const ReasercherFullInfo = ({ reasercher }) => {
       fields: [
         {
           name: "e-mail",
-          value: reasercher.email,
+          value: researcher.email,
         },
         {
           name: "Телефон",
-          value: reasercher.phone,
+          value: researcher.phone,
         },
       ],
     },
@@ -68,11 +68,12 @@ const ReasercherFullInfo = ({ reasercher }) => {
         <ChapterHeaderTemplate chapterTitle="Исследования" />
         <Card style={{ overflowY: "auto", maxHeight: "60vh" }}>
           <List>
-            {reasercher.reaserches_id.map((item, index) => (
+            {researcher.researches_id.map((item, index) => (
               <ListItemButton
-                to={`/researcher?reaserch_id=${reasercher.reaserches_id[index].id}`}
+                to={`/researches?research_id=${researches[item].id}`}
               >
-                {index + 1}.&nbsp;<Link>{item}</Link>
+                {index + 1}.&nbsp;
+                <Link>{researches[researcher.researches_id[index]].title}</Link>
               </ListItemButton>
             ))}
           </List>
@@ -80,23 +81,23 @@ const ReasercherFullInfo = ({ reasercher }) => {
       </ChaptersPaper>
       <ChaptersPaper>
         <ChapterHeaderTemplate chapterTitle="Профиль исследователя" />
-        <ChapterContentTemplate chaptersInfo={chaptersInfo} />
+        <ChapterInfoTemplate chaptersInfo={chaptersInfo} />
       </ChaptersPaper>
     </DialogPanel>
   );
 };
 
-const ReaserchersTable = ({ setSelectedReasercher }) => {
+const ResearchersTable = ({ setSelectedResearcher }) => {
   // TODO: optimizing this
-  const [data, setData] = useState(getMockReaserchers());
-  const [reasercherData, setReasercherData] = useState(getMockReaserches());
-  const [reaserchesListState, setReaserchesListState] = useState(
+  const [data, setData] = useState(getMockResearchers());
+  const [researchesData, setResearcherData] = useState(getMockResearches());
+  const [researchesListState, setResearchesListState] = useState(
     Array(data.length).fill(true),
   );
-  const handleToggleReaserches = (reaserchIndex) =>
-    setReaserchesListState(
-      reaserchesListState.map((item, index) => {
-        if (index == reaserchIndex) {
+  const handleToggleResearches = (researchIndex) =>
+    setResearchesListState(
+      researchesListState.map((item, index) => {
+        if (index == researchIndex) {
           return !item;
         }
       }),
@@ -117,11 +118,11 @@ const ReaserchersTable = ({ setSelectedReasercher }) => {
       header: "ФИО",
       Cell: ({ row }) => (
         <Typography
-          onClick={() => setSelectedReasercher(row.original)}
+          onClick={() => setSelectedResearcher(row.original)}
           style={{ cursor: "pointer" }}
         >
           {row.original.surname} {row.original.name[0]}.{" "}
-          {row.original.patronomic[0]}.
+          {row.original.patronymic[0]}.
         </Typography>
       ),
     },
@@ -144,31 +145,31 @@ const ReaserchersTable = ({ setSelectedReasercher }) => {
       header: "Работа",
     },
     {
-      accessorKey: "reaserches",
+      accessorKey: "researches",
       header: "Исследования",
       Cell: ({ row }) => (
         <Box style={{ overflowY: "auto", maxHeight: "20vh" }}>
           <List>
-            {row.original.reaserches_id
+            {row.original.researches_id
               // .slice(
               //   0,
-              //   reaserchesListState[row.id]
+              //   researchesListState[row.id]
               //     ? REASERCHES_LIST_LEN
-              //     : row.original.reaserches_id.length,
+              //     : row.original.researches_id.length,
               // )
               .map((item, index) => (
                 <ListItemButton
                   key={index}
-                  to={`/researcher?reaserch_id=${reasercherData[item].id}`}
+                  to={`/researches?research_id=${researchesData[item].id}`}
                 >
-                  {index + 1}.&nbsp;<Link>{reasercherData[item].title}</Link>
+                  {index + 1}.&nbsp;<Link>{researchesData[item].title}</Link>
                 </ListItemButton>
               ))}
 
-            {/* {row.original.reaserches_id.length > 3 ? (
-              <ListItemButton onClick={() => handleToggleReaserches(row.id)}>
+            {/* {row.original.researches_id.length > 3 ? (
+              <ListItemButton onClick={() => handleToggleResearches(row.id)}>
                 <Typography>
-                  {reaserchesListState[row.id] ? ">" : "<"}
+                  {researchesListState[row.id] ? ">" : "<"}
                 </Typography>
               </ListItemButton>
             ) : (
@@ -190,30 +191,35 @@ const ReaserchersTable = ({ setSelectedReasercher }) => {
   return <MaterialReactTable table={table} />;
 };
 
-const Reaserchers = () => {
-  const [selectedReasercher, setSelectedReasercher] = useState(null);
+const Researchers = () => {
+  const [selectedResearcher, setSelectedResearcher] = useState(null);
   // TODO: set name of chapter
   return (
     <>
       <Dialog
-        open={selectedReasercher !== null}
+        open={selectedResearcher !== null}
         onClose={() => {
-          setSelectedReasercher(null);
+          setSelectedResearcher(null);
         }}
         fullWidth={true}
         maxWidth="xl"
       >
-        {selectedReasercher !== null && (
-          <ReasercherFullInfo reasercher={selectedReasercher} />
+        {selectedResearcher !== null && (
+          <ResearcherFullInfo
+            researcher={selectedResearcher}
+            researches={getMockResearches()}
+          />
         )}
       </Dialog>
       <Typography className="page-title">Исследователи</Typography>
       <Paper className="chapter">
-        <Typography className="chapter-title">НАЗВАНИЕ</Typography>
-        <ReaserchersTable setSelectedReasercher={setSelectedReasercher} />
+        <Typography className="chapter-title">
+          Таблица исследователей
+        </Typography>
+        <ResearchersTable setSelectedResearcher={setSelectedResearcher} />
       </Paper>
     </>
   );
 };
 
-export default Reaserchers;
+export default Researchers;

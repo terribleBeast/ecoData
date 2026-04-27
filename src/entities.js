@@ -6,7 +6,7 @@ import {
   Assignment,
   ImageSearch,
 } from "@mui/icons-material";
-import Reaserchers from "./components/pages/Reaserchers";
+import Researchers from "./components/pages/Researchers";
 import Researches from "../src/components/pages/Researches";
 import Analyzator from "./components/pages/Analyzator/Analyzator";
 
@@ -21,7 +21,7 @@ export const pages = [
     name: "Исследователи",
     link: "researchers",
     icon: <PeopleAlt />,
-    page: <Reaserchers />,
+    page: <Researchers />,
   },
   {
     name: "Растения",
@@ -54,15 +54,19 @@ export const classifiers = [
     plant: "Яблоня",
     varieties: [
       "Феникс Уральское",
-      "Уральское наливное",
+      // "Уральское наливное",
       "Сувенир Алтая",
       "Подарок садоводам",
       "Заветное",
-      "Жебровское",
-      "Жар-птица",
-      "Алтайское румяное",
-      "Алтайское зимнее",
-      "Алтайская красавица",
+      // "Жебровское",
+      // "Жар-птица",
+      // "Алтайское румяное",
+      // "Алтайское зимнее",
+      // "Алтайская красавица",
     ],
+  },
+  {
+    plant: "Томаты",
+    varieties: ["Бычье сердце"],
   },
 ];

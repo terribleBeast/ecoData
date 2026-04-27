@@ -7,32 +7,118 @@ import {
   List,
   Link,
   Card,
-  CardContent,
-  CardHeader,
-  Button,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
 } from "@mui/material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import { useMemo, useState } from "react";
-import { getMockReaserchers, getMockReaserches } from "../../mock_data";
+import { useState, useEffect } from "react";
+import { getResearchPrediction } from "../../api/api";
+import { classifiers } from "../../entities";
 import {
-  ChapterContentTemplate,
+  getMockPrediction,
+  getMockResearchers,
+  getMockResearches,
+} from "../../mock_data";
+import {
+  ChapterInfoTemplate,
   ChapterHeaderTemplate,
   ChaptersPaper,
 } from "../ChapterTemplate";
 import { DialogPanel } from "../DialogPanel";
 
-const ReaserchFullInfo = ({ reaserch }) => {
+const ResearchFullInfo = ({ research }) => {
+  const researchers = getMockResearchers();
+  const activeResearchers = research.researchers_id.map(
+    (id) => researchers[id],
+  );
+
+  const ResultTable = () => {
+    const [rows, setRows] = useState([]);
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+      const getPrediction = async () => {
+        try {
+          const response = await getResearchPrediction(1);
+          console.log(response);
+          setRows((prevRows) => [...prevRows, ...response]);
+          // Or if you want to replace the initial "asd":
+          // setRows(response);
+        } catch (error) {
+          console.error("Error fetching prediction:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      // TODO: set delay
+      setTimeout(2000000);
+      getPrediction();
+    }, []);
+    if (loading) return <div>Loading ...</div>;
+
+    const header = rows[0];
+    // rows.map((item) => console.log(item));
+    // for (let i = 0; i < 10; i++) {
+    //   // console.log("Pred_0", getProdiction());
+    //   const predictions = getPrediction().then((data) => data);
+    //   // console.log("Pred", predictions);
+    //   // rows.push([i, `Изображение ${i}`, ...predictions]);
+    // }
+    return (
+      <Table>
+        <TableHead>
+          <TableRow>
+            {header.map((name, index) => (
+              <TableCell key={index}>{name}</TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.slice(1).map((row) => (
+            <TableRow>
+              {row.map((value) => (
+                <TableCell>{value}</TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
+  };
   const chaptersInfo = [
     {
       title: "Общая информация",
       fields: [
-        { name: "Название", value: reaserch.title },
-        { name: "Цель", value: reaserch.goal },
-        { name: "Статус", value: reaserch.status },
+        { name: "Название", value: research.title },
+        { name: "Цель", value: research.goal },
+        { name: "Статус", value: research.status },
       ],
+    },
+    {
+      title: "Участники",
+      fields: (
+        <Box style={{ overflowY: "auto", maxHeight: "20vh" }}>
+          <List>
+            {activeResearchers.map((researcher, index) => (
+              <ListItemButton
+                key={index}
+                to={`/researchers?researcher_id=${researcher.id}`}
+              >
+                {index + 1}.&nbsp;
+                <Link>
+                  {researcher.surname} {researcher.name[0]}.{" "}
+                  {researcher.patronymic[0]}.
+                </Link>
+              </ListItemButton>
+            ))}{" "}
+          </List>
+        </Box>
+      ),
     },
   ];
 
@@ -40,19 +126,23 @@ const ReaserchFullInfo = ({ reaserch }) => {
     <DialogPanel>
       <ChaptersPaper>
         <ChapterHeaderTemplate chapterTitle="Таблица результатов" />
-        <Card style={{ overflowY: "auto", maxHeight: "60vh" }}></Card>
+        <Card
+          style={{ overflowY: "auto", overflowX: "auto", maxHeight: "60vh" }}
+        >
+          <ResultTable />
+        </Card>
       </ChaptersPaper>
       <ChaptersPaper>
         <ChapterHeaderTemplate chapterTitle="Данные об исследовании" />
-        <ChapterContentTemplate chaptersInfo={chaptersInfo} />
+        <ChapterInfoTemplate chaptersInfo={chaptersInfo} />
       </ChaptersPaper>
     </DialogPanel>
   );
 };
 
-const ReaserchesTable = ({ setSelectedReaserch }) => {
-  const [data, setData] = useState(getMockReaserches());
-  const [reaserchersData, setReaserchersData] = useState(getMockReaserchers());
+const ResearchesTable = ({ setSelectedResearch }) => {
+  const [data, setData] = useState(getMockResearches());
+  const [researchersData, setResearchersData] = useState(getMockResearchers());
   const columns = [
     {
       accessorKey: "id",
@@ -69,7 +159,7 @@ const ReaserchesTable = ({ setSelectedReaserch }) => {
       header: "Название",
       Cell: ({ row }) => (
         <Typography
-          onClick={() => setSelectedReaserch(row.original)}
+          onClick={() => setSelectedResearch(row.original)}
           style={{ cursor: "pointer" }}
         >
           {row.original.title}
@@ -95,41 +185,24 @@ const ReaserchesTable = ({ setSelectedReaserch }) => {
       header: "Статус",
     },
     {
-      accessorKey: "reaserchers_id",
+      accessorKey: "researchers_id",
       header: "Исследователи",
       Cell: ({ row }) => (
         <Box style={{ overflowY: "auto", maxHeight: "20vh" }}>
           <List>
-            {row.original.reaserchers_id
-              // .slice(
-              //   0,
-              //   reaserchesListState[row.id]
-              //     ? REASERCHES_LIST_LEN
-              //     : row.original.reaserches_id.length,
-              // )
-              .map((item, index) => (
-                <ListItemButton
-                  key={index}
-                  to={`/researcher?reasercher_id=${reaserchersData[item].id}`}
-                >
-                  {index + 1}.&nbsp;
-                  <Link>
-                    {reaserchersData[item].surname}{" "}
-                    {reaserchersData[item].name[0]}.{" "}
-                    {reaserchersData[item].patronomic[0]}.
-                  </Link>
-                </ListItemButton>
-              ))}
-
-            {/* {row.original.reaserches_id.length > 3 ? (
-              <ListItemButton onClick={() => handleToggleReaserches(row.id)}>
-                <Typography>
-                  {reaserchesListState[row.id] ? ">" : "<"}
-                </Typography>
+            {row.original.researchers_id.map((item, index) => (
+              <ListItemButton
+                key={index}
+                to={`/researchers?researcher_id=${researchersData[item].id}`}
+              >
+                {index + 1}.&nbsp;
+                <Link>
+                  {researchersData[item].surname}{" "}
+                  {researchersData[item].name[0]}.{" "}
+                  {researchersData[item].patronymic[0]}.
+                </Link>
               </ListItemButton>
-            ) : (
-              <></>
-            )}*/}
+            ))}
           </List>
         </Box>
       ),
@@ -142,30 +215,30 @@ const ReaserchesTable = ({ setSelectedReaserch }) => {
   return <MaterialReactTable table={table} />;
 };
 
-const Research = () => {
-  const [selectedReaserch, setSelectedReaserch] = useState(null);
+const Researches = () => {
+  const [selectedResearch, setSelectedResearch] = useState(null);
   // TODO: set name of chapter
   return (
     <>
       <Dialog
-        open={selectedReaserch !== null}
+        open={selectedResearch !== null}
         onClose={() => {
-          setSelectedReaserch(null);
+          setSelectedResearch(null);
         }}
         fullWidth={true}
         maxWidth="xl"
       >
-        {selectedReaserch !== null && (
-          <ReaserchFullInfo reaserch={selectedReaserch} />
+        {selectedResearch !== null && (
+          <ResearchFullInfo research={selectedResearch} />
         )}
       </Dialog>
       <Typography className="page-title">Исследования</Typography>
       <Paper className="chapter">
-        <Typography className="chapter-title">НАЗВАНИЕ</Typography>
-        <ReaserchesTable setSelectedReaserch={setSelectedReaserch} />
+        <Typography className="chapter-title">Таблица исследований</Typography>
+        <ResearchesTable setSelectedResearch={setSelectedResearch} />
       </Paper>
     </>
   );
 };
 
-export default Research;
+export default Researches;

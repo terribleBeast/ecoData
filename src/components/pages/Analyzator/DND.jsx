@@ -37,6 +37,7 @@ const FileDragAndDrop = ({
           ? URL.createObjectURL(file)
           : undefined,
         name: file.name,
+        file: file,
         key: `file-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         predictions: null,
         status: defaultState,

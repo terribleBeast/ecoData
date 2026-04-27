@@ -55,7 +55,7 @@ export const ImageCard = ({
   }
 
   const prediction =
-    image.predictions !== null
+    image.predictions !== null && image.predictions !== undefined
       ? image.predictions.reduce((max, current) =>
           current.probability > max.probability ? current : max,
         )
@@ -101,12 +101,7 @@ export const ImageCard = ({
           {image.name !== undefined ? image.name : "Не найдено"}
         </Typography>
         <Typography className="image-prediction">
-          {prediction !== null
-            ? prediction.classifier +
-              " (" +
-              prediction.probability.toFixed(2) +
-              "%)"
-            : "Нет предсказаний"}
+          {prediction !== null ? prediction.classifier : "Нет предсказаний"}
         </Typography>
       </Box>
       <Box style={{ display: "flex", justifyContent: "end" }}>
@@ -150,7 +145,7 @@ export const ImageFullInfo = ({ image }) => {
     },
   ];
   const bestValue =
-    image.predictions !== null
+    image.predictions !== null && image.predictions !== undefined
       ? image.predictions.reduce((max, current) =>
           current.probability > max.probability ? current : max,
         )
@@ -248,7 +243,7 @@ export const ImageFullInfo = ({ image }) => {
                   {image.selectedClassifier}
                 </Typography>
               </Typography>
-              {image.predictions !== null ? (
+              {image.predictions !== null && image.predictions !== undefined ? (
                 <Table>
                   <TableHead>
                     <TableRow>

@@ -1,4 +1,4 @@
-export default class ReasercherModel {
+export default class ResearcherModel {
   constructor({
     id,
     email,
@@ -6,10 +6,10 @@ export default class ReasercherModel {
     role,
     name,
     surname,
-    patronomic,
+    patronymic,
     job,
     phone,
-    reaserches_id,
+    researches_id,
   }) {
     this.id = id;
     this.email = email;
@@ -17,9 +17,9 @@ export default class ReasercherModel {
     this.role = role;
     this.name = name;
     this.surname = surname;
-    this.patronomic = patronomic;
+    this.patronymic = patronymic;
     this.job = job;
     this.phone = phone;
-    this.reaserches_id = reaserches_id;
+    this.researches_id = researches_id;
   }
 }
