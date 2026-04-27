@@ -5,42 +5,31 @@ start frontend part
 ```
 npm start
 ```
-start test db
-```
-npm run start-server
-```
-### Development steps
-- [ ] Front-end
-  - [ ] Fix error in design
-    - [ ] Login / Sign in
+### Plan
+- [ ] Fix error in design
+  - [ ] Login / Sign in
+- [ ] Sections
+  - [ ] Loading state
   - [ ] Pages
-    - [ ] Analyzator
-      - [x] Create maket
-      - [x] Implement page
+    - [ ] Analyzer
       - [ ] to implement keystroke processing for moving between images
-      - [ ] to optimize rendering 
     - [ ] User profile
-      - [ ] Create maket
       - [ ] Implement page
+    - [ ] Researches
+    - [ ] Researchers
+    - [ ] Plants
+    - [ ] Laboratories
+    - [ ] Locations
+    - [ ] Login / Sign in
+      - [ ] Add "Forgot password"
     - [ ] Loading page
-    - [ ] Not valide page
-  - [ ] Increase performance
-    - [ ] Opitmize rendering (RegPage, LoginPage, Analyzator)
-  - [ ] Roling model 
-    - [ ] Add some additible elements (add new classifier)
-
-- [ ] Back-end
-  - [ ] FastAPI
-    - [ ] Endpoints
-      - [ ] User
-        - [ ] Log in
-        - [ ] Sign in
-        - [ ] Edit profile
-      - [ ] Analyzer
-        - [ ] Download img
-        - [ ] Processing on server (TOP)
-  - [ ] PostgreSQL
-  - [ ] Docker
-
+    - [ ] Not invalid page
+  - [ ] Error handling
+- [ ] Increase performance
+  - [ ] Optimize rendering (RegPage, LoginPage, Analyzer)
+  - [ ] Lazy load
+- [ ] Testing 
+  - [ ] Interface 
+  - [ ] Logic
 ### Comments
-Some errors in regisstration and login process.
+Some errors in registration and login process.
