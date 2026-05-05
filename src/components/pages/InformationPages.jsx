@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useNavigate, redi, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 export const LoadingPage = () => (
   <Box
