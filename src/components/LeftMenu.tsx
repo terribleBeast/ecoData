@@ -17,7 +17,7 @@ const LeftMenu = () => {
           selected={currLocation.pathname.slice(1) === item.link}
           key={item.link}
         >
-          {item.icon}
+          {<item.icon />}
           <Typography>{item.name}</Typography>
         </ListItemButton>
       )),

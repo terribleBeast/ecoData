@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import User from "../Models/User";
+import { type IUserData, User } from "../Models/User";
 const port = "8000";
 const host = `http://localhost:${port}`;
 
@@ -10,12 +10,13 @@ export const userApi = createApi({
 
   endpoints: (builder) => ({
     // get User
-    getUser: builder.query({
+    getUser: builder.query<IUserData, { email: string }>({
       query: (email) => `/users?email=${email}`,
-      transformResponse: (response) => {
-        return response[0];
-      }, // Extract the first user from the array
-      providesTags: (result, error, email) => [{ type: "User", id: email }], // Tag individual users
+      transformResponse: (response: { data: IUserData }): IUserData =>
+        response.data,
+      transformErrorResponse: (response: { status: string | number }) =>
+        response.status,
+      providesTags: ({ email }) => [{ type: "User", id: email }], // Tag individual users
     }),
 
     // get Users
@@ -24,16 +25,16 @@ export const userApi = createApi({
     }),
 
     // create User
-    createUser: builder.mutation({
+    createUser: builder.mutation<IUserData, { email: string }>({
       query: (user) => ({
         url: "/users",
         method: "POST",
         body: new User({ ...user }),
       }),
-      async onQueryStarted({ email }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ email }, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log(`User ${email} is created`);
+          console.log(`User ${data.email} is created. Old email ${email}`);
         } catch (error) {
           console.error("Error creating user:", error);
         }
@@ -63,7 +64,7 @@ export const userApi = createApi({
     // }),
 
     // update User Respond
-    updateUser: builder.mutation({
+    updateUser: builder.mutation<IUserData, IUserData>({
       query: (data) => ({
         url: `/users/${data.id}`,
         method: "PUT",
@@ -71,28 +72,26 @@ export const userApi = createApi({
       }),
       async onQueryStarted(data_, { dispatch, queryFulfilled }) {
         try {
-          const oldUser = dispatch(
-            userApi.endpoints.getUser.initiate(data_.id),
-          );
-          const { data } = await queryFulfilled({ ...oldUser, ...data_ });
+          const oldUserData = dispatch(
+            userApi.endpoints.getUser.initiate({ email: data_.email }),
+          ).unwrap();
+          const { data } = await queryFulfilled;
 
-          console.log(`Updating user with id: ${data_.id}`, oldUser); // Check data here.
+          console.log(`Updating user with id: ${data.id}`, oldUserData); // Check data here.
         } catch (error) {
           console.error("Error updating user:", error);
         }
       },
-      invalidatesTags: (result, error, { email }) => [
-        { type: "User", id: email },
-      ],
+      invalidatesTags: (data) => [{ type: "User", id: data.email }],
     }),
 
     deleteUserRespond: builder.mutation({
-      query: ({ id, email, password, info, responds }) => ({
+      query: ({ id, email, password_hash }) => ({
         url: `/users/${id}`,
         method: "PUT",
-        body: new User({ email, password, id, info, responds }),
+        body: new User({ email, password_hash, id }),
       }),
-      async onQueryStarted({ id, email }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ email }, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           console.log(`Put ${email}`, data); // Check data here.
@@ -100,9 +99,7 @@ export const userApi = createApi({
           console.error("Error deleting user respond:", error);
         }
       },
-      invalidatesTags: (result, error, { email }) => [
-        { type: "User", id: email },
-      ],
+      invalidatesTags: ({ email }) => [{ type: "User", id: email }],
     }),
 
     deleteUser: builder.mutation({
@@ -118,7 +115,7 @@ export const userApi = createApi({
           console.error("Error deleting user:", error);
         }
       },
-      invalidatesTags: (result, error, id) => [{ type: "User", id }],
+      invalidatesTags: (id) => [{ type: "User", id }],
     }),
   }),
 });

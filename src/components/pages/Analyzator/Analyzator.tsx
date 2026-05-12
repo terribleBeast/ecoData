@@ -3,16 +3,26 @@ import { Box, Button, Dialog, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 import { getPrediction } from "../../../api/api.js";
 import { getMockImages } from "../../../mock_data.js";
-import FileDragAndDrop from "./DND";
-import { ImageCard, ImageFullInfo, imageStatus } from "./Image.jsx";
+import FileDragAndDrop from "./DND.jsx";
+import { ImageCard, ImageFullInfo } from "./Image.jsx";
 import { ChapterHeaderTemplate, PageChapter } from "../../Templates.jsx";
 import { classifiers } from "../../../entities.js";
-import { ClassifiersChapter, DropDownGenusMenu } from "./components";
+import { ClassifiersChapter, DropDownGenusMenu } from "./components.jsx";
+import type { IImageData } from "../../../Models/Image.js";
+import { ImageStatus } from "../../../Models/Image.js";
 
-const ImagesContainer = ({
+interface ImagesContainerProps {
+  images: IImageData[];
+  onOpen: (image: IImageData) => void;
+  onDelete: (image: IImageData) => void;
+  onUpdate: (image: IImageData, newStatus: ImageStatus) => void;
+}
+
+const ImagesContainer: React.FC<ImagesContainerProps> = ({
   images,
   onOpen: handleOpenImageFullInfo,
   onDelete: handleDeleteImage,
+  onUpdate: handleUpdateImage,
 }) => (
   <Box
     className="cards-container"
@@ -25,6 +35,7 @@ const ImagesContainer = ({
       <ImageCard
         onOpen={(image) => handleOpenImageFullInfo(image)}
         onDelete={handleDeleteImage}
+        onUpdate={handleUpdateImage}
         image={image}
         key={index}
       />
@@ -32,7 +43,11 @@ const ImagesContainer = ({
   </Box>
 );
 
-const ClassifiersMenu = ({ handleSelectClassifier }) => {
+const ClassifiersMenu = ({
+  handleSelectClassifier,
+}: {
+  handleSelectClassifier: (classifier_index: number) => void;
+}) => {
   return (
     <Paper
       className="chapter"
@@ -51,32 +66,44 @@ const ClassifiersMenu = ({ handleSelectClassifier }) => {
   );
 };
 
-function getAllPrediction(images) {
-  // TODO: implement function creating csv file
-}
+// function getAllPrediction(images) {
+//   // TODO: implement function creating csv file
+// }
 
 const Analyzer = () => {
   const [isOpenFileMenu, setIsOpenFileMenu] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [images, setImages] = useState(getMockImages(imageStatus.LOADING, 0));
+  const [selectedImage, setSelectedImage] = useState<null | IImageData>(null);
+  const [images, setImages] = useState<IImageData[]>(
+    getMockImages(ImageStatus.LOADING, 0),
+  );
   const [selectedClassifier, setSelectedClassifier] = useState("Яблоня");
-  const handleSelectClassifier = (classifier_index) => {
+  const handleSelectClassifier = (classifier_index: number) => {
     setSelectedClassifier(classifiers[classifier_index].plant);
   };
 
-  const handleAddImages = (newImages) => {
+  const handleAddImages = (newImages: IImageData[]) => {
     setImages((images) => [...newImages, ...images]);
   };
-
-  const handleDeleteImage = (image) => {
+  const handleDeleteImage = (image: IImageData) => {
     setImages(images.filter((tmp_image) => tmp_image.key !== image.key));
   };
 
-  const handleOpenImageFullInfo = (image) => {
+  const handleOpenImageFullInfo = (image: IImageData) => {
     setSelectedImage(image);
   };
+  const handleUpdateImageStatus = (
+    image: IImageData,
+    newStatus: ImageStatus,
+  ) => {
+    setImages(
+      images.map((tmp_image) => {
+        if (tmp_image.key === image.key) tmp_image.status = newStatus;
+        return tmp_image;
+      }),
+    );
+  };
 
-  const handleDownloadResult = (e) => {
+  const handleDownloadResult = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
 
     if (!images || images.length === 0) {
@@ -98,7 +125,7 @@ const Analyzer = () => {
     const data = [["Id", "Изображение", "Род", ...species].join(",")];
 
     images.map((image, index) => {
-      let row = [index + 1, image.name || "Unknown", image.selectedClassifier];
+      const row = [index + 1, image.name || "Unknown", image.classifier];
 
       species.forEach((speciesName) => {
         const prediction = image.predictions?.find(
@@ -122,17 +149,29 @@ const Analyzer = () => {
     URL.revokeObjectURL(url);
   };
 
-  const handleProcessImages = async (images) => {
-    for (let i = 0; i < images.length; i++) {
-      if (images[i].status === imageStatus.UPLOADED) {
-        images[i].predictions = await getPrediction(images[i]).then(
-          (data) => data,
-        );
-        images[i].status = imageStatus.PROCESSED;
-      }
-
-      setImages([...images]);
-    }
+  const handleProcessImages = async (images: IImageData[]) => {
+    const updatedImages = await Promise.all(
+      images
+        .filter((image) => image.status === ImageStatus.UPLOADED)
+        .map(async (image) => {
+          try {
+            const predictions = await getPrediction(image);
+            return { ...image, predictions, status: ImageStatus.PROCESSED };
+          } catch (e) {
+            console.log(e);
+            return { ...image, status: ImageStatus.ERROR };
+          }
+        }),
+    );
+    // for (let i = 0; i < images.length; i++) {
+    //   if (images[i].status === ImageStatus.UPLOADED) {
+    //     images[i].predictions = await getPrediction(images[i]).then(
+    //       (data) => data,
+    //     );
+    //     images[i].status = ImageStatus.PROCESSED;
+    //   }
+    // }
+    setImages([...updatedImages]);
 
     return images;
   };
@@ -152,6 +191,7 @@ const Analyzer = () => {
       <ClassifiersChapter />
 
       <PageChapter
+        title={undefined}
         headerComponent={
           <Box
             style={{
@@ -179,6 +219,7 @@ const Analyzer = () => {
                 <Typography>Обработать</Typography>
               </Button>
               <Button
+                href=""
                 color="success"
                 variant="contained"
                 onClick={handleDownloadResult}
@@ -194,7 +235,7 @@ const Analyzer = () => {
             <Box style={{ width: "80%" }}>
               <FileDragAndDrop
                 updateImages={handleAddImages}
-                defaultState={imageStatus.LOADING}
+                defaultStatus={ImageStatus.LOADING}
                 selectedClassifier={selectedClassifier}
               />
             </Box>
@@ -209,6 +250,7 @@ const Analyzer = () => {
           images={images}
           onOpen={handleOpenImageFullInfo}
           onDelete={handleDeleteImage}
+          onUpdate={handleUpdateImageStatus}
         />
       </PageChapter>
     </>

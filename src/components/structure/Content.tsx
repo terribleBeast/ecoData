@@ -6,7 +6,7 @@ import { Outlet } from "react-router";
 function Content() {
   return (
     <Box>
-      <main style={{ height: "100hv" }}>
+      <main style={{ height: "100vh" }}>
         <LeftMenu></LeftMenu>
         <div className="content-surface">
           <Outlet />

@@ -10,14 +10,24 @@ import {
 import {
   MaterialReactTable,
   useMaterialReactTable,
+  type MRT_ColumnDef,
 } from "material-react-table";
 import { useState } from "react";
 import { getMockResearchers, getMockResearches } from "../../mock_data";
 import { ChapterInfoTemplate, DialogChapters, PageChapter } from "../Templates";
 import { DialogPanel } from "../DialogPanel";
+import type { IResearchData } from "../../Models/Research";
+import type { IResearcherData } from "../../Models/Researcher";
+import type { IChapterData } from "./Analyzator/components";
 
-const ResearcherFullInfo = ({ researcher, researches }) => {
-  const chaptersInfo = [
+const ResearcherFullInfo = ({
+  researcher,
+  researches,
+}: {
+  researcher: IResearcherData;
+  researches: IResearchData[];
+}) => {
+  const chaptersInfo: IChapterData[] = [
     {
       title: "Общая информация",
       fields: [
@@ -60,7 +70,7 @@ const ResearcherFullInfo = ({ researcher, researches }) => {
           <List>
             {researcher.researches_id.map((item, index) => (
               <ListItemButton
-                to={`/researches?research_id=${researches[item].id}`}
+                href={`/researches?research_id=${researches[item].id}`}
               >
                 {index + 1}.&nbsp;
                 <Link>{researches[researcher.researches_id[index]].title}</Link>
@@ -76,14 +86,18 @@ const ResearcherFullInfo = ({ researcher, researches }) => {
   );
 };
 
-const ResearchersTable = ({ setSelectedResearcher }) => {
+const ResearchersTable = ({
+  setSelectedResearcher,
+}: {
+  setSelectedResearcher: (researcher: IResearcherData) => void;
+}) => {
   // TODO: optimizing this
   const [data, setData] = useState(getMockResearchers());
   const [researchesData, setResearcherData] = useState(getMockResearches());
   const [researchesListState, setResearchesListState] = useState(
     Array(data.length).fill(true),
   );
-  const handleToggleResearches = (researchIndex) =>
+  const handleToggleResearches = (researchIndex: number) =>
     setResearchesListState(
       researchesListState.map((item, index) => {
         if (index == researchIndex) {
@@ -91,7 +105,7 @@ const ResearchersTable = ({ setSelectedResearcher }) => {
         }
       }),
     );
-  const columns = [
+  const columns: MRT_ColumnDef<IResearcherData>[] = [
     {
       accessorKey: "id",
       header: "№",
@@ -149,7 +163,7 @@ const ResearchersTable = ({ setSelectedResearcher }) => {
               .map((item, index) => (
                 <ListItemButton
                   key={index}
-                  to={`/researches?research_id=${researchesData[item].id}`}
+                  href={`/researches?research_id=${researchesData[item].id}`}
                 >
                   {index + 1}.&nbsp;<Link>{researchesData[item].title}</Link>
                 </ListItemButton>
@@ -181,7 +195,8 @@ const ResearchersTable = ({ setSelectedResearcher }) => {
 };
 
 const Researchers = () => {
-  const [selectedResearcher, setSelectedResearcher] = useState(null);
+  const [selectedResearcher, setSelectedResearcher] =
+    useState<IResearcherData | null>(null);
   // TODO: set name of chapter
   return (
     <>

@@ -7,45 +7,53 @@ import {
   ImageSearch,
 } from "@mui/icons-material";
 import Researchers from "./components/pages/Researchers";
-import Researches from "../src/components/pages/Researches";
+import Researches from "./components/pages/Researches";
 import Analyzer from "./components/pages/Analyzator/Analyzator";
+import { LoadingPage } from "./components/pages/InformationPages";
 
-export const pages = [
+interface PageData {
+  name: string;
+  link: string;
+  icon: React.ComponentType;
+  component: React.ComponentType;
+}
+
+export const pages: PageData[] = [
   {
     name: "Исследования",
     link: "researches",
-    icon: <Assignment />,
-    component: <Researches />,
+    icon: Assignment,
+    component: Researches,
   },
   {
     name: "Исследователи",
     link: "researchers",
-    icon: <PeopleAlt />,
-    component: <Researchers />,
+    icon: PeopleAlt,
+    component: Researchers,
   },
   {
     name: "Растения",
     link: "plants",
-    icon: <Grass />,
-    component: null,
+    icon: Grass,
+    component: LoadingPage,
   },
   {
     name: "Анализатор",
     link: "analyzer",
-    icon: <ImageSearch />,
-    component: <Analyzer />,
+    icon: ImageSearch,
+    component: Analyzer,
   },
   {
     name: "Локации",
     link: "locations",
-    icon: <LocationOn />,
-    component: null,
+    icon: LocationOn,
+    component: LoadingPage,
   },
   {
     name: "Лаборатории",
     link: "laboratories",
-    icon: <Biotech />,
-    component: null,
+    icon: Biotech,
+    component: LoadingPage,
   },
 ];
 

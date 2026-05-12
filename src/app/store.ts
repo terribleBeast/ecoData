@@ -10,3 +10,4 @@ export const store = configureStore({
   // middleware: (getDefaultMiddleware) =>
   //   getDefaultMiddleware().concat(userApi.middleware),
 });
+export type IRootState = ReturnType<typeof store.getState>;

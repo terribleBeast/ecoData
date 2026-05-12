@@ -1,32 +1,34 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router";
+import App from "./App.tsx";
 import { store } from "./app/store";
+import { BrowserRouter } from "react-router";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./app/theme";
 import { CssBaseline } from "@mui/material";
 import { generateMockDB } from "./mock_data";
+import { StrictMode } from "react";
 
 generateMockDB();
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement,
+);
 root.render(
-  // <React.StrictMode>
-  <ThemeProvider theme={theme}>
-    <CssBaseline />
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </ThemeProvider>,
-  // </React.StrictMode
+  <StrictMode>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
+    </ThemeProvider>
+    ,
+  </StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// reportWebVitals();

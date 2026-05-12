@@ -1,6 +1,6 @@
 import { Typography, AppBar, Toolbar, Button, Box } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { memo } from "react";
+// import { memo } from "react";
 // import MenuIcon from '@mui/icons-material/Menu';
 import SpaIcon from "@mui/icons-material/Spa";
 import { Link } from "react-router";
@@ -28,7 +28,7 @@ function Header() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
-            LinkComponent={Link}
+            component={Link}
             to="/"
           >
             <SpaIcon />
@@ -43,7 +43,7 @@ function Header() {
               <Button
                 color="inherit"
                 onClick={() => {
-                  dispatch(toLogOut);
+                  dispatch(toLogOut());
                   navigate("/auth");
                 }}
                 style={{

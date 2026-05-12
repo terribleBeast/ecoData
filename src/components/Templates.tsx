@@ -6,18 +6,31 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { type IChapterData } from "./pages/Analyzator/components";
 
-export const ChapterHeaderTemplate = ({ chapterTitle }) => (
+export const ChapterHeaderTemplate = ({
+  chapterTitle,
+}: {
+  chapterTitle: string;
+}) => (
   <Typography className="chapter-title" style={{ alignSelf: "center" }}>
     {chapterTitle}
   </Typography>
 );
 
-export const ChapterContentTemplate = ({ content }) => {
+export const ChapterContentTemplate = ({
+  content,
+}: {
+  content: React.ReactNode;
+}) => {
   return <Box>{content}</Box>;
 };
 
-export const ChapterInfoTemplate = ({ chaptersInfo }) => {
+export const ChapterInfoTemplate = ({
+  chaptersInfo,
+}: {
+  chaptersInfo: IChapterData[];
+}) => {
   if (chaptersInfo === null) return;
 
   return (
@@ -43,7 +56,13 @@ export const ChapterInfoTemplate = ({ chaptersInfo }) => {
   );
 };
 
-export const DialogChapters = ({ title, children }) => (
+export const DialogChapters = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => (
   <Paper
     elevation={3}
     style={{
@@ -60,14 +79,29 @@ export const DialogChapters = ({ title, children }) => (
   </Paper>
 );
 
-export const Page = ({ title, children }) => (
+export const Page = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) => (
   <Box className="page-layout">
     <Typography className="page-title">{title}</Typography>
     {children}
   </Box>
 );
 
-export const PageChapter = ({ title, headerComponent, children }) => (
+export const PageChapter = ({
+  title,
+  headerComponent,
+  children,
+}: {
+  title?: string;
+  headerComponent?: React.ReactNode;
+
+  children: React.ReactNode;
+}) => (
   <Paper elevation={3} className="chapter">
     {headerComponent !== undefined ? (
       headerComponent

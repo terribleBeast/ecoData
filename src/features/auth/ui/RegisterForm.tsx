@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 // import { toLogIn } from "../features/user/userSlice"
 // import { createUser, getUser } from "../database/CRUD"
@@ -11,7 +11,7 @@ import { toLogIn } from "../../user/userSlice";
 const RegisterForm = () => {
   const [getUser] = useLazyGetUserQuery();
   const [createUser] = useCreateUserMutation();
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
   const { register, handleSubmit, watch } = useForm();
@@ -38,14 +38,14 @@ const RegisterForm = () => {
     } catch (err) {
       console.log(err);
     }
-  }, [email, password, name, dispatch, navigate]);
+  }, [email, password, name, dispatch, navigate, createUser, getUser]);
 
   return (
     <div className="reg-form">
       <Typography className="reg-form-title">Регистрация</Typography>
       <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
         <Grid sx={{ width: "100%", "& > *": { width: "100%" } }}>
-          <Grid item>
+          <Grid size={12}>
             <Typography className="reg-form-field-name">Имя</Typography>
             <TextField
               {...register("name", {})}
@@ -54,7 +54,7 @@ const RegisterForm = () => {
             />
           </Grid>
 
-          <Grid item>
+          <Grid size={12}>
             <Typography>Email</Typography>
             <TextField
               {...register("email", {
@@ -69,27 +69,23 @@ const RegisterForm = () => {
               className="reg-input"
             />
           </Grid>
-          <Grid item>
+          <Grid size={12}>
             <Typography className="form-field-text">Пароль</Typography>
             <TextField
-              {...register(
-                "password",
-
-                {
-                  required: true,
-                  minLenght: 4,
-                },
-              )}
+              {...register("password", {
+                required: true,
+                // minLength: 4
+              })}
               type="password"
               className="reg-input"
             />
           </Grid>
-          <Grid item>
+          <Grid size={12}>
             <Button type="submit" className="reg-button">
               Зарегистрироваться
             </Button>
           </Grid>
-          <Grid item></Grid>
+          <Grid size={12}></Grid>
         </Grid>
       </form>
     </div>

@@ -1,23 +1,24 @@
 import { useForm } from "react-hook-form";
 import { Button, Grid, TextField, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 
 // import { toLogIn } from "../features/user/userSlice"
 import { useLazyGetUserQuery } from "../../api/usersAPI";
 import { toLogIn } from "../../user/userSlice";
+import type { IUserData } from "../../../Models/User";
 
 // import './../App.css'
 
 const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const [error, setError] = useState("Error input");
 
   const {
-    register,
-    handleSubmit,
+    // register,
+    // handleSubmit,
     // formState: { errors },
     watch,
   } = useForm();
@@ -34,22 +35,23 @@ const LoginForm = () => {
   //
   const [getUser] = useLazyGetUserQuery();
 
-  const onInput = useCallback(async () => {
-    setError("Error input");
-  }, []);
+  // const onInput = useCallback(async () => {
+  //   setError("Error input");
+  // }, []);
   const onChange = async () => {
-    setError("Error input");
+    setError(error);
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     // Working without async await
     //
     // event.preventDefault();
     console.log("onSubmit");
     // TODO: error proccesing
     try {
-      const user = getUser(email).unwrap();
-      if (user !== undefined && user.password === password) {
+      const user: IUserData = await getUser(email).unwrap();
+
+      if (user !== undefined && user.password_hash === password) {
         dispatch(
           toLogIn({
             login: user.email,
@@ -79,7 +81,7 @@ const LoginForm = () => {
         onSubmit={onSubmit}
       >
         <Grid sx={{ width: "100%", "& > *": { width: "100%" } }}>
-          <Grid item>
+          <Grid size={12}>
             <Typography className="form-field-text">Email</Typography>
 
             <TextField
@@ -97,7 +99,7 @@ const LoginForm = () => {
               // error={error}
             />
           </Grid>
-          <Grid item>
+          <Grid size={12}>
             <Typography className="form-field-text">Пароль</Typography>
             <TextField
               // {...register("password", {
@@ -109,7 +111,7 @@ const LoginForm = () => {
               // error={error}
             />
           </Grid>
-          <Grid item>
+          <Grid size={12}>
             <Button type="submit" className="login-button">
               Войти
             </Button>

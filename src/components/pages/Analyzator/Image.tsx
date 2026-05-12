@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { Paper, Box, Typography } from "@mui/material";
 import {
   TableCell,
@@ -13,43 +12,48 @@ import {
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { DialogPanel } from "../../DialogPanel";
+import {
+  ImageStatus,
+  type IImageData,
+  type IPrediction,
+} from "../../../Models/Image";
+import type { MRT_ColumnDef } from "material-react-table";
 
-export const imageStatus = {
-  LOADING: "Загрузка",
-  UPLOADED: "Загружен",
-  PROCESSING: "В обработке",
-  PROCESSED: "Обработан",
-  ERROR: "Ошибка",
-  UNKNOWN: "Неизвестно",
-};
+interface ImageCardProps {
+  image: IImageData;
+  onDelete: (image: IImageData) => void;
+  onOpen: (image: IImageData) => void;
+  onUpdate: (image: IImageData, newStatus: ImageStatus) => void;
+}
 
-export const ImageCard = ({
+export const ImageCard: React.FC<ImageCardProps> = ({
   image,
   onDelete: handleDelete,
   onOpen: handleOpenImageFullInfo,
+  onUpdate: handleUpdateImage,
 }) => {
   console.log("ImageCard");
   let borderStyle = "0 0 4px";
   switch (image.status) {
-    case imageStatus.LOADING:
+    case ImageStatus.LOADING:
       borderStyle = borderStyle.concat(" #3C9DD0");
       // TODO: add loading stage
-      image.status = imageStatus.UPLOADED;
+      handleUpdateImage(image, ImageStatus.UPLOADED);
       break;
-    case imageStatus.UPLOADED:
+    case ImageStatus.UPLOADED:
       borderStyle = borderStyle.concat(" yellow");
       break;
-    case imageStatus.PROCESSING:
+    case ImageStatus.PROCESSING:
       borderStyle = borderStyle.concat(" blue");
       break;
-    case imageStatus.PROCESSED:
+    case ImageStatus.PROCESSED:
       borderStyle = borderStyle.concat(" green");
       break;
-    case imageStatus.ERROR:
+    case ImageStatus.ERROR:
       borderStyle = borderStyle.concat(" red");
       break;
     default:
-      // imageStatus.UNKNOWN
+      // ImageStatus.UNKNOWN
       borderStyle = borderStyle.concat(" gray");
       break;
   }
@@ -118,7 +122,7 @@ export const ImageCard = ({
   );
 };
 
-export const ImageFullInfo = ({ image }) => {
+export const ImageFullInfo = ({ image }: { image: IImageData }) => {
   console.log("image FULL");
 
   // TODO: implement handle keydown
@@ -134,14 +138,14 @@ export const ImageFullInfo = ({ image }) => {
   //     window.removeEventListener("keydown", handleKeyDown);
   //   };
   // }, []);
-  const columns = [
+  const columns: MRT_ColumnDef<IPrediction>[] = [
     {
-      Header: "Классификатор",
-      accessor: "classifier",
+      header: "Классификатор",
+      // accessor: "classifier",
     },
     {
-      Header: "Вероятность",
-      accessor: "probability",
+      header: "Вероятность",
+      // accessor: "probability",
     },
   ];
   const bestValue =
@@ -185,7 +189,7 @@ export const ImageFullInfo = ({ image }) => {
             Лупа
           </Button>
           <Button
-            href={image.src}
+            href={image.src !== undefined ? image.src : ""}
             target="_blank"
             variant="contained"
             color="success"
@@ -240,7 +244,7 @@ export const ImageFullInfo = ({ image }) => {
               <Typography style={{ fontWeight: "bold" }} gutterBottom>
                 Выбранный классификатор:{" "}
                 <Typography style={{ display: "inline" }}>
-                  {image.selectedClassifier}
+                  {image.classifier}
                 </Typography>
               </Typography>
               {image.predictions !== null && image.predictions !== undefined ? (
@@ -248,7 +252,7 @@ export const ImageFullInfo = ({ image }) => {
                   <TableHead>
                     <TableRow>
                       {columns.map((column, index) => (
-                        <TableCell key={index}>{column.Header}</TableCell>
+                        <TableCell key={index}>{column.header}</TableCell>
                       ))}
                     </TableRow>
                   </TableHead>
@@ -258,6 +262,7 @@ export const ImageFullInfo = ({ image }) => {
                         key={index}
                         style={{
                           backgroundColor:
+                            bestValue &&
                             prediction.probability === bestValue.probability
                               ? "lightgreen"
                               : "",

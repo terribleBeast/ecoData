@@ -15,6 +15,8 @@ import {
 import {
   MaterialReactTable,
   useMaterialReactTable,
+  type MRT_ColumnDef,
+  type MRT_RowData,
 } from "material-react-table";
 import { useState, useEffect } from "react";
 import { getResearchPrediction } from "../../api/api";
@@ -22,66 +24,71 @@ import { getMockResearchers, getMockResearches } from "../../mock_data";
 import { ChapterInfoTemplate, DialogChapters, PageChapter } from "../Templates";
 import { DialogPanel } from "../DialogPanel";
 import { LoadingPage } from "./InformationPages";
+import type { IResearchData } from "../../Models/Research";
+import type { IPrediction } from "../../Models/Image";
+import type { IChapterData } from "./Analyzator/components";
 
-const ResearchFullInfo = ({ research }) => {
+export interface ITableData {
+  headers: string[];
+  rows: IPrediction[][];
+}
+const ResultTable = () => {
+  const [tableData, setTableData] = useState<ITableData>({
+    headers: [],
+    rows: [],
+  });
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const getPrediction = async () => {
+      try {
+        const response = await getResearchPrediction(1);
+        console.log(response);
+        setTableData({
+          headers: response.headers,
+          rows: response.rows,
+        });
+        // Or if you want to replace the initial "asd":
+        // setRows(response);
+      } catch (error) {
+        console.error("Error fetching prediction:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    // TODO: set delay
+    setTimeout(() => {}, 2000000);
+    getPrediction();
+  }, []);
+  if (loading) return <LoadingPage />;
+  return (
+    <Table>
+      <TableHead>
+        <TableRow>
+          {tableData.headers.map((name, index) => (
+            <TableCell key={index}>{name}</TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {tableData.rows.map((row, index) => (
+          <TableRow key={index}>
+            {row.map((value, index) => (
+              <TableCell key={index}>{value.probability}</TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+const ResearchFullInfo = ({ research }: { research: IResearchData | null }) => {
+  if (research === null) return;
   const researchers = getMockResearchers();
   const activeResearchers = research.researchers_id.map(
     (id) => researchers[id],
   );
 
-  const ResultTable = () => {
-    const [rows, setRows] = useState([]);
-    const [loading, setLoading] = useState(true);
-    useEffect(() => {
-      const getPrediction = async () => {
-        try {
-          const response = await getResearchPrediction(1);
-          console.log(response);
-          setRows((prevRows) => [...prevRows, ...response]);
-          // Or if you want to replace the initial "asd":
-          // setRows(response);
-        } catch (error) {
-          console.error("Error fetching prediction:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      // TODO: set delay
-      setTimeout(2000000);
-      getPrediction();
-    }, []);
-    if (loading) return <LoadingPage />;
-
-    const header = rows[0];
-    // rows.map((item) => console.log(item));
-    // for (let i = 0; i < 10; i++) {
-    //   // console.log("Pred_0", getProdiction());
-    //   const predictions = getPrediction().then((data) => data);
-    //   // console.log("Pred", predictions);
-    //   // rows.push([i, `Изображение ${i}`, ...predictions]);
-    // }
-    return (
-      <Table>
-        <TableHead>
-          <TableRow>
-            {header.map((name, index) => (
-              <TableCell key={index}>{name}</TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.slice(1).map((row, index) => (
-            <TableRow key={index}>
-              {row.map((value, index) => (
-                <TableCell key={index}>{value}</TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    );
-  };
-  const chaptersInfo = [
+  const chaptersInfo: IChapterData[] = [
     {
       title: "Общая информация",
       fields: [
@@ -98,7 +105,7 @@ const ResearchFullInfo = ({ research }) => {
             {activeResearchers.map((researcher, index) => (
               <ListItemButton
                 key={index}
-                to={`/researchers?researcher_id=${researcher.id}`}
+                href={`/researchers?researcher_id=${researcher.id}`}
               >
                 {index + 1}.&nbsp;
                 <Link>
@@ -129,14 +136,19 @@ const ResearchFullInfo = ({ research }) => {
   );
 };
 
-const ResearchesTable = ({ setSelectedResearch }) => {
+const ResearchesTable = ({
+  setSelectedResearch,
+}: {
+  setSelectedResearch: (research: IResearchData) => void;
+}) => {
   const [data, setData] = useState(getMockResearches());
   const [researchersData, setResearchersData] = useState(getMockResearchers());
-  const columns = [
+
+  const columns: MRT_ColumnDef<IResearchData>[] = [
     {
       accessorKey: "id",
       header: "№",
-      accessorFn: (dataRow) => dataRow.id + 1,
+      accessorFn: (dataRow: MRT_RowData) => dataRow.id + 1,
       minSize: 50,
       size: 70,
       maxSize: 100,
@@ -182,7 +194,7 @@ const ResearchesTable = ({ setSelectedResearch }) => {
             {row.original.researchers_id.map((item, index) => (
               <ListItemButton
                 key={index}
-                to={`/researchers?researcher_id=${researchersData[item].id}`}
+                href={`/researchers?researcher_id=${researchersData[item].id}`}
               >
                 {index + 1}.&nbsp;
                 <Link>
@@ -205,7 +217,8 @@ const ResearchesTable = ({ setSelectedResearch }) => {
 };
 
 const Researches = () => {
-  const [selectedResearch, setSelectedResearch] = useState(null);
+  const [selectedResearch, setSelectedResearch] =
+    useState<IResearchData | null>(null);
   // TODO: set name of chapter
   return (
     <>
@@ -217,9 +230,7 @@ const Researches = () => {
         fullWidth={true}
         maxWidth="xl"
       >
-        {selectedResearch !== null && (
-          <ResearchFullInfo research={selectedResearch} />
-        )}
+        {selectedResearch && <ResearchFullInfo research={selectedResearch} />}
       </Dialog>
 
       <PageChapter title="Таблица исследований">

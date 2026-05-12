@@ -5,13 +5,12 @@ import { Routes, Route } from "react-router";
 import React, { Suspense } from "react";
 import { pages } from "./entities";
 import AuthForm from "./components/pages/Auth";
-import { Typography } from "@mui/material";
 import {
   LoadingPage,
   NotValidRoutePage,
 } from "./components/pages/InformationPages";
 
-const Home = React.lazy(() => import("./components/pages/Home"));
+const Home = React.lazy(() => import("./components/pages/Home.tsx"));
 
 function App() {
   return (
@@ -25,7 +24,7 @@ function App() {
             {pages.map((item, index) => (
               <Route
                 path={item.link}
-                element={<Page title={item.name}>{item.component}</Page>}
+                element={<Page title={item.name}>{<item.component />}</Page>}
                 key={index}
               />
             ))}

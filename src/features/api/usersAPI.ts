@@ -2,18 +2,12 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const port = "3001";
 const host = `http://localhost:${port}`;
-
-class User {
-  constructor({ email, password }) {
-    this.email = email;
-    this.password = password;
-  }
-}
+// import { UserData } from "../../Models/User";
 
 export const userApi = createApi({
   reducerPath: "userApi",
   baseQuery: fetchBaseQuery({ baseUrl: host }),
-  tagTypes: ["User"], // Define tag types for caching and invalidation
+  tagTypes: ["UserData"], // Define tag types for caching and invalidation
 
   endpoints: (builder) => ({
     // get User
@@ -25,7 +19,7 @@ export const userApi = createApi({
 
         return response[0];
       }, // Extract the first user from the array
-      providesTags: (result, error, email) => [{ type: "User", id: email }], // Tag individual users
+      providesTags: (result, error, email) => [{ type: "UserData", id: email }], // Tag individual users
     }),
 
     // create User
@@ -45,7 +39,7 @@ export const userApi = createApi({
       //         console.error("Error creating user:", error);
       //     }
       // },
-      invalidatesTags: ["User"],
+      invalidatesTags: ["UserData"],
     }),
   }),
 });

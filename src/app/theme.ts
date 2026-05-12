@@ -20,7 +20,11 @@ export const theme = createTheme({
     },
     MuiTypography: {
       // fontSize: 16,
-      fontFamily: "Segoe UI",
+      styleOverrides: {
+        root: () => ({
+          fontFamily: "Segoe UI",
+        }),
+      },
     },
   },
 });

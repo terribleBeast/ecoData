@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router";
 
-let TIMEOUT = 500;
+const TIMEOUT = 500;
 const ChapterCards = () => {
   const cardsActions = [
     {
