@@ -37,7 +37,6 @@ export const ImageCard: React.FC<ImageCardProps> = ({
   switch (image.status) {
     case ImageStatus.LOADING:
       borderStyle = borderStyle.concat(" #3C9DD0");
-      // TODO: add loading stage
       handleUpdateImage(image, ImageStatus.UPLOADED);
       break;
     case ImageStatus.UPLOADED:
@@ -53,7 +52,6 @@ export const ImageCard: React.FC<ImageCardProps> = ({
       borderStyle = borderStyle.concat(" red");
       break;
     default:
-      // ImageStatus.UNKNOWN
       borderStyle = borderStyle.concat(" gray");
       break;
   }
@@ -67,7 +65,7 @@ export const ImageCard: React.FC<ImageCardProps> = ({
   return (
     <Paper
       key={image.key}
-      style={{
+      sx={{
         padding: "0.5rem",
         width: "150px",
         boxShadow: borderStyle,
@@ -77,7 +75,7 @@ export const ImageCard: React.FC<ImageCardProps> = ({
       }}
     >
       <Box
-        style={{
+        sx={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -98,19 +96,16 @@ export const ImageCard: React.FC<ImageCardProps> = ({
       </Box>
 
       <Box className="image-overlay">
-        <Typography
-          className="image-title"
-          style={{ overflowWrap: "break-word", fontWeight: "bold" }}
-        >
+        <Typography sx={{ overflowWrap: "break-word", fontWeight: "bold" }}>
           {image.name !== undefined ? image.name : "Не найдено"}
         </Typography>
-        <Typography className="image-prediction">
+        <Typography>
           {prediction !== null ? prediction.classifier : "Нет предсказаний"}
         </Typography>
       </Box>
-      <Box style={{ display: "flex", justifyContent: "end" }}>
+      <Box sx={{ display: "flex", justifyContent: "end" }}>
         <Delete
-          style={{
+          sx={{
             color: "red",
             fontSize: "medium",
             cursor: "pointer",
@@ -125,27 +120,12 @@ export const ImageCard: React.FC<ImageCardProps> = ({
 export const ImageFullInfo = ({ image }: { image: IImageData }) => {
   console.log("image FULL");
 
-  // TODO: implement handle keydown
-  // useEffect(() => {
-  //   const handleKeyDown = (event) => {
-  //     // if (event.ctrlKey && event.key === Key.K) {
-  //     //   event.preventDefault(); // Prevent default browser behavior
-  //     // }
-  //   };
-
-  //   window.addEventListener("keydown", handleKeyDown);
-  //   return () => {
-  //     window.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, []);
   const columns: MRT_ColumnDef<IPrediction>[] = [
     {
       header: "Классификатор",
-      // accessor: "classifier",
     },
     {
       header: "Вероятность",
-      // accessor: "probability",
     },
   ];
   const bestValue =
@@ -159,7 +139,7 @@ export const ImageFullInfo = ({ image }: { image: IImageData }) => {
     <DialogPanel>
       <Paper
         elevation={3}
-        style={{
+        sx={{
           width: "100%",
           display: "flex",
           flexDirection: "column",
@@ -167,8 +147,14 @@ export const ImageFullInfo = ({ image }: { image: IImageData }) => {
         }}
       >
         <Typography
-          className="chapter-title"
-          style={{ height: "5%", alignSelf: "center" }}
+          sx={(theme) => ({
+            fontSize: "2.2rem",
+            marginBottom: "1.5rem",
+            fontWeight: 600,
+            color: theme.palette.secondary.main,
+            height: "5%",
+            alignSelf: "center",
+          })}
         >
           Изображение
         </Typography>
@@ -179,7 +165,7 @@ export const ImageFullInfo = ({ image }: { image: IImageData }) => {
           width="100%"
         />
         <Box
-          style={{
+          sx={{
             display: "flex",
             justifyContent: "space-between",
             marginTop: "1rem",
@@ -203,7 +189,7 @@ export const ImageFullInfo = ({ image }: { image: IImageData }) => {
       </Paper>
       <Paper
         elevation={3}
-        style={{
+        sx={{
           width: "100%",
           display: "flex",
           flexDirection: "column",
@@ -211,39 +197,43 @@ export const ImageFullInfo = ({ image }: { image: IImageData }) => {
         }}
       >
         <Typography
-          className="chapter-title"
-          // variant="h6"
-          // component="h2"
           gutterBottom
-          style={{ height: "10%", alignSelf: "center" }}
+          sx={(theme) => ({
+            fontSize: "2.2rem",
+            marginBottom: "1.5rem",
+            fontWeight: 600,
+            color: theme.palette.secondary.main,
+            height: "10%",
+            alignSelf: "center",
+          })}
         >
           Информация об изображении
         </Typography>
 
-        <Box style={{ height: "90%" }}>
-          <Card elevation={2} style={{ marginBottom: "16px" }}>
+        <Box sx={{ height: "90%" }}>
+          <Card elevation={2} sx={{ marginBottom: "16px" }}>
             <CardHeader title="Общая информация" />
             <CardContent>
-              <Typography style={{ fontWeight: "bold" }}>
+              <Typography sx={{ fontWeight: "bold" }}>
                 Имя:{" "}
-                <Typography style={{ display: "inline" }}>
+                <Typography sx={{ display: "inline" }}>
                   {image.name !== undefined ? image.name : "Не найдено"}
                 </Typography>
               </Typography>
-              <Typography style={{ fontWeight: "bold" }}>
+              <Typography sx={{ fontWeight: "bold" }}>
                 Статус:{" "}
-                <Typography style={{ display: "inline" }}>
+                <Typography sx={{ display: "inline" }}>
                   {image.status}
                 </Typography>
               </Typography>
             </CardContent>
           </Card>
-          <Card elevation={2} style={{ marginBottom: "16px" }}>
+          <Card elevation={2} sx={{ marginBottom: "16px" }}>
             <CardHeader title="Результаты анализа" />
             <CardContent>
-              <Typography style={{ fontWeight: "bold" }} gutterBottom>
+              <Typography sx={{ fontWeight: "bold" }} gutterBottom>
                 Выбранный классификатор:{" "}
-                <Typography style={{ display: "inline" }}>
+                <Typography sx={{ display: "inline" }}>
                   {image.classifier}
                 </Typography>
               </Typography>

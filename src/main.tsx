@@ -10,7 +10,7 @@ import { CssBaseline } from "@mui/material";
 import { generateMockDB } from "./mock_data";
 import { StrictMode } from "react";
 
-generateMockDB();
+// generateMockDB();
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );

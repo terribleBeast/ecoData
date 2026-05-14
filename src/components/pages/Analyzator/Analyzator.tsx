@@ -25,8 +25,13 @@ const ImagesContainer: React.FC<ImagesContainerProps> = ({
   onUpdate: handleUpdateImage,
 }) => (
   <Box
-    className="cards-container"
-    style={{
+    sx={{
+      flexWrap: "wrap",
+      width: "100%",
+      display: "flex",
+      padding: "1rem",
+      justifyContent: "center",
+      gap: "1rem",
       maxHeight: "900px",
       overflowY: "auto",
     }}
@@ -50,25 +55,30 @@ const ClassifiersMenu = ({
 }) => {
   return (
     <Paper
-      className="chapter"
-      style={{
+      elevation={3}
+      sx={(theme) => ({
+        backgroundColor: theme.palette.surface,
+        padding: "1rem",
+        paddingLeft: "1.5rem",
+        paddingRight: "1.5rem",
+        borderRadius: "8px",
+        marginBottom: "2rem",
         width: "100%",
         display: "flex",
-        // justifyContent: "space-between",
         flexDirection: "column",
-      }}
+      })}
     >
-      <Typography className="chapter-title" style={{ fontSize: "32px" }}>
-        Род
-      </Typography>
+      <Typography sx={{ fontSize: "32px", ...chapterTitleSx }}>Род</Typography>
       <DropDownGenusMenu handleSelectClassifier={handleSelectClassifier} />
     </Paper>
   );
 };
 
-// function getAllPrediction(images) {
-//   // TODO: implement function creating csv file
-// }
+const chapterTitleSx = {
+  fontSize: "2.2rem",
+  marginBottom: "1.5rem",
+  fontWeight: 600,
+};
 
 const Analyzer = () => {
   const [isOpenFileMenu, setIsOpenFileMenu] = useState(false);
@@ -111,7 +121,6 @@ const Analyzer = () => {
       return;
     }
 
-    // Get all unique species
     const allSpecies = new Set();
     images.forEach((image) => {
       if (image.predictions) {
@@ -120,8 +129,6 @@ const Analyzer = () => {
     });
     const species = Array.from(allSpecies);
 
-    // Prepare CSV data
-    //
     const data = [["Id", "Изображение", "Род", ...species].join(",")];
 
     images.map((image, index) => {
@@ -163,14 +170,6 @@ const Analyzer = () => {
           }
         }),
     );
-    // for (let i = 0; i < images.length; i++) {
-    //   if (images[i].status === ImageStatus.UPLOADED) {
-    //     images[i].predictions = await getPrediction(images[i]).then(
-    //       (data) => data,
-    //     );
-    //     images[i].status = ImageStatus.PROCESSED;
-    //   }
-    // }
     setImages([...updatedImages]);
 
     return images;
@@ -194,14 +193,14 @@ const Analyzer = () => {
         title={undefined}
         headerComponent={
           <Box
-            style={{
+            sx={{
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
             }}
           >
             <ChapterHeaderTemplate chapterTitle={"Изображения"} />
-            <Box style={{ display: "flex", gap: "1rem" }}>
+            <Box sx={{ display: "flex", gap: "1rem" }}>
               <Button
                 color="success"
                 variant="contained"
@@ -231,15 +230,15 @@ const Analyzer = () => {
         }
       >
         {isOpenFileMenu && (
-          <Box style={{ display: "flex" }}>
-            <Box style={{ width: "80%" }}>
+          <Box sx={{ display: "flex" }}>
+            <Box sx={{ width: "80%" }}>
               <FileDragAndDrop
                 updateImages={handleAddImages}
                 defaultStatus={ImageStatus.LOADING}
                 selectedClassifier={selectedClassifier}
               />
             </Box>
-            <Box style={{ display: "flex", width: "20%" }}>
+            <Box sx={{ display: "flex", width: "20%" }}>
               <ClassifiersMenu
                 handleSelectClassifier={handleSelectClassifier}
               />

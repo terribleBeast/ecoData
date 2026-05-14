@@ -32,6 +32,7 @@ export interface ITableData {
   headers: string[];
   rows: IPrediction[][];
 }
+
 const ResultTable = () => {
   const [tableData, setTableData] = useState<ITableData>({
     headers: [],
@@ -47,15 +48,12 @@ const ResultTable = () => {
           headers: response.headers,
           rows: response.rows,
         });
-        // Or if you want to replace the initial "asd":
-        // setRows(response);
       } catch (error) {
         console.error("Error fetching prediction:", error);
       } finally {
         setLoading(false);
       }
     };
-    // TODO: set delay
     setTimeout(() => {}, 2000000);
     getPrediction();
   }, []);
@@ -81,6 +79,7 @@ const ResultTable = () => {
     </Table>
   );
 };
+
 const ResearchFullInfo = ({ research }: { research: IResearchData | null }) => {
   if (research === null) return;
   const researchers = getMockResearchers();
@@ -100,7 +99,7 @@ const ResearchFullInfo = ({ research }: { research: IResearchData | null }) => {
     {
       title: "Участники",
       fields: (
-        <Box style={{ overflowY: "auto", maxHeight: "20vh" }}>
+        <Box sx={{ overflowY: "auto", maxHeight: "20vh" }}>
           <List>
             {activeResearchers.map((researcher, index) => (
               <ListItemButton
@@ -123,9 +122,7 @@ const ResearchFullInfo = ({ research }: { research: IResearchData | null }) => {
   return (
     <DialogPanel>
       <DialogChapters title="Таблица результатов">
-        <Card
-          style={{ overflowY: "auto", overflowX: "auto", maxHeight: "60vh" }}
-        >
+        <Card sx={{ overflowY: "auto", overflowX: "auto", maxHeight: "60vh" }}>
           <ResultTable />
         </Card>
       </DialogChapters>
@@ -161,7 +158,7 @@ const ResearchesTable = ({
       Cell: ({ row }) => (
         <Typography
           onClick={() => setSelectedResearch(row.original)}
-          style={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer" }}
         >
           {row.original.title}
         </Typography>
@@ -189,7 +186,7 @@ const ResearchesTable = ({
       accessorKey: "researchers_id",
       header: "Исследователи",
       Cell: ({ row }) => (
-        <Box style={{ overflowY: "auto", maxHeight: "20vh" }}>
+        <Box sx={{ overflowY: "auto", maxHeight: "20vh" }}>
           <List>
             {row.original.researchers_id.map((item, index) => (
               <ListItemButton
@@ -219,7 +216,7 @@ const ResearchesTable = ({
 const Researches = () => {
   const [selectedResearch, setSelectedResearch] =
     useState<IResearchData | null>(null);
-  // TODO: set name of chapter
+
   return (
     <>
       <Dialog

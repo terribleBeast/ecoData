@@ -17,6 +17,7 @@ import {
 import { useNavigate } from "react-router";
 
 const TIMEOUT = 500;
+
 const ChapterCards = () => {
   const cardsActions = [
     {
@@ -43,12 +44,22 @@ const ChapterCards = () => {
   ];
 
   return (
-    <Box className="cards-container">
+    <Box
+      sx={{
+        flexWrap: "wrap",
+        width: "100%",
+        display: "flex",
+        padding: "1rem",
+        justifyContent: "center",
+        gap: "1rem",
+      }}
+    >
       {cardsActions.map((card, index) => (
         <Paper
-          className="card"
           key={index}
           sx={{
+            borderRadius: "16px",
+            width: "30%",
             "&:hover": { boxShadow: 3 },
           }}
         >
@@ -112,7 +123,7 @@ const ChapterGetStarted = () => {
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
-                aligns: "center",
+                alignItems: "center",
                 textAlign: "center",
                 boxShadow: 1,
                 "&:hover": { boxShadow: 3 },
@@ -132,6 +143,7 @@ const ChapterGetStarted = () => {
                 variant="outlined"
                 color="success"
                 size="small"
+                fullWidth
                 onClick={() => navigate(step.to)}
               >
                 {step.action}
@@ -148,7 +160,7 @@ const chapters = [
   {
     title: "Что такое EcoData?",
     content: (
-      <Typography className="chapter-description">
+      <Typography>
         <strong>EcoData</strong> - система для исследования растительных
         биоиндикаторов. Она помогает собрать данных об экологической обстановке
         в разных локациях.
@@ -167,19 +179,58 @@ const chapters = [
 
 const Home = () => {
   return (
-    <Box className="page-layout">
+    <Box
+      sx={(theme) => ({
+        backgroundColor: theme.palette.backgroundPage,
+        border: `1px solid ${theme.palette.border}`,
+        borderRadius: "5px",
+        height: "100%",
+        width: "100%",
+        margin: "1.5rem",
+        padding: "1.5rem",
+        display: "inline-block",
+      })}
+    >
       <Fade in timeout={TIMEOUT}>
-        <Typography className="page-title">Система EcoData</Typography>
+        <Typography
+          sx={(theme) => ({
+            fontSize: "3rem",
+            marginBottom: "2rem",
+            color: theme.palette.primary.main,
+          })}
+        >
+          Система EcoData
+        </Typography>
       </Fade>
 
-      <Box className="main-page-content">
+      <Box sx={{ width: "inherit", borderRadius: "8px" }}>
         {chapters.map((chapter, index) => (
-          <Paper className="chapter" key={index}>
+          <Paper
+            key={index}
+            elevation={3}
+            sx={(theme) => ({
+              backgroundColor: theme.palette.surface,
+              padding: "1rem",
+              paddingLeft: "1.5rem",
+              paddingRight: "1.5rem",
+              borderRadius: "8px",
+              marginBottom: "2rem",
+            })}
+          >
             <Fade in timeout={(index + 1) * TIMEOUT}>
-              <Typography className="chapter-title">{chapter.title}</Typography>
+              <Typography
+                sx={(theme) => ({
+                  fontSize: "2.2rem",
+                  marginBottom: "1.5rem",
+                  fontWeight: 600,
+                  color: theme.palette.secondary.main,
+                })}
+              >
+                {chapter.title}
+              </Typography>
             </Fade>
             <Fade in timeout={(index + 2) * TIMEOUT}>
-              <Box className="chapter-content">{chapter.content}</Box>
+              <Box>{chapter.content}</Box>
             </Fade>
           </Paper>
         ))}

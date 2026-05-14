@@ -1,93 +1,169 @@
-import { useForm } from "react-hook-form";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router";
-import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 // import { toLogIn } from "../features/user/userSlice"
 // import { createUser, getUser } from "../database/CRUD"
-import { useLazyGetUserQuery, useCreateUserMutation } from "../../api/usersAPI";
+import {
+  useLazyGetUserQuery,
+  // useCreateUserMutation,
+} from "../../../api/userApi";
 import { toLogIn } from "../../user/userSlice";
+import { LevelLog, sendLogToServer } from "../../../api/api";
+import { deriveErrorMessage, EMAIL_REGEX } from "../utils";
+
+interface IUserRegFormData {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+}
 
 const RegisterForm = () => {
-  const [getUser] = useLazyGetUserQuery();
-  const [createUser] = useCreateUserMutation();
-  // const [message, setMessage] = useState("");
-
-  const navigate = useNavigate();
-  const { register, handleSubmit, watch } = useForm();
+  const [getUser, { isLoading, isError, error: rtkError }] =
+    useLazyGetUserQuery();
+  // const [createUser] = useCreateUserMutation();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const { email, password, name } = watch();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IUserRegFormData>({
+    mode: "onBlur",
+    reValidateMode: "onChange",
+  });
 
-  const onSubmit = useCallback(async () => {
+  const onSubmit: SubmitHandler<IUserRegFormData> = async (
+    formData: IUserRegFormData,
+  ) => {
     console.log("onSubmit");
     try {
-      const user = await getUser(email).unwrap();
-      if (user === undefined) {
-        const user = await createUser({
-          name: name,
-          email: email,
-          password: password,
-        }).unwrap();
+      const user = await getUser({ email: formData.email }).unwrap();
+      if (user) {
+        // const user = await createUser({
+        //   name: name,
+        //   email: email,
+        //   password: password,
+        // }).unwrap();
         dispatch(toLogIn({ login: user.email, id: user.id, name: user.name }));
         navigate("/");
       } else {
-        console.log("error creating user", user);
+        sendLogToServer(LevelLog.INFO, `User ${formData.email}`);
       }
     } catch (err) {
-      console.log(err);
+      sendLogToServer(
+        LevelLog.ERROR,
+        `Register attempt failed for ${formData.email}`,
+        err instanceof Error ? err.message : String(err),
+      ).catch();
     }
-  }, [email, password, name, dispatch, navigate, createUser, getUser]);
+  };
 
   return (
     <div className="reg-form">
       <Typography className="reg-form-title">Регистрация</Typography>
-      <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
-        <Grid sx={{ width: "100%", "& > *": { width: "100%" } }}>
+      {/* Server-level errors */}
+      {isError && (
+        <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
+          {deriveErrorMessage(rtkError)}
+        </Alert>
+      )}
+      <Box
+        component="form"
+        sx={{ width: "100%" }}
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Grid container spacing={2}>
+          {/* ---- Name ---- */}
           <Grid size={12}>
-            <Typography className="reg-form-field-name">Имя</Typography>
             <TextField
-              {...register("name", {})}
+              label="Имя"
+              type="text"
+              fullWidth
+              disabled={isLoading}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+              {...register("name", {
+                required: "Имя обязательно",
+              })}
               variant="outlined"
-              className="reg-input"
+              // className="reg-input"
             />
           </Grid>
-
+          {/* ---- Email ---- */}
           <Grid size={12}>
-            <Typography>Email</Typography>
             <TextField
+              label="Email"
+              type="email"
+              autoComplete="email"
+              fullWidth
+              disabled={isLoading}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              slotProps={{
+                htmlInput: {
+                  "aria-invalid": errors.email ? "true" : "false",
+                },
+              }}
               {...register("email", {
-                required: "Email is required",
-
+                required: "Email обязателен",
                 pattern: {
-                  value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                  message: "Invalid email address",
+                  value: EMAIL_REGEX,
+                  message: "Некорректный email адрес",
                 },
               })}
-              variant="outlined"
-              className="reg-input"
             />
           </Grid>
+          {/* ---- Password ---- */}
           <Grid size={12}>
-            <Typography className="form-field-text">Пароль</Typography>
             <TextField
-              {...register("password", {
-                required: true,
-                // minLength: 4
-              })}
+              label="Пароль"
               type="password"
-              className="reg-input"
+              autoComplete="current-password"
+              disabled={isLoading}
+              error={!!errors.password}
+              fullWidth
+              slotProps={{
+                htmlInput: {
+                  "aria-invalid": errors.password ? "true" : "false",
+                },
+              }}
+              {...register("password", {
+                required: "Пароль обязателен",
+                minLength: {
+                  value: 4,
+                  message: "Пароль должен содержать минимум 4 символа",
+                },
+              })}
             />
           </Grid>
           <Grid size={12}>
-            <Button type="submit" className="reg-button">
-              Зарегистрироваться
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              fullWidth
+              disabled={isLoading}
+              className="reg-button"
+              startIcon={isLoading ? <CircularProgress size={20} /> : null}
+            >
+              {isLoading ? "Создание..." : "Зарегистрироваться"}
             </Button>
           </Grid>
-          <Grid size={12}></Grid>
         </Grid>
-      </form>
+      </Box>
     </div>
   );
 };

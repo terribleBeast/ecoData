@@ -1,7 +1,5 @@
 import { Typography, AppBar, Toolbar, Button, Box } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-// import { memo } from "react";
-// import MenuIcon from '@mui/icons-material/Menu';
 import SpaIcon from "@mui/icons-material/Spa";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
@@ -15,52 +13,48 @@ import {
 function Header() {
   const navigate = useNavigate();
   const isLogIn = useSelector(selectUserIsLogIn);
+  console.log(isLogIn);
   const name = useSelector(selectUserName);
   const dispatch = useDispatch();
-  console.log("Header rendered");
   return (
-    <header>
-      <AppBar position="static" className="AppBar">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            component={Link}
-            to="/"
-          >
-            <SpaIcon />
-          </IconButton>
+    <AppBar position="static" sx={{ width: "100dvw" }}>
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+          component={Link}
+          to="/"
+        >
+          <SpaIcon />
+        </IconButton>
 
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            EcoData
-          </Typography>
+        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+          EcoData
+        </Typography>
 
-          {isLogIn ? (
-            <Box>
-              <Button
-                color="inherit"
-                onClick={() => {
-                  dispatch(toLogOut());
-                  navigate("/auth");
-                }}
-                style={{
-                  textTransform: "none",
-                }}
-              >
-                <Typography>{name}</Typography>
-              </Button>
-            </Box>
-          ) : (
-            <Button color="inherit" onClick={() => navigate("/auth")}>
-              Войти
+        {isLogIn ? (
+          <Box>
+            <Button
+              color="inherit"
+              onClick={() => {
+                dispatch(toLogOut());
+                navigate("/auth");
+              }}
+              sx={{ textTransform: "none" }}
+            >
+              <Typography>{name}</Typography>
             </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-    </header>
+          </Box>
+        ) : (
+          <Button color="inherit" onClick={() => navigate("/auth")}>
+            Войти
+          </Button>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 }
 

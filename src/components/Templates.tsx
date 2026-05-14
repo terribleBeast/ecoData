@@ -13,7 +13,15 @@ export const ChapterHeaderTemplate = ({
 }: {
   chapterTitle: string;
 }) => (
-  <Typography className="chapter-title" style={{ alignSelf: "center" }}>
+  <Typography
+    sx={(theme) => ({
+      fontSize: "2.2rem",
+      marginBottom: "1.5rem",
+      fontWeight: 600,
+      color: theme.palette.secondary.main,
+      alignSelf: "center",
+    })}
+  >
     {chapterTitle}
   </Typography>
 );
@@ -34,16 +42,16 @@ export const ChapterInfoTemplate = ({
   if (chaptersInfo === null) return;
 
   return (
-    <Box style={{ overflowY: "auto", maxHeight: "60vh" }}>
+    <Box sx={{ overflowY: "auto", maxHeight: "60vh" }}>
       {chaptersInfo.map((chapterData, index) => (
-        <Card style={{ marginBottom: "16px" }} key={chapterData.title + index}>
+        <Card sx={{ marginBottom: "16px" }} key={chapterData.title + index}>
           <CardHeader title={chapterData.title} />
           <CardContent key={index}>
             {Array.isArray(chapterData.fields)
               ? chapterData.fields.map((field, index) => (
-                  <Typography style={{ fontWeight: "bold" }} key={index}>
+                  <Typography sx={{ fontWeight: "bold" }} key={index}>
                     {field.name}:{" "}
-                    <Typography style={{ display: "inline" }}>
+                    <Typography sx={{ display: "inline" }}>
                       {field.value}
                     </Typography>
                   </Typography>
@@ -65,14 +73,22 @@ export const DialogChapters = ({
 }) => (
   <Paper
     elevation={3}
-    style={{
+    sx={{
       width: "50%",
       display: "flex",
       flexDirection: "column",
       padding: "1rem",
     }}
   >
-    <Typography className="chapter-title" style={{ alignSelf: "center" }}>
+    <Typography
+      sx={(theme) => ({
+        fontSize: "2.2rem",
+        marginBottom: "1.5rem",
+        fontWeight: 600,
+        color: theme.palette.secondary.main,
+        alignSelf: "center",
+      })}
+    >
       {title}
     </Typography>
     <ChapterContentTemplate content={children} />
@@ -86,8 +102,27 @@ export const Page = ({
   title: string;
   children: React.ReactNode;
 }) => (
-  <Box className="page-layout">
-    <Typography className="page-title">{title}</Typography>
+  <Box
+    sx={(theme) => ({
+      backgroundColor: theme.palette.backgroundPage,
+      border: `1px solid ${theme.palette.border}`,
+      borderRadius: "5px",
+      height: "100%",
+      width: "100%",
+      margin: "1.5rem",
+      padding: "1.5rem",
+      display: "inline-block",
+    })}
+  >
+    <Typography
+      sx={(theme) => ({
+        fontSize: "3rem",
+        marginBottom: "2rem",
+        color: theme.palette.primary.main,
+      })}
+    >
+      {title}
+    </Typography>
     {children}
   </Box>
 );
@@ -99,14 +134,32 @@ export const PageChapter = ({
 }: {
   title?: string;
   headerComponent?: React.ReactNode;
-
   children: React.ReactNode;
 }) => (
-  <Paper elevation={3} className="chapter">
+  <Paper
+    elevation={3}
+    sx={(theme) => ({
+      backgroundColor: theme.palette.surface,
+      padding: "1rem",
+      paddingLeft: "1.5rem",
+      paddingRight: "1.5rem",
+      borderRadius: "8px",
+      marginBottom: "2rem",
+    })}
+  >
     {headerComponent !== undefined ? (
       headerComponent
     ) : (
-      <Typography className="chapter-title">{title}</Typography>
+      <Typography
+        sx={(theme) => ({
+          fontSize: "2.2rem",
+          marginBottom: "1.5rem",
+          fontWeight: 600,
+          color: theme.palette.secondary.main,
+        })}
+      >
+        {title}
+      </Typography>
     )}
 
     {children}

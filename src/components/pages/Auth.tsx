@@ -3,32 +3,73 @@ import SpaIcon from "@mui/icons-material/Spa";
 import LoginForm from "../../features/auth/ui/LoginForm";
 import { useState } from "react";
 import RegisterForm from "../../features/auth/ui/RegisterForm";
-// import { toLogIn } from "../features/user/userSlice"
-// import { createUser, getUser } from "../database/CRUD"
-
-// import './../App.css'
 
 const AuthForm = () => {
   const [isRegForm, setStateLog] = useState(false);
 
   return (
-    <Box className="auth">
-      <Box className="auth-logo">
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        backgroundColor: "#f2f3f5",
+        padding: "2rem",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          marginBottom: "2rem",
+        }}
+      >
         <SpaIcon />
-        <Typography className="auth-logo-text">EcoData</Typography>
+        <Typography
+          sx={(theme) => ({
+            fontSize: "2rem",
+            fontWeight: "bold",
+            color: theme.palette.primary.main,
+          })}
+        >
+          EcoData
+        </Typography>
       </Box>
 
       {isRegForm ? <RegisterForm /> : <LoginForm />}
 
       <Button
-        className="forgot-password"
         onClick={() => {
           setStateLog(!isRegForm);
         }}
+        sx={{
+          marginTop: "1rem",
+          fontSize: "0.9rem",
+          color: "#1a56db",
+          textDecoration: "none",
+          display: "inline-block",
+          "&:hover": { textDecoration: "underline" },
+        }}
       >
-        {" "}
-        {isRegForm ? "Уже зарегистрированы?" : "Нет аккаунта?"}{" "}
+        {isRegForm ? "Уже зарегистрированы?" : "Нет аккаунта?"}
       </Button>
+      {isRegForm ? null : (
+        <Button
+          sx={{
+            marginTop: "1rem",
+            fontSize: "0.9rem",
+            color: "#1a56db",
+            textDecoration: "none",
+            display: "inline-block",
+            "&:hover": { textDecoration: "underline" },
+          }}
+        >
+          <Typography> Забыли пароль?</Typography>
+        </Button>
+      )}
     </Box>
   );
 };

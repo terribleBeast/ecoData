@@ -9,16 +9,25 @@ import {
   LoadingPage,
   NotValidRoutePage,
 } from "./components/pages/InformationPages";
+import { Box } from "@mui/material";
 
 const Home = React.lazy(() => import("./components/pages/Home.tsx"));
 
 function App() {
   return (
-    <div className="App">
-      <Header />
+    <Box sx={{ height: "100dvh", width: "100dvw" }}>
       <Suspense fallback={<LoadingPage />}>
         <Routes>
-          <Route path="/" element={<Content />}>
+          <Route
+            path="/"
+            element={
+              <>
+                <Header />
+                <Content />
+                <Footer />
+              </>
+            }
+          >
             <Route index element={<Home />} />
 
             {pages.map((item, index) => (
@@ -34,8 +43,7 @@ function App() {
           <Route path="/auth" element={<AuthForm />}></Route>
         </Routes>
       </Suspense>
-      <Footer />
-    </div>
+    </Box>
   );
 }
 

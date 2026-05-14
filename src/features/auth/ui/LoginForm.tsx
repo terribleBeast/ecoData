@@ -1,57 +1,65 @@
-import { useForm } from "react-hook-form";
-import { Button, Grid, TextField, Typography, Box } from "@mui/material";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  Box,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
 import { useNavigate } from "react-router";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
 
-// import { toLogIn } from "../features/user/userSlice"
-import { useLazyGetUserQuery } from "../../api/usersAPI";
+import { useLazyGetUserQuery } from "../../../api/userApi";
 import { toLogIn } from "../../user/userSlice";
 import type { IUserData } from "../../../Models/User";
+import { LevelLog, sendLogToServer } from "../../../api/api";
 
-// import './../App.css'
+interface IUserFormData {
+  email: string;
+  password: string;
+}
+
+const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+const deriveErrorMessage = (err: unknown): string => {
+  if (!err) return "Неизвестная ошибка";
+  if (typeof err === "object" && err !== null && "status" in err) {
+    const status = (err as { status: number | string }).status;
+    if (status === 404) return "Пользователь не найден";
+    if (status === "FETCH_ERROR" || status === "PARSING_ERROR")
+      return "Не удалось подключиться к серверу";
+    return `Ошибка сервера (${status})`;
+  }
+  if (typeof err === "object" && err !== null && "message" in err) {
+    return (err as { message: string }).message;
+  }
+  return String(err);
+};
 
 const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [error, setError] = useState("Error input");
 
   const {
-    // register,
-    // handleSubmit,
-    // formState: { errors },
-    watch,
-  } = useForm();
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IUserFormData>({
+    mode: "onBlur",
+    reValidateMode: "onChange",
+  });
 
-  const { email, password } = watch();
+  const [getUser, { isLoading, isError, error: rtkError }] =
+    useLazyGetUserQuery();
 
-  // const validateEmail = (value) => {
-  //   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  //   if (!emailRegex.test(value)) {
-  //     return 'Invalid email address';
-  //   }
-  //   return true;
-  // };
-  //
-  const [getUser] = useLazyGetUserQuery();
-
-  // const onInput = useCallback(async () => {
-  //   setError("Error input");
-  // }, []);
-  const onChange = async () => {
-    setError(error);
-  };
-
-  const onSubmit = async () => {
-    // Working without async await
-    //
-    // event.preventDefault();
-    console.log("onSubmit");
-    // TODO: error proccesing
+  const onSubmit: SubmitHandler<IUserFormData> = async (
+    formData: IUserFormData,
+  ) => {
     try {
-      const user: IUserData = await getUser(email).unwrap();
-
-      if (user !== undefined && user.password_hash === password) {
+      const user: IUserData = await getUser({ email: formData.email }).unwrap();
+      if (user) {
         dispatch(
           toLogIn({
             login: user.email,
@@ -60,65 +68,120 @@ const LoginForm = () => {
           }),
         );
         navigate("/");
+        sendLogToServer(LevelLog.INFO, `User ${user.email} logged in `);
       }
     } catch (err) {
-      console.log(err);
+      sendLogToServer(
+        LevelLog.ERROR,
+        `Login attempt failed for ${formData.email}`,
+        err instanceof Error ? err.message : String(err),
+      ).catch();
     }
   };
 
   return (
-    <div className="login-form">
-      <Box
+    <Box
+      sx={{
+        backgroundColor: "#fff",
+        padding: "2rem",
+        borderRadius: "16px",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+        width: "100%",
+        maxWidth: "400px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+      }}
+    >
+      <Typography
         sx={{
-          width: "100%",
+          textAlign: "center",
+          fontSize: "1.5rem",
+          fontWeight: 600,
+          marginBottom: "1.5rem",
+          color: "text.primary",
         }}
       >
-        <Typography className="login-form-title">Вход</Typography>
-      </Box>
-      <form
-        style={{ width: "100%" }}
-        // onSubmit={handleSubmit(onSubmit)}>
-        onSubmit={onSubmit}
+        Вход
+      </Typography>
+      {isError && (
+        <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
+          {deriveErrorMessage(rtkError)}
+        </Alert>
+      )}
+      <Box
+        component="form"
+        sx={{ width: "100%" }}
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <Grid sx={{ width: "100%", "& > *": { width: "100%" } }}>
+        <Grid container spacing={2}>
           <Grid size={12}>
-            <Typography className="form-field-text">Email</Typography>
-
             <TextField
-              // {...register("email", {
-              //   required: true,
-              //   pattern: {
-              //     value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-              //     message: "Invalid email address",
-              //   },
-              // })}
-              variant="outlined"
-              className="login-input"
-              // onInput={onInput}
-              onChange={onChange}
-              // error={error}
+              label="Email"
+              type="email"
+              autoComplete="email"
+              fullWidth
+              disabled={isLoading}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              slotProps={{
+                htmlInput: {
+                  "aria-invalid": errors.email ? "true" : "false",
+                },
+              }}
+              {...register("email", {
+                required: "Email обязателен",
+                pattern: {
+                  value: EMAIL_REGEX,
+                  message: "Некорректный email адрес",
+                },
+              })}
             />
           </Grid>
           <Grid size={12}>
-            <Typography className="form-field-text">Пароль</Typography>
             <TextField
-              // {...register("password", {
-              //   required: true,
-              //   minLenght: 4,
-              // })}
+              label="Пароль"
               type="password"
-              className="login-input"
-              // error={error}
+              autoComplete="current-password"
+              disabled={isLoading}
+              error={!!errors.password}
+              fullWidth
+              slotProps={{
+                htmlInput: {
+                  "aria-invalid": errors.password ? "true" : "false",
+                },
+              }}
+              {...register("password", {
+                required: "Пароль обязателен",
+                minLength: {
+                  value: 4,
+                  message: "Пароль должен содержать минимум 4 символа",
+                },
+              })}
             />
           </Grid>
           <Grid size={12}>
-            <Button type="submit" className="login-button">
-              Войти
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              fullWidth
+              disabled={isLoading}
+              startIcon={isLoading ? <CircularProgress size={20} /> : undefined}
+              sx={(theme) => ({
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.dark,
+                },
+              })}
+            >
+              {isLoading ? "Вход..." : "Войти"}
             </Button>
           </Grid>
         </Grid>
-      </form>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

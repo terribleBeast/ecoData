@@ -20,16 +20,6 @@ export interface IChapterData {
 
 export const ClassifiersChapter = () => {
   const chaptersInfo: IChapterData[] = [];
-  // const classifiers = [];
-  // const [species, setSpecies] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // useEffect(async () => {
-  //   const response = await getSpecies("Яблоня");
-  //   console.log(response);
-  //   setSpecies(response.map((item) => item.species));
-
-  //   setLoading(false);
-  // }, []);
   for (let i = 0; i < classifiers.length; i++) {
     chaptersInfo.push({
       title: classifiers[i].plant,
@@ -42,13 +32,12 @@ export const ClassifiersChapter = () => {
     });
   }
   const [selectedGenus, setSelectedGenus] = useState([chaptersInfo[0]]);
-  // if (loading) return <div>Loading</div>;
 
   return (
     <PageChapter
       title={undefined}
       headerComponent={
-        <Box style={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <ChapterHeaderTemplate chapterTitle={"Роды и сорта растений"} />
           <DropDownGenusMenu
             handleSelectClassifier={(classifier_index: number) =>
@@ -71,7 +60,7 @@ export const DropDownGenusMenu = ({
   handleSelectClassifier: (index: number) => void;
 }) => {
   return (
-    <FormControl style={{ minWidth: "15%" }}>
+    <FormControl sx={{ minWidth: "15%" }}>
       <InputLabel>Род растения</InputLabel>
       <Select defaultValue={"Яблоня"}>
         {classifiers.map((item, index) => (

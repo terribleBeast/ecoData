@@ -2,10 +2,16 @@ import { Box, Button, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router";
 
 export const LoadingPage = () => (
-  <Box
-    style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-  >
-    <Typography className="chapter-title" style={{ fontSize: "18px" }}>
+  <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+    <Typography
+      sx={(theme) => ({
+        fontSize: "2.2rem",
+        marginBottom: "1.5rem",
+        fontWeight: 600,
+        color: theme.palette.secondary.main,
+      })}
+      style={{ fontSize: "18px" }}
+    >
       Загрузка...
     </Typography>
   </Box>
@@ -16,26 +22,29 @@ export const NotValidRoutePage = () => {
   const currLocation = useLocation();
 
   return (
-    <main>
-      <Box
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-        }}
+    <Box
+      component="main"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+        padding: 0,
+      }}
+    >
+      <Typography
+        sx={(theme) => ({
+          fontSize: "2.2rem",
+          marginBottom: "1.5rem",
+          fontWeight: 600,
+          color: theme.palette.secondary.main,
+        })}
       >
-        <Typography className="chapter-title">
-          Маршрута '{currLocation.pathname}' не существует
-        </Typography>
-        <Button
-          onClick={() => navigate("/")}
-          color="success"
-          variant="outlined"
-        >
-          <Typography>Перейти на главную</Typography>
-        </Button>
-      </Box>
-    </main>
+        Маршрута '{currLocation.pathname}' не существует
+      </Typography>
+      <Button onClick={() => navigate("/")} color="success" variant="outlined">
+        <Typography>Перейти на главную</Typography>
+      </Button>
+    </Box>
   );
 };

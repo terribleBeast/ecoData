@@ -11,11 +11,11 @@ export const userSlice = createSlice({
 
   reducers: {
     toLogIn: (state, actions) => {
-      state.login = actions.payload.login;
+      console.log("to login", actions);
+      state.login = actions.payload.email;
       state.isLogIn = true;
       state.id = actions.payload.id;
       state.name = actions.payload.name;
-      console.log("to login", actions);
     },
     toLogOut: (state) => {
       state.login = null;

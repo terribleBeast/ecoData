@@ -66,7 +66,7 @@ const ResearcherFullInfo = ({
   return (
     <DialogPanel>
       <DialogChapters title={"Исследования"}>
-        <Card style={{ overflowY: "auto", maxHeight: "60vh" }}>
+        <Card sx={{ overflowY: "auto", maxHeight: "60vh" }}>
           <List>
             {researcher.researches_id.map((item, index) => (
               <ListItemButton
@@ -91,20 +91,9 @@ const ResearchersTable = ({
 }: {
   setSelectedResearcher: (researcher: IResearcherData) => void;
 }) => {
-  // TODO: optimizing this
   const [data, setData] = useState(getMockResearchers());
   const [researchesData, setResearcherData] = useState(getMockResearches());
-  const [researchesListState, setResearchesListState] = useState(
-    Array(data.length).fill(true),
-  );
-  const handleToggleResearches = (researchIndex: number) =>
-    setResearchesListState(
-      researchesListState.map((item, index) => {
-        if (index == researchIndex) {
-          return !item;
-        }
-      }),
-    );
+
   const columns: MRT_ColumnDef<IResearcherData>[] = [
     {
       accessorKey: "id",
@@ -122,7 +111,7 @@ const ResearchersTable = ({
       Cell: ({ row }) => (
         <Typography
           onClick={() => setSelectedResearcher(row.original)}
-          style={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer" }}
         >
           {row.original.surname} {row.original.name[0]}.{" "}
           {row.original.patronymic[0]}.
@@ -136,12 +125,6 @@ const ResearchersTable = ({
     {
       accessorKey: "role",
       header: "Статус",
-      // editVariant: "select",
-      // editSelectOptions: rolesUser,
-      // muiEditTextFieldProps: {
-      //   error: !!validationErrors?.state,
-      //   helperText: validationErrors?.state,
-      // },
     },
     {
       accessorKey: "job",
@@ -151,33 +134,16 @@ const ResearchersTable = ({
       accessorKey: "researches",
       header: "Исследования",
       Cell: ({ row }) => (
-        <Box style={{ overflowY: "auto", maxHeight: "20vh" }}>
+        <Box sx={{ overflowY: "auto", maxHeight: "20vh" }}>
           <List>
-            {row.original.researches_id
-              // .slice(
-              //   0,
-              //   researchesListState[row.id]
-              //     ? REASERCHES_LIST_LEN
-              //     : row.original.researches_id.length,
-              // )
-              .map((item, index) => (
-                <ListItemButton
-                  key={index}
-                  href={`/researches?research_id=${researchesData[item].id}`}
-                >
-                  {index + 1}.&nbsp;<Link>{researchesData[item].title}</Link>
-                </ListItemButton>
-              ))}
-
-            {/* {row.original.researches_id.length > 3 ? (
-              <ListItemButton onClick={() => handleToggleResearches(row.id)}>
-                <Typography>
-                  {researchesListState[row.id] ? ">" : "<"}
-                </Typography>
+            {row.original.researches_id.map((item, index) => (
+              <ListItemButton
+                key={index}
+                href={`/researches?research_id=${researchesData[item].id}`}
+              >
+                {index + 1}.&nbsp;<Link>{researchesData[item].title}</Link>
               </ListItemButton>
-            ) : (
-              <></>
-            )}*/}
+            ))}
           </List>
         </Box>
       ),
@@ -187,8 +153,6 @@ const ResearchersTable = ({
   const table = useMaterialReactTable({
     columns: columns,
     data: data,
-    // layoutMode: "grid",
-    // state:
   });
   console.log("Table");
   return <MaterialReactTable table={table} />;
@@ -197,7 +161,7 @@ const ResearchersTable = ({
 const Researchers = () => {
   const [selectedResearcher, setSelectedResearcher] =
     useState<IResearcherData | null>(null);
-  // TODO: set name of chapter
+
   return (
     <>
       <Dialog
