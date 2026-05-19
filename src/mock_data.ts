@@ -1,11 +1,14 @@
 import { Faker, ru } from "@faker-js/faker";
-import { type IResearchData, ResearchStatus } from "./Models/Research";
-import type { IResearcherData } from "./Models/Researcher";
-import { ImageStatus, type IImageData } from "./Models/Image";
+import {
+  type IResearchDataFull,
+  ResearchStatus,
+} from "./shared/types/research";
+import type { IResearcherData } from "./shared/types/researcher";
+import { ImageStatusType, type IImageData } from "./shared/types/image";
 
 const customFaker = new Faker({ locale: [ru] });
 const researchers: IResearcherData[] = [];
-const researches: IResearchData[] = [];
+const researches: IResearchDataFull[] = [];
 let isActiveDB = false;
 
 export function generateMockDB(
@@ -94,7 +97,7 @@ export function getMockResearchers() {
 }
 
 export function getMockImages(
-  defaultStatus: ImageStatus,
+  defaultStatus: ImageStatusType,
   imagesNumber: number,
 ) {
   const images = [
@@ -135,8 +138,9 @@ export function getMockImageStatus() {
 
 export async function getMockPrediction(image: ImageData) {
   let result = null;
-  const values = Object.values(ImageStatus);
-  const status: ImageStatus = values[Math.floor(Math.random() * values.length)];
+  const values = Object.values(ImageStatusType);
+  const status: ImageStatusType =
+    values[Math.floor(Math.random() * values.length)];
   // image.status = status;
   if (image.status === status) {
     // Predictions for apple tries

@@ -13,30 +13,14 @@ import { useDispatch } from "react-redux";
 
 import { useLazyGetUserQuery } from "../../../api/userApi";
 import { toLogIn } from "../../user/userSlice";
-import type { IUserData } from "../../../Models/User";
+import type { IUserData } from "../../../shared/types/user";
 import { LevelLog, sendLogToServer } from "../../../api/api";
+import { deriveErrorMessage, EMAIL_REGEX } from "../utils";
 
 interface IUserFormData {
   email: string;
   password: string;
 }
-
-const EMAIL_REGEX = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-const deriveErrorMessage = (err: unknown): string => {
-  if (!err) return "Неизвестная ошибка";
-  if (typeof err === "object" && err !== null && "status" in err) {
-    const status = (err as { status: number | string }).status;
-    if (status === 404) return "Пользователь не найден";
-    if (status === "FETCH_ERROR" || status === "PARSING_ERROR")
-      return "Не удалось подключиться к серверу";
-    return `Ошибка сервера (${status})`;
-  }
-  if (typeof err === "object" && err !== null && "message" in err) {
-    return (err as { message: string }).message;
-  }
-  return String(err);
-};
 
 const LoginForm = () => {
   const dispatch = useDispatch();
