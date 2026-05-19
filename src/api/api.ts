@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { IImageData } from "../Models/Image";
+import type { IImageData } from "../shared/types/image";
 import type { ITableData } from "../components/pages/Researches";
 const port = "8000";
 const host = `http://localhost:${port}/api/v1`;

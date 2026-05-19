@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { type IUserData } from "../Models/User";
+import { type IUserData } from "../shared/types/user";
 const port = "8000";
 const host = `http://localhost:${port}`;
 
@@ -62,45 +62,6 @@ export const userApi = createApi({
     //       ] : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
     //       [{ type: 'User', id: 'LIST' }],
     // }),
-
-    //   // update User Respond
-    //   updateUser: builder.mutation<IUserData, IUserData>({
-    //     query: (data) => ({
-    //       url: `/users/${data.id}`,
-    //       method: "PUT",
-    //       body: { ...data },
-    //     }),
-    //     async onQueryStarted(data_, { dispatch, queryFulfilled }) {
-    //       try {
-    //         const oldUserData = dispatch(
-    //           userApi.endpoints.getUser.initiate({ email: data_.email }),
-    //         ).unwrap();
-    //         const { data } = await queryFulfilled;
-
-    //         console.log(`Updating user with id: ${data.id}`, oldUserData); // Check data here.
-    //       } catch (error) {
-    //         console.error("Error updating user:", error);
-    //       }
-    //     },
-    //     invalidatesTags: (data) => [{ type: "User", id: data.email }],
-    //   }),
-
-    //   deleteUserRespond: builder.mutation({
-    //     query: ({ id, email, password_hash }) => ({
-    //       url: `/users/${id}`,
-    //       method: "PUT",
-    //       body: new User({ email, password_hash, id }),
-    //     }),
-    //     async onQueryStarted({ email }, { queryFulfilled }) {
-    //       try {
-    //         const { data } = await queryFulfilled;
-    //         console.log(`Put ${email}`, data); // Check data here.
-    //       } catch (error) {
-    //         console.error("Error deleting user respond:", error);
-    //       }
-    //     },
-    //     invalidatesTags: ({ email }) => [{ type: "User", id: email }],
-    //   }),
 
     //   deleteUser: builder.mutation({
     //     query: (id) => ({
