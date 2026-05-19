@@ -9,6 +9,11 @@ export type ResearchStatus =
 export interface IResearchData {
   id: number;
   title: string;
+}
+
+export interface IResearchDataFull {
+  id: number;
+  title: string;
   goal: string;
   startDate: string;
   endDate: string;
