@@ -8,7 +8,7 @@ import {
   selectUserIsLogIn,
   selectUserName,
   toLogOut,
-} from "../../features/user/userSlice";
+} from "../../user/userSlice";
 
 function Header() {
   const navigate = useNavigate();

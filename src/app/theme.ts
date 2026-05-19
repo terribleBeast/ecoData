@@ -86,9 +86,6 @@ export const theme = createTheme({
       },
     },
     MuiTypography: {
-      defaultProps: {
-        fontFamily: '"Inter", "Segoe UI", sans-serif',
-      },
       styleOverrides: {
         root: {
           fontFamily: '"Inter", "Segoe UI", sans-serif',

@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import LeftMenu from "../LeftMenu";
+import LeftMenu from "../components/LeftMenu";
 import { Outlet } from "react-router";
 
 function Content() {

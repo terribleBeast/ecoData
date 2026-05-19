@@ -1,22 +1,19 @@
 import "./App.css";
-import { Content, Header, Footer } from "./components";
-import { Page } from "./components/Templates";
+import { Content, Header, Footer } from "./features/structure/ui/index.tsx";
+import { Page } from "./shared/components/Templates.tsx";
 import { Routes, Route } from "react-router";
 import React, { Suspense } from "react";
-import { pages } from "./entities";
-import AuthForm from "./components/pages/Auth";
-import {
-  LoadingPage,
-  NotValidRoutePage,
-} from "./components/pages/InformationPages";
+import { pages } from "@/app/routes.ts";
+import AuthForm from "./features/auth/AuthPage.tsx";
+import { LoadingComponent, NotValidRouteComponent } from "@/shared/components";
 import { Box } from "@mui/material";
 
-const Home = React.lazy(() => import("./components/pages/Home.tsx"));
+const Home = React.lazy(() => import("./features/home/Home.tsx"));
 
 function App() {
   return (
     <Box sx={{ height: "100dvh", width: "100dvw" }}>
-      <Suspense fallback={<LoadingPage />}>
+      <Suspense fallback={<LoadingComponent />}>
         <Routes>
           <Route
             path="/"
@@ -37,7 +34,7 @@ function App() {
                 key={index}
               />
             ))}
-            {<Route path="*" element={<NotValidRoutePage />} />}
+            {<Route path="*" element={<NotValidRouteComponent />} />}
           </Route>
 
           <Route path="/auth" element={<AuthForm />}></Route>
