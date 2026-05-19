@@ -1,22 +1,13 @@
-import { Box, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { Box } from "@mui/material";
 import { useState } from "react";
-import { classifiers } from "../../../entities";
 import {
   ChapterContentTemplate,
   ChapterHeaderTemplate,
   ChapterInfoTemplate,
   PageChapter,
-} from "../../Templates";
-
-interface IChapterField {
-  name: string;
-  value: string;
-}
-
-export interface IChapterData {
-  title: string;
-  fields: IChapterField[] | React.ReactNode;
-}
+} from "@/shared/components/Templates";
+import { classifiers, type IChapterData } from "@/shared/types";
+import { ClassifierDropdown } from "./ClassifierDropdown";
 
 export const ClassifiersChapter = () => {
   const chaptersInfo: IChapterData[] = [];
@@ -39,8 +30,8 @@ export const ClassifiersChapter = () => {
       headerComponent={
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <ChapterHeaderTemplate chapterTitle={"Роды и сорта растений"} />
-          <DropDownGenusMenu
-            handleSelectClassifier={(classifier_index: number) =>
+          <ClassifierDropdown
+            onSelect={(classifier_index: number) =>
               setSelectedGenus([chaptersInfo[classifier_index]])
             }
           />
@@ -51,28 +42,5 @@ export const ClassifiersChapter = () => {
         content={<ChapterInfoTemplate chaptersInfo={selectedGenus} />}
       />
     </PageChapter>
-  );
-};
-
-export const DropDownGenusMenu = ({
-  handleSelectClassifier,
-}: {
-  handleSelectClassifier: (index: number) => void;
-}) => {
-  return (
-    <FormControl sx={{ minWidth: "15%" }}>
-      <InputLabel>Род растения</InputLabel>
-      <Select defaultValue={"Яблоня"}>
-        {classifiers.map((item, index) => (
-          <MenuItem
-            key={index}
-            value={item.plant}
-            onClick={() => handleSelectClassifier(index)}
-          >
-            {item.plant}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
   );
 };

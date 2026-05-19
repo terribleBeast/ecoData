@@ -1,4 +1,3 @@
-import { Paper, Box, Typography } from "@mui/material";
 import {
   TableCell,
   Table,
@@ -9,125 +8,25 @@ import {
   Button,
   CardHeader,
   CardContent,
+  Typography,
+  Box,
+  Paper,
 } from "@mui/material";
-import { Delete } from "@mui/icons-material";
-import { DialogPanel } from "../../DialogPanel";
-import {
-  ImageStatus,
-  type IImageData,
-  type IPrediction,
-} from "../../../Models/Image";
+import { DialogPanel } from "../../../shared/components/DialogPanel";
+import { type IImageData, type IPrediction } from "../../../shared/types/image";
 import type { MRT_ColumnDef } from "material-react-table";
 
-interface ImageCardProps {
-  image: IImageData;
-  onDelete: (image: IImageData) => void;
-  onOpen: (image: IImageData) => void;
-  onUpdate: (image: IImageData, newStatus: ImageStatus) => void;
-}
-
-export const ImageCard: React.FC<ImageCardProps> = ({
-  image,
-  onDelete: handleDelete,
-  onOpen: handleOpenImageFullInfo,
-  onUpdate: handleUpdateImage,
-}) => {
-  console.log("ImageCard");
-  let borderStyle = "0 0 4px";
-  switch (image.status) {
-    case ImageStatus.LOADING:
-      borderStyle = borderStyle.concat(" #3C9DD0");
-      handleUpdateImage(image, ImageStatus.UPLOADED);
-      break;
-    case ImageStatus.UPLOADED:
-      borderStyle = borderStyle.concat(" yellow");
-      break;
-    case ImageStatus.PROCESSING:
-      borderStyle = borderStyle.concat(" blue");
-      break;
-    case ImageStatus.PROCESSED:
-      borderStyle = borderStyle.concat(" green");
-      break;
-    case ImageStatus.ERROR:
-      borderStyle = borderStyle.concat(" red");
-      break;
-    default:
-      borderStyle = borderStyle.concat(" gray");
-      break;
-  }
-
-  const prediction =
-    image.predictions !== null && image.predictions !== undefined
-      ? image.predictions.reduce((max, current) =>
-          current.probability > max.probability ? current : max,
-        )
-      : null;
-  return (
-    <Paper
-      key={image.key}
-      sx={{
-        padding: "0.5rem",
-        width: "150px",
-        boxShadow: borderStyle,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <img
-          src={image.src !== undefined ? image.src : "no-image-icon_1200.png"}
-          alt="ошибка загрузки изображения"
-          width="100px"
-          height="100px"
-          style={{
-            border: "1px solid black",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-          onClick={() => handleOpenImageFullInfo(image)}
-        ></img>
-      </Box>
-
-      <Box className="image-overlay">
-        <Typography sx={{ overflowWrap: "break-word", fontWeight: "bold" }}>
-          {image.name !== undefined ? image.name : "Не найдено"}
-        </Typography>
-        <Typography>
-          {prediction !== null ? prediction.classifier : "Нет предсказаний"}
-        </Typography>
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "end" }}>
-        <Delete
-          sx={{
-            color: "red",
-            fontSize: "medium",
-            cursor: "pointer",
-          }}
-          onClick={() => handleDelete(image)}
-        />
-      </Box>
-    </Paper>
-  );
-};
-
+const columns: MRT_ColumnDef<IPrediction>[] = [
+  {
+    header: "Классификатор",
+  },
+  {
+    header: "Вероятность",
+  },
+];
 export const ImageFullInfo = ({ image }: { image: IImageData }) => {
   console.log("image FULL");
 
-  const columns: MRT_ColumnDef<IPrediction>[] = [
-    {
-      header: "Классификатор",
-    },
-    {
-      header: "Вероятность",
-    },
-  ];
   const bestValue =
     image.predictions !== null && image.predictions !== undefined
       ? image.predictions.reduce((max, current) =>
@@ -276,3 +175,5 @@ export const ImageFullInfo = ({ image }: { image: IImageData }) => {
     </DialogPanel>
   );
 };
+
+export default ImageFullInfo;
