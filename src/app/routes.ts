@@ -6,8 +6,8 @@ import {
   Assignment,
   ImageSearch,
 } from "@mui/icons-material";
-import Researchers from "@/features/reaserchers/ui/ResearchersPage";
-import Researches from "@/features/reaserches/ui/ResearchesPage";
+import Researchers from "@/features/researchers/ui/ResearchersPage";
+import Researches from "@/features/researches/ui/ResearchesPage";
 import Analyzer from "@/features/analyzer/ui/AnalyzerPage";
 import { LoadingComponent } from "@/shared/components";
 
