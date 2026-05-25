@@ -1,3 +1,5 @@
+import type { IPrediction } from "./image";
+
 export const ResearchStatus = {
   ACTIVE: "Активно",
   STOP: "Прекращено",
@@ -19,4 +21,9 @@ export interface IResearchDataFull {
   endDate: string;
   researchers_id: number[];
   status: ResearchStatus;
+}
+
+export interface IPredictionTable {
+  headers: string[];
+  rows: IPrediction[][];
 }
