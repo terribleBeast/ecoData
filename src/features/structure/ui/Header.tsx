@@ -6,7 +6,6 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectIsAuthenticated,
-  selectUserInfo,
   userLoggedOut,
 } from "@/features/user/authSlice";
 

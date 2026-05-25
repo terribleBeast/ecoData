@@ -1,16 +1,16 @@
-import "./App.css";
 import { Content, Header, Footer } from "./features/structure/ui/index.tsx";
 import { Page } from "./shared/components/Templates.tsx";
 import { Routes, Route } from "react-router";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { pages } from "@/app/routes.ts";
 import AuthForm from "./features/auth/AuthPage.tsx";
 import { LoadingComponent, NotValidRouteComponent } from "@/shared/components";
 import { Box } from "@mui/material";
+import { generateMockDB } from "./test/mock_data.ts";
 
 const Home = React.lazy(() => import("./features/home/Home.tsx"));
-
 function App() {
+  // useEffect(() => generateMockDB(), []);
   return (
     <Box sx={{ height: "100dvh", width: "100dvw" }}>
       <Suspense fallback={<LoadingComponent />}>
