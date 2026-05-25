@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { ImageCard } from "./ImageCard";
 import type { IImageData, ImageStatusType } from "@/shared/types/image";
+import { memo, useMemo } from "react";
 
 interface ImagesContainerProps {
   images: IImageData[];

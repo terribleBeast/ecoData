@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import type { IImageData } from "../../../shared/types/image";
 import { classifiers } from "../../../shared/types/classifier";
-import { useImagesState } from "./useImageState";
+import { useImageState } from "./useImageState";
 import { useImagesProcessing } from "./useImagesProcessing";
 
 export function useAnalyzerPage() {
@@ -12,7 +12,7 @@ export function useAnalyzerPage() {
   );
 
   const { images, addImages, deleteImage, updateImageStatus, replaceImages } =
-    useImagesState();
+    useImageState();
 
   const { processImages } = useImagesProcessing();
 
