@@ -5,17 +5,15 @@ import { Link } from "react-router";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  selectUserIsLogIn,
-  selectUserName,
-  toLogOut,
-} from "../../user/userSlice";
+  selectIsAuthenticated,
+  selectUserInfo,
+  userLoggedOut,
+} from "@/features/user/authSlice";
 
 function Header() {
   const navigate = useNavigate();
-  const isLogIn = useSelector(selectUserIsLogIn);
-  console.log(isLogIn);
-  const name = useSelector(selectUserName);
   const dispatch = useDispatch();
+  const isLogIn = useSelector(selectIsAuthenticated);
   return (
     <AppBar position="static" sx={{ width: "100dvw" }}>
       <Toolbar>
@@ -40,12 +38,13 @@ function Header() {
             <Button
               color="inherit"
               onClick={() => {
-                dispatch(toLogOut());
+                dispatch(userLoggedOut());
                 navigate("/auth");
               }}
               sx={{ textTransform: "none" }}
             >
-              <Typography>{name}</Typography>
+              {/*<Typography>{user?.name} </Typography>*/}
+              Выйти
             </Button>
           </Box>
         ) : (

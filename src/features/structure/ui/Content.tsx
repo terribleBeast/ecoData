@@ -16,6 +16,7 @@ function Content() {
         minHeight: "875pt",
       })}
     >
+      {/*{ TODO: Toggle menu, and }*/}
       <LeftMenu />
       <Box
         sx={(theme) => ({

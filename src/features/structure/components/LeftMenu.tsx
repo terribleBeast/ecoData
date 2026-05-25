@@ -1,6 +1,7 @@
 import { Box, List, ListItemButton, Typography } from "@mui/material";
 import { Link, useLocation } from "react-router";
 import { pages } from "@/app/routes";
+import { memo } from "react";
 
 interface IMenuItem {
   isSelected: boolean;
@@ -9,7 +10,7 @@ interface IMenuItem {
   name: string;
 }
 
-const MenuItem = (data: IMenuItem) => (
+const MenuItem = memo((data: IMenuItem) => (
   <ListItemButton
     component={Link}
     to={data.link}
@@ -37,18 +38,19 @@ const MenuItem = (data: IMenuItem) => (
     {<data.icon />}
     <Typography>{data.name}</Typography>
   </ListItemButton>
-);
+));
 
 const LeftMenu = () => {
   const currLocation = useLocation();
 
-  // TODO: use useMemo
-  const menuItems = pages.map((item) => (
-    <MenuItem
-      {...item}
-      isSelected={item.link.slice(1) === currLocation.pathname}
-    />
-  ));
+  const menuItems = pages.map((item) => {
+    return (
+      <MenuItem
+        {...item}
+        isSelected={item.link === currLocation.pathname.slice(1)}
+      />
+    );
+  });
 
   return (
     <Box
