@@ -2,12 +2,12 @@ import { Faker, ru } from "@faker-js/faker";
 import {
   type IResearchDataFull,
   ResearchStatus,
-} from "./shared/types/research";
-import type { IResearcherData } from "./shared/types/researcher";
-import { ImageStatusType, type IImageData } from "./shared/types/image";
+} from "../shared/types/research";
+import type { IResearcherDataFull } from "../shared/types/researcher";
+import { type ImageStatusType, type IImageData } from "@/shared/types/image";
 
 const customFaker = new Faker({ locale: [ru] });
-const researchers: IResearcherData[] = [];
+const researchers: IResearcherDataFull[] = [];
 const researches: IResearchDataFull[] = [];
 let isActiveDB = false;
 
@@ -136,32 +136,32 @@ export function getMockImageStatus() {
   return status;
 }
 
-export async function getMockPrediction(image: ImageData) {
-  let result = null;
-  const values = Object.values(ImageStatusType);
-  const status: ImageStatusType =
-    values[Math.floor(Math.random() * values.length)];
-  // image.status = status;
-  if (image.status === status) {
-    // Predictions for apple tries
-    const predictions = [
-      "Феникс Уральское",
-      "Уральское наливное",
-      "Сувенир Алтая",
-      "Подарок садоводам",
-      "Заветное",
-      "Жебровское",
-      "Жар-птица",
-      "Алтайское румяное",
-      "Алтайское зимнее",
-      "Алтайская красавица",
-    ];
-    result = predictions.map((prediction) => ({
-      classifier: prediction,
-      probability: Math.random() * 100,
-    }));
-  }
+// export async function getMockPrediction(image: ImageData) {
+//   let result = null;
+//   const values = Object.values(ImageStatusType);
+//   const status: ImageStatusType =
+//     values[Math.floor(Math.random() * values.length)];
+//   // image.status = status;
+//   if (image.status === status) {
+//     // Predictions for apple tries
+//     const predictions = [
+//       "Феникс Уральское",
+//       "Уральское наливное",
+//       "Сувенир Алтая",
+//       "Подарок садоводам",
+//       "Заветное",
+//       "Жебровское",
+//       "Жар-птица",
+//       "Алтайское румяное",
+//       "Алтайское зимнее",
+//       "Алтайская красавица",
+//     ];
+//     result = predictions.map((prediction) => ({
+//       classifier: prediction,
+//       probability: Math.random() * 100,
+//     }));
+//   }
 
-  await new Promise((result) => setTimeout(result, 200));
-  return Promise.resolve(result);
-}
+//   await new Promise((result) => setTimeout(result, 200));
+//   return Promise.resolve(result);
+// }

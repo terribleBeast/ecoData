@@ -1,6 +1,5 @@
 import { createTheme } from "@mui/material/styles";
 
-// Augment the palette to include custom colors
 declare module "@mui/material/styles" {
   interface Palette {
     menuBg: string;
@@ -29,6 +28,7 @@ export const theme = createTheme({
     },
     secondary: {
       main: "#2e7d32",
+      light: "",
     },
     background: {
       default: "#fafafa",
