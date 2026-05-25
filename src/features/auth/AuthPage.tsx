@@ -1,11 +1,12 @@
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import SpaIcon from "@mui/icons-material/Spa";
 import LoginForm from "./ui/LoginForm";
-import { useState } from "react";
 import RegisterForm from "./ui/RegisterForm";
+import { useAuthPage } from "./hooks/useAuthPage";
+import { WithoutAuthButton } from "./components/authPageButtons";
 
 const AuthForm = () => {
-  const [isRegForm, setStateLog] = useState(false);
+  const { isLogInForm, logInFormProps, regFormProps } = useAuthPage();
 
   return (
     <Box
@@ -15,10 +16,11 @@ const AuthForm = () => {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        backgroundColor: "#f2f3f5",
+        backgroundColor: "backgroundPage",
         padding: "2rem",
       }}
     >
+      {/* Brand */}
       <Box
         sx={{
           display: "flex",
@@ -27,7 +29,7 @@ const AuthForm = () => {
           marginBottom: "2rem",
         }}
       >
-        <SpaIcon />
+        <SpaIcon sx={{ fontSize: 32 }} />
         <Typography
           sx={(theme) => ({
             fontSize: "2rem",
@@ -39,37 +41,18 @@ const AuthForm = () => {
         </Typography>
       </Box>
 
-      {isRegForm ? <RegisterForm /> : <LoginForm />}
-
-      <Button
-        onClick={() => {
-          setStateLog(!isRegForm);
-        }}
-        sx={{
-          marginTop: "1rem",
-          fontSize: "0.9rem",
-          color: "#1a56db",
-          textDecoration: "none",
-          display: "inline-block",
-          "&:hover": { textDecoration: "underline" },
-        }}
-      >
-        {isRegForm ? "Уже зарегистрированы?" : "Нет аккаунта?"}
-      </Button>
-      {isRegForm ? null : (
-        <Button
-          sx={{
-            marginTop: "1rem",
-            fontSize: "0.9rem",
-            color: "#1a56db",
-            textDecoration: "none",
-            display: "inline-block",
-            "&:hover": { textDecoration: "underline" },
-          }}
-        >
-          <Typography> Забыли пароль?</Typography>
-        </Button>
+      {/* Form card */}
+      {isLogInForm ? (
+        <LoginForm {...logInFormProps} />
+      ) : (
+        <RegisterForm {...regFormProps} />
       )}
+
+      {/* Text link below the card */}
+      <WithoutAuthButton
+        textState={isLogInForm}
+        onClick={() => console.error("NOT IMPLEMENT")}
+      />
     </Box>
   );
 };

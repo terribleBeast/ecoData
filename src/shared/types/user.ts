@@ -1,21 +1,18 @@
-export interface IUserData {
-  name?: string;
-  surname?: string;
-  patronymic?: string;
-  password_hash?: string;
-  email: string;
-  id?: number;
+export interface IPersonName {
+  name: string;
+  surname: string;
+  patronymic: string;
 }
 
-export class User implements IUserData {
-  name?: string;
-  surname?: string;
-  patronymic?: string;
-  password_hash?: string;
+export interface IAuthUser extends IPersonName {
+  token: string | null;
   email: string;
-  id?: number;
-
-  constructor(data: IUserData) {
-    this.email = data.email;
-  }
+  id: number;
 }
+
+export interface ICheckExistUser {
+  password_hash: string;
+  email: string;
+}
+
+export interface ICreateUser extends IPersonName, ICheckExistUser {}

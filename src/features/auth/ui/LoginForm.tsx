@@ -1,171 +1,69 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { Grid } from "@mui/material";
+import { useState } from "react";
+
+import type { IFormLogInProps } from "../types";
+import type { ICheckExistUser } from "@/shared/types/user";
 import {
-  Button,
-  Grid,
-  TextField,
-  Typography,
-  Box,
-  CircularProgress,
-  Alert,
-} from "@mui/material";
-import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
+  EmailField,
+  PasswordField,
+  type IFieldProps,
+} from "../components/FormFields";
+import { ForgotPasswordButton } from "../components/authPageButtons";
+import { AuthFormTemplate } from "../components/AuthFormTemplate";
 
-import { useLazyGetUserQuery } from "../../../api/userApi";
-import { toLogIn } from "../../user/userSlice";
-import type { IUserData } from "../../../shared/types/user";
-import { LevelLog, sendLogToServer } from "../../../api/api";
-import { deriveErrorMessage, EMAIL_REGEX } from "../utils";
+const LoginForm = ({
+  isLoading,
+  onSubmit,
+  isError,
+  errorMsg,
+  onForgotPassword,
+  onSwitchForm,
+}: IFormLogInProps) => {
+  const [showPassword, setShowPassword] = useState(false);
 
-interface IUserFormData {
-  email: string;
-  password: string;
-}
-
-const LoginForm = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const handleShowPassword = () => setShowPassword((prev) => !prev);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IUserFormData>({
+  } = useForm<ICheckExistUser>({
     mode: "onBlur",
-    reValidateMode: "onChange",
+    reValidateMode: "onSubmit",
   });
 
-  const [getUser, { isLoading, isError, error: rtkError }] =
-    useLazyGetUserQuery();
-
-  const onSubmit: SubmitHandler<IUserFormData> = async (
-    formData: IUserFormData,
-  ) => {
-    try {
-      const user: IUserData = await getUser({ email: formData.email }).unwrap();
-      if (user) {
-        dispatch(
-          toLogIn({
-            login: user.email,
-            id: user.id,
-            name: user.name,
-          }),
-        );
-        navigate("/");
-        sendLogToServer(LevelLog.INFO, `User ${user.email} logged in `);
-      }
-    } catch (err) {
-      sendLogToServer(
-        LevelLog.ERROR,
-        `Login attempt failed for ${formData.email}`,
-        err instanceof Error ? err.message : String(err),
-      ).catch();
-    }
+  const fieldProps: IFieldProps = {
+    register,
+    errors,
+    isLoading,
   };
 
   return (
-    <Box
-      sx={{
-        backgroundColor: "#fff",
-        padding: "2rem",
-        borderRadius: "16px",
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-        width: "100%",
-        maxWidth: "400px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-      }}
+    <AuthFormTemplate
+      title="Вход"
+      submitLabel="Войти"
+      submitLoadingLabel="Вход..."
+      isLoading={isLoading}
+      isError={isError}
+      errorMsg={errorMsg}
+      isLoginForm
+      onSubmit={handleSubmit(onSubmit)}
+      onSwitchForm={onSwitchForm}
     >
-      <Typography
-        sx={{
-          textAlign: "center",
-          fontSize: "1.5rem",
-          fontWeight: 600,
-          marginBottom: "1.5rem",
-          color: "text.primary",
-        }}
-      >
-        Вход
-      </Typography>
-      {isError && (
-        <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
-          {deriveErrorMessage(rtkError)}
-        </Alert>
-      )}
-      <Box
-        component="form"
-        sx={{ width: "100%" }}
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <Grid container spacing={2}>
-          <Grid size={12}>
-            <TextField
-              label="Email"
-              type="email"
-              autoComplete="email"
-              fullWidth
-              disabled={isLoading}
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              slotProps={{
-                htmlInput: {
-                  "aria-invalid": errors.email ? "true" : "false",
-                },
-              }}
-              {...register("email", {
-                required: "Email обязателен",
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "Некорректный email адрес",
-                },
-              })}
-            />
-          </Grid>
-          <Grid size={12}>
-            <TextField
-              label="Пароль"
-              type="password"
-              autoComplete="current-password"
-              disabled={isLoading}
-              error={!!errors.password}
-              fullWidth
-              slotProps={{
-                htmlInput: {
-                  "aria-invalid": errors.password ? "true" : "false",
-                },
-              }}
-              {...register("password", {
-                required: "Пароль обязателен",
-                minLength: {
-                  value: 4,
-                  message: "Пароль должен содержать минимум 4 символа",
-                },
-              })}
-            />
-          </Grid>
-          <Grid size={12}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="success"
-              fullWidth
-              disabled={isLoading}
-              startIcon={isLoading ? <CircularProgress size={20} /> : undefined}
-              sx={(theme) => ({
-                "&:hover": {
-                  backgroundColor: theme.palette.primary.dark,
-                },
-              })}
-            >
-              {isLoading ? "Вход..." : "Войти"}
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-    </Box>
+      <EmailField {...fieldProps} />
+
+      <PasswordField
+        {...fieldProps}
+        showPassword={showPassword}
+        onClickEye={handleShowPassword}
+      />
+
+      {/* Forgot password — right-aligned below the password field */}
+      <Grid size={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <ForgotPasswordButton onClick={onForgotPassword} disabled={isLoading} />
+      </Grid>
+    </AuthFormTemplate>
   );
 };
 

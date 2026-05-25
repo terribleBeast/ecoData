@@ -1,170 +1,107 @@
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { Grid, TextField } from "@mui/material";
+import { useState } from "react";
+
+import type { IFormRegProps } from "../types";
+import type { ICreateUser } from "@/shared/types/user";
 import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
-// import { toLogIn } from "../features/user/userSlice"
-// import { createUser, getUser } from "../database/CRUD"
-import {
-  useLazyGetUserQuery,
-  // useCreateUserMutation,
-} from "../../../api/userApi";
-import { toLogIn } from "../../user/userSlice";
-import { LevelLog, sendLogToServer } from "../../../api/api";
-import { deriveErrorMessage, EMAIL_REGEX } from "../utils";
+  EmailField,
+  PasswordField,
+  type IFieldProps,
+} from "../components/FormFields";
+import { AuthFormTemplate } from "../components/AuthFormTemplate";
 
-interface IUserRegFormData {
-  name: string;
-  surname: string;
-  email: string;
-  password: string;
-}
+const RegisterForm = ({
+  isLoading,
+  isError,
+  errorMsg,
+  onSubmit,
+  onSwitchForm,
+}: IFormRegProps) => {
+  const [showPassword, setShowPassword] = useState(false);
 
-const RegisterForm = () => {
-  const [getUser, { isLoading, isError, error: rtkError }] =
-    useLazyGetUserQuery();
-  // const [createUser] = useCreateUserMutation();
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const handleShowPassword = () => setShowPassword((prev) => !prev);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IUserRegFormData>({
+  } = useForm<ICreateUser>({
     mode: "onBlur",
-    reValidateMode: "onChange",
+    reValidateMode: "onSubmit",
   });
 
-  const onSubmit: SubmitHandler<IUserRegFormData> = async (
-    formData: IUserRegFormData,
-  ) => {
-    console.log("onSubmit");
-    try {
-      const user = await getUser({ email: formData.email }).unwrap();
-      if (user) {
-        // const user = await createUser({
-        //   name: name,
-        //   email: email,
-        //   password: password,
-        // }).unwrap();
-        dispatch(toLogIn({ login: user.email, id: user.id, name: user.name }));
-        navigate("/");
-      } else {
-        sendLogToServer(LevelLog.INFO, `User ${formData.email}`);
-      }
-    } catch (err) {
-      sendLogToServer(
-        LevelLog.ERROR,
-        `Register attempt failed for ${formData.email}`,
-        err instanceof Error ? err.message : String(err),
-      ).catch();
-    }
+  const fieldProps: IFieldProps = {
+    register,
+    errors,
+    isLoading,
   };
 
   return (
-    <div className="reg-form">
-      <Typography className="reg-form-title">Регистрация</Typography>
-      {/* Server-level errors */}
-      {isError && (
-        <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
-          {deriveErrorMessage(rtkError)}
-        </Alert>
-      )}
-      <Box
-        component="form"
-        sx={{ width: "100%" }}
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <Grid container spacing={2}>
-          {/* ---- Name ---- */}
-          <Grid size={12}>
-            <TextField
-              label="Имя"
-              type="text"
-              fullWidth
-              disabled={isLoading}
-              error={!!errors.name}
-              helperText={errors.name?.message}
-              {...register("name", {
-                required: "Имя обязательно",
-              })}
-              variant="outlined"
-              // className="reg-input"
-            />
-          </Grid>
-          {/* ---- Email ---- */}
-          <Grid size={12}>
-            <TextField
-              label="Email"
-              type="email"
-              autoComplete="email"
-              fullWidth
-              disabled={isLoading}
-              error={!!errors.email}
-              helperText={errors.email?.message}
-              slotProps={{
-                htmlInput: {
-                  "aria-invalid": errors.email ? "true" : "false",
-                },
-              }}
-              {...register("email", {
-                required: "Email обязателен",
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "Некорректный email адрес",
-                },
-              })}
-            />
-          </Grid>
-          {/* ---- Password ---- */}
-          <Grid size={12}>
-            <TextField
-              label="Пароль"
-              type="password"
-              autoComplete="current-password"
-              disabled={isLoading}
-              error={!!errors.password}
-              fullWidth
-              slotProps={{
-                htmlInput: {
-                  "aria-invalid": errors.password ? "true" : "false",
-                },
-              }}
-              {...register("password", {
-                required: "Пароль обязателен",
-                minLength: {
-                  value: 4,
-                  message: "Пароль должен содержать минимум 4 символа",
-                },
-              })}
-            />
-          </Grid>
-          <Grid size={12}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="success"
-              fullWidth
-              disabled={isLoading}
-              className="reg-button"
-              startIcon={isLoading ? <CircularProgress size={20} /> : null}
-            >
-              {isLoading ? "Создание..." : "Зарегистрироваться"}
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
-    </div>
+    <AuthFormTemplate
+      title="Регистрация"
+      submitLabel="Зарегистрироваться"
+      submitLoadingLabel="Создание..."
+      isLoading={isLoading}
+      isError={isError}
+      errorMsg={errorMsg}
+      isLoginForm={false}
+      onSubmit={handleSubmit(onSubmit)}
+      onSwitchForm={onSwitchForm}
+    >
+      {/* Surname */}
+      <Grid size={12}>
+        <TextField
+          label="Фамилия"
+          type="text"
+          fullWidth
+          autoComplete="family-name"
+          disabled={isLoading}
+          error={!!errors.surname}
+          helperText={errors.surname?.message}
+          {...register("surname", {
+            required: "Фамилия обязательно",
+          })}
+        />
+      </Grid>
+      {/* Name */}
+      <Grid size={12}>
+        <TextField
+          label="Имя"
+          type="text"
+          fullWidth
+          autoComplete="name"
+          disabled={isLoading}
+          error={!!errors.name}
+          helperText={errors.name?.message}
+          {...register("name", {
+            required: "Имя обязательно",
+          })}
+        />
+      </Grid>
+      {/* Patronymic */}
+      <Grid size={12}>
+        <TextField
+          label="Отчество"
+          type="text"
+          fullWidth
+          autoComplete="additional-name"
+          disabled={isLoading}
+          error={!!errors.patronymic}
+          helperText={errors.patronymic?.message}
+          {...register("patronymic", {
+            required: "Отчество обязательно",
+          })}
+        />
+      </Grid>
+      <EmailField {...fieldProps} />
+
+      <PasswordField
+        {...fieldProps}
+        showPassword={showPassword}
+        onClickEye={handleShowPassword}
+      />
+    </AuthFormTemplate>
   );
 };
 

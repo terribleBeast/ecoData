@@ -13,7 +13,6 @@ export const deriveErrorMessage = (err: unknown): string => {
   // FetchBaseQueryError (network failure, HTTP error, etc.)
   if (typeof err === "object" && err !== null && "status" in err) {
     const status = (err as { status: number | string }).status;
-    if (status === 404) return "Пользователь не найден";
     if (status === "FETCH_ERROR" || status === "PARSING_ERROR")
       return "Не удалось подключиться к серверу";
     return `Ошибка сервера (${status})`;
