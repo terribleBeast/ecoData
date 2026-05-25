@@ -1,9 +1,6 @@
 import { Dialog } from "@mui/material";
-import { useState } from "react";
 import { PageChapter } from "@/shared/components";
 import { ResearchesTable, ResearchFullInfo } from "../components";
-import type { ISelectedResearch } from "../types";
-import { useResearchersPage } from "@/features/researchers/hooks/useResearchersPage";
 import { useResearchesPage } from "../hooks/useResearchesPage";
 
 const ResearchesPage = () => {
@@ -13,7 +10,6 @@ const ResearchesPage = () => {
     selectedResearch,
     onCloseFullInfo,
     isLoading,
-    isError,
   } = useResearchesPage();
 
   return (

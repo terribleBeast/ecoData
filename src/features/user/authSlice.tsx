@@ -1,12 +1,7 @@
-import {
-  createSlice,
-  type PayloadAction,
-  type PrepareAction,
-} from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { RootStateType } from "../../app/store";
 import type { IAuthUser } from "@/shared/types/user";
 import { userEndpoints } from "@/api/endpoints";
-import { useSelector } from "react-redux";
 
 interface AuthState {
   user: IAuthUser | null;

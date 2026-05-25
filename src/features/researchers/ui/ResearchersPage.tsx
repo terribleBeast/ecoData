@@ -7,7 +7,6 @@ const ResearchersPage = () => {
   const {
     researchers,
     isLoadingResearchers,
-    isErrorResearchers,
     selectedResearcher,
     handleSelectResearcher,
     closeDetail,
