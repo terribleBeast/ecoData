@@ -4,16 +4,13 @@ import {
   DialogChapters,
 } from "@/shared/components/Templates";
 import { DialogPanel } from "@/shared/components/DialogPanel";
-import type { IResearchDataFull } from "@/shared/types/research";
-import type { IResearcherData } from "@/shared/types/researcher";
 import type { IChapterData } from "@/shared/types";
+import type { ISelectedResearcher } from "../types";
 
 export const ResearcherFullInfo = ({
   researcher,
-  researches,
 }: {
-  researcher: IResearcherData;
-  researches: IResearchDataFull[];
+  researcher: ISelectedResearcher;
 }) => {
   const chaptersInfo: IChapterData[] = [
     {
@@ -56,12 +53,13 @@ export const ResearcherFullInfo = ({
       <DialogChapters title={"Исследования"}>
         <Card sx={{ overflowY: "auto", maxHeight: "60vh" }}>
           <List>
-            {researcher.researches_id.map((item, index) => (
+            {researcher.researches.map((item, index) => (
               <ListItemButton
-                href={`/researches?research_id=${researches[item].id}`}
+                href={`/researches?research_id=${item.id}`}
+                key={index}
               >
                 {index + 1}.&nbsp;
-                <Link>{researches[researcher.researches_id[index]].title}</Link>
+                <Link>{item.title}</Link>
               </ListItemButton>
             ))}
           </List>

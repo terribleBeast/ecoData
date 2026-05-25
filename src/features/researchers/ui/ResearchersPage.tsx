@@ -1,33 +1,36 @@
 import { Dialog } from "@mui/material";
-import { useState } from "react";
-import { getMockResearches } from "@/mock_data";
 import { PageChapter } from "@/shared/components/Templates";
-import type { IResearcherData } from "../../../shared/types/researcher";
 import { ResearcherFullInfo, ResearchersTable } from "../components";
+import { useResearchersPage } from "../hooks/useResearchersPage";
 
 const ResearchersPage = () => {
-  const [selectedResearcher, setSelectedResearcher] =
-    useState<IResearcherData | null>(null);
+  const {
+    researchers,
+    isLoadingResearchers,
+    isErrorResearchers,
+    selectedResearcher,
+    handleSelectResearcher,
+    closeDetail,
+  } = useResearchersPage();
 
   return (
     <>
       <Dialog
         open={selectedResearcher !== null}
-        onClose={() => {
-          setSelectedResearcher(null);
-        }}
+        onClose={closeDetail}
         fullWidth={true}
         maxWidth="xl"
       >
         {selectedResearcher !== null && (
-          <ResearcherFullInfo
-            researcher={selectedResearcher}
-            researches={getMockResearches()}
-          />
+          <ResearcherFullInfo researcher={selectedResearcher} />
         )}
       </Dialog>
       <PageChapter title="Таблица исследователей">
-        <ResearchersTable setSelectedResearcher={setSelectedResearcher} />
+        <ResearchersTable
+          data={researchers}
+          handleSelectResearcher={handleSelectResearcher}
+          isLoading={isLoadingResearchers}
+        />
       </PageChapter>
     </>
   );
