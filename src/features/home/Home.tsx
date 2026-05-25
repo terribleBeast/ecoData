@@ -44,32 +44,41 @@ const ChapterCards = () => {
   ];
 
   return (
-    <Box
-      sx={{
-        flexWrap: "wrap",
-        width: "100%",
-        display: "flex",
-        padding: "1rem",
-        justifyContent: "center",
-        gap: "1rem",
-      }}
-    >
+    // <Box
+    //   sx={{
+    //     flexWrap: "wrap",
+    //     width: "100%",
+    //     display: "flex",
+    //     padding: "1rem",
+    //     justifyContent: "center",
+    //     gap: "1rem",
+    //     paddingRight: "3rem",
+    //     paddingLeft: "3rem",
+    //   }}
+    // >
+    <Grid container spacing={2}>
       {cardsActions.map((card, index) => (
-        <Paper
-          key={index}
-          sx={{
-            borderRadius: "16px",
-            width: "30%",
-            "&:hover": { boxShadow: 3 },
-          }}
-        >
-          <CardHeader title={card.title} />
-          <CardContent>
-            <Typography>{card.description}</Typography>
-          </CardContent>
-        </Paper>
+        <Grid size={{ xs: 12, md: 4 }} key={index}>
+          <Paper
+            key={index}
+            sx={{
+              borderRadius: "16px",
+              // display: "inline",
+              height: "stretch",
+              paddingLeft: "1rem",
+              paddingRight: "1rem",
+              "&:hover": { boxShadow: 3 },
+            }}
+          >
+            <CardHeader title={card.title} />
+            <CardContent>
+              <Typography>{card.description}</Typography>
+            </CardContent>
+          </Paper>
+        </Grid>
       ))}
-    </Box>
+      {/*</Box>*/}
+    </Grid>
   );
 };
 
