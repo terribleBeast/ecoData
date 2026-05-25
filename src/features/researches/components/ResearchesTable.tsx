@@ -1,22 +1,22 @@
-import { Typography, Box, ListItemButton, List, Link } from "@mui/material";
+import { Typography } from "@mui/material";
 import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
   type MRT_RowData,
 } from "material-react-table";
-import { useState } from "react";
-import { getMockResearchers, getMockResearches } from "@/mock_data";
 import type { IResearchDataFull } from "@/shared/types/research";
 
 export const ResearchesTable = ({
-  setSelectedResearch,
+  data,
+  handleSelectResearch,
+  isLoading: isLoadingResearchers,
 }: {
-  setSelectedResearch: (research: IResearchDataFull) => void;
+  data: IResearchDataFull[];
+  handleSelectResearch: (research: IResearchDataFull) => void;
+  isLoading: boolean;
 }) => {
-  const [data, setData] = useState(getMockResearches());
-  const [researchersData, setResearchersData] = useState(getMockResearchers());
-
+  console.log("Researches", data);
   const columns: MRT_ColumnDef<IResearchDataFull>[] = [
     {
       accessorKey: "id",
@@ -33,7 +33,7 @@ export const ResearchesTable = ({
       header: "Название",
       Cell: ({ row }) => (
         <Typography
-          onClick={() => setSelectedResearch(row.original)}
+          onClick={() => handleSelectResearch(row.original)}
           sx={{ cursor: "pointer" }}
         >
           {row.original.title}
@@ -58,33 +58,36 @@ export const ResearchesTable = ({
       accessorKey: "status",
       header: "Статус",
     },
-    {
-      accessorKey: "researchers_id",
-      header: "Исследователи",
-      Cell: ({ row }) => (
-        <Box sx={{ overflowY: "auto", maxHeight: "20vh" }}>
-          <List>
-            {row.original.researchers_id.map((item, index) => (
-              <ListItemButton
-                key={index}
-                href={`/researchers?researcher_id=${researchersData[item].id}`}
-              >
-                {index + 1}.&nbsp;
-                <Link>
-                  {researchersData[item].surname}{" "}
-                  {researchersData[item].name[0]}.{" "}
-                  {researchersData[item].patronymic[0]}.
-                </Link>
-              </ListItemButton>
-            ))}
-          </List>
-        </Box>
-      ),
-    },
+    // {
+    //   accessorKey: "researchers_id",
+    //   header: "Исследователи",
+    //   Cell: ({ row }) => (
+    //     <Box sx={{ overflowY: "auto", maxHeight: "20vh" }}>
+    //       <List>
+    //         {row.original.researchers_id.map((item, index) => (
+    //           <ListItemButton
+    //             key={index}
+    //             href={`/researchers?researcher_id=${researches[item].id}`}
+    //           >
+    //             {index + 1}.&nbsp;
+    //             <Link>
+    //               {researches[item].surname} {researches[item].name[0]}.{" "}
+    //               {researches[item].patronymic[0]}.
+    //             </Link>
+    //           </ListItemButton>
+    //         ))}
+    //       </List>
+    //     </Box>
+    //   ),
+    // },
   ];
+
   const table = useMaterialReactTable({
-    columns: columns,
-    data: data,
+    columns,
+    data,
+    state: {
+      isLoading: isLoadingResearchers,
+    },
   });
   return <MaterialReactTable table={table} />;
 };

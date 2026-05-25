@@ -1,20 +1,26 @@
 import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { PageChapter } from "@/shared/components";
-import type { IResearchDataFull } from "@/shared/types/research";
 import { ResearchesTable, ResearchFullInfo } from "../components";
+import type { ISelectedResearch } from "../types";
+import { useResearchersPage } from "@/features/researchers/hooks/useResearchersPage";
+import { useResearchesPage } from "../hooks/useResearchesPage";
 
 const ResearchesPage = () => {
-  const [selectedResearch, setSelectedResearch] =
-    useState<IResearchDataFull | null>(null);
+  const {
+    researches,
+    handleSelectResearch,
+    selectedResearch,
+    onCloseFullInfo,
+    isLoading,
+    isError,
+  } = useResearchesPage();
 
   return (
     <>
       <Dialog
         open={selectedResearch !== null}
-        onClose={() => {
-          setSelectedResearch(null);
-        }}
+        onClose={onCloseFullInfo}
         fullWidth={true}
         maxWidth="xl"
       >
@@ -22,7 +28,11 @@ const ResearchesPage = () => {
       </Dialog>
 
       <PageChapter title="Таблица исследований">
-        <ResearchesTable setSelectedResearch={setSelectedResearch} />
+        <ResearchesTable
+          data={researches}
+          handleSelectResearch={handleSelectResearch}
+          isLoading={isLoading}
+        />
       </PageChapter>
     </>
   );

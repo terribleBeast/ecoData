@@ -1,5 +1,3 @@
-import { getMockResearchers } from "@/mock_data";
-import type { IResearchDataFull } from "@/shared/types/research";
 import {
   ChapterInfoTemplate,
   DialogChapters,
@@ -8,17 +6,14 @@ import {
 import type { IChapterData } from "@/shared/types";
 import { Box, Card, Link, List, ListItemButton } from "@mui/material";
 import { ResultTable } from "./PredictionResultTable";
+import type { ISelectedResearch } from "../types";
 
 export const ResearchFullInfo = ({
   research,
 }: {
-  research: IResearchDataFull | null;
+  research: ISelectedResearch | null;
 }) => {
   if (research === null) return;
-  const researchers = getMockResearchers();
-  const activeResearchers = research.researchers_id.map(
-    (id) => researchers[id],
-  );
 
   const chaptersInfo: IChapterData[] = [
     {
@@ -34,7 +29,7 @@ export const ResearchFullInfo = ({
       fields: (
         <Box sx={{ overflowY: "auto", maxHeight: "20vh" }}>
           <List>
-            {activeResearchers.map((researcher, index) => (
+            {research.researchers.map((researcher, index) => (
               <ListItemButton
                 key={index}
                 href={`/researchers?researcher_id=${researcher.id}`}
@@ -56,7 +51,7 @@ export const ResearchFullInfo = ({
     <DialogPanel>
       <DialogChapters title="Таблица результатов">
         <Card sx={{ overflowY: "auto", overflowX: "auto", maxHeight: "60vh" }}>
-          <ResultTable />
+          <ResultTable data={research.results} isLoading={false} />
         </Card>
       </DialogChapters>
       <DialogChapters title="Данные об исследовании">
