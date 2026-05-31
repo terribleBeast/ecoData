@@ -29,7 +29,26 @@ server.get("/researches", (req, res, next) => {
   }
   next(); // fall through to default router
 });
-
+server.get("/researchers", (req, res, next) => {
+  if (req.query.ids) {
+    const ids = req.query.ids
+      .split(",")
+      .map(Number)
+      .filter((n) => !isNaN(n));
+    const db = router.db.getState();
+    const filtered = db.researchers.filter((r) => ids.includes(r.id));
+    return res.jsonp({ data: filtered });
+  }
+  next(); // fall through to default router
+});
+server.get("/researches/:id/predictions", (req, res) => {
+  const db = router.db.getState();
+  const predictions = db.predictions?.[req.params.id];
+  if (!predictions) {
+    return res.status(404).jsonp({ error: "Predictions not found" });
+  }
+  res.jsonp({ data: predictions });
+});
 // Custom routes from routes.json still needed? Read the file manually
 server.use(middlewares);
 server.use(
