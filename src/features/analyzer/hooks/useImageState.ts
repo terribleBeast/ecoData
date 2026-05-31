@@ -1,15 +1,8 @@
-import { getMockImages } from "@/test/mock_data";
-import {
-  ImageStatus,
-  type IImageData,
-  type ImageStatusType,
-} from "@/shared/types/image";
+import { type IImageData, type ImageStatusType } from "@/shared/types/image";
 import { useCallback, useState } from "react";
 
 export const useImageState = () => {
-  const [images, setImages] = useState<IImageData[]>(
-    getMockImages(ImageStatus.LOADING, 10),
-  );
+  const [images, setImages] = useState<IImageData[]>([]);
 
   const addImages = useCallback((images: IImageData[]) => {
     setImages((prev) => [...images, ...prev]);
