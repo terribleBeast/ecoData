@@ -1,11 +1,10 @@
-import { ListItemButton, List, Link, Card } from "@mui/material";
-import {
-  ChapterInfoTemplate,
-  DialogChapters,
-} from "@/shared/components/Templates";
+import { ListItemButton, List, Card, Typography } from "@mui/material";
 import { DialogPanel } from "@/shared/components/DialogPanel";
 import type { IChapterData } from "@/shared/types";
 import type { ISelectedResearcher } from "../types";
+import { Link as RouterLink } from "react-router";
+import { DialogSection } from "@/shared/ui/layout";
+import { ChapterInfoTemplate } from "@/shared/ui/ChapterInfoTemplate";
 
 export const ResearcherFullInfo = ({
   researcher,
@@ -43,31 +42,46 @@ export const ResearcherFullInfo = ({
         },
         {
           name: "Телефон",
-          value: researcher.phone,
+          value: researcher.phoneNumber,
         },
       ],
     },
   ];
+  const hasResearches = researcher.researches.length > 0;
   return (
     <DialogPanel>
-      <DialogChapters title={"Исследования"}>
+      <DialogSection title={"Исследования"}>
         <Card sx={{ overflowY: "auto", maxHeight: "60vh" }}>
-          <List>
-            {researcher.researches.map((item, index) => (
-              <ListItemButton
-                href={`/researches?research_id=${item.id}`}
-                key={index}
-              >
-                {index + 1}.&nbsp;
-                <Link>{item.title}</Link>
-              </ListItemButton>
-            ))}
-          </List>
+          {hasResearches ? (
+            <List>
+              {researcher.researches.map((item, index) => (
+                <ListItemButton
+                  component={RouterLink}
+                  to={`/researches/${item.id}`}
+                  key={index}
+                >
+                  <Typography>
+                    {index + 1}.&nbsp;{item.title}
+                  </Typography>
+                </ListItemButton>
+              ))}
+            </List>
+          ) : (
+            <Typography
+              sx={{
+                padding: "1rem",
+                color: "text.secondary",
+                fontStyle: "italic",
+              }}
+            >
+              Исследователь пока не участвует ни в одном исследовании
+            </Typography>
+          )}
         </Card>
-      </DialogChapters>
-      <DialogChapters title="Профиль исследователя">
+      </DialogSection>
+      <DialogSection title="Профиль исследователя">
         <ChapterInfoTemplate chaptersInfo={chaptersInfo} />
-      </DialogChapters>
+      </DialogSection>
     </DialogPanel>
   );
 };

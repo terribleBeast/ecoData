@@ -1,21 +1,30 @@
-import { useLazyGetResearchesByIdsQuery } from "@/api/endpoints/research";
+// frontend/src/features/researchers/hooks/useResearchersState.ts
 
-import { useGetResearchersQuery } from "@/api/endpoints";
+import { useEntityCRUD } from "@/shared/hooks/useEntityCRUD";
+import {
+  useCreateResearcherFullMutation,
+  useDeleteResearcherMutation,
+  useEditResearcherFullMutation,
+  useLazyGetResearcherByIdQuery,
+  useGetResearchersQuery,
+} from "@/api/endpoints";
 
 export const useResearchersState = () => {
-  const {
-    data: researchers = [],
-    isLoading: isLoadingResearchers,
-    isError: isErrorResearchers,
-    error,
-  } = useGetResearchersQuery();
+  const crud = useEntityCRUD(
+    useGetResearchersQuery,
+    useLazyGetResearcherByIdQuery,
+    useCreateResearcherFullMutation,
+    useEditResearcherFullMutation,
+    useDeleteResearcherMutation,
+    undefined,
+  );
 
-  const [getResearchesByIds] = useLazyGetResearchesByIdsQuery();
   return {
-    researchers,
-    getResearchesByIds,
-    isLoadingResearchers,
-    isErrorResearchers,
-    error,
+    researchers: crud.items,
+    fetchedResearcher: crud.fetchedItem,
+    createResearcherFull: crud.create,
+    editResearcherFull: crud.update,
+    deleteResearcher: crud.remove,
+    state: crud.state,
   };
 };

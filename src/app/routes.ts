@@ -6,53 +6,100 @@ import {
   Assignment,
   ImageSearch,
 } from "@mui/icons-material";
-import Researchers from "@/features/researchers/ui/ResearchersPage";
-import Researches from "@/features/researches/ui/ResearchesPage";
-import Analyzer from "@/features/analyzer/ui/AnalyzerPage";
-import { LoadingComponent } from "@/shared/components";
-
-interface PageData {
+import { ResearchersPage } from "@/features/researchers/ui/ResearchersPage";
+import { ResearcherDetailDialog } from "@/features/researchers/ui/ResearcherDetailDialog";
+import AnalyzerPage from "@/features/analyzer/ui/AnalyzerPage";
+import ResearchesPage from "@/features/researches/ui/ResearchesPage";
+import { ResearchDetailDialog } from "@/features/researches/ui/ResearchDetialDialog";
+export interface IEntityInfo {
   name: string;
-  link: string;
-  icon: React.ComponentType;
-  component: React.ComponentType;
+  path: EntityPathType;
 }
 
-export const pages: PageData[] = [
+export const entityPaths = {
+  PLANTS: "plants",
+  LABS: "laboratories",
+  RESEARCHERS: "researchers",
+  RESEARCHES: "researches",
+  LOCATIONS: "locations",
+  ANALYZER: "analyzer",
+} as const;
+export type EntityPathType = (typeof entityPaths)[keyof typeof entityPaths];
+export const entityNames = {
+  PLANTS: "Растения",
+  LABS: "Лаборатории",
+  RESEARCHERS: "Исследователи",
+  RESEARCHES: "Исследования",
+  LOCATIONS: "Локации",
+  ANALYZER: "Анализатор",
+} as const;
+export type EntityNameType = (typeof entityNames)[keyof typeof entityNames];
+
+export interface MenuItemData {
+  title: EntityNameType;
+  path: EntityPathType;
+  icon: React.ComponentType;
+}
+
+export const menuItems: MenuItemData[] = [
   {
-    name: "Исследования",
-    link: "researches",
+    title: entityNames.RESEARCHES,
+    path: entityPaths.RESEARCHES,
     icon: Assignment,
-    component: Researches,
   },
   {
-    name: "Исследователи",
-    link: "researchers",
+    title: entityNames.RESEARCHERS,
+    path: entityPaths.RESEARCHERS,
     icon: PeopleAlt,
-    component: Researchers,
   },
   {
-    name: "Растения",
-    link: "plants",
+    title: entityNames.PLANTS,
+    path: entityPaths.PLANTS,
     icon: Grass,
-    component: LoadingComponent,
   },
   {
-    name: "Анализатор",
-    link: "analyzer",
+    title: entityNames.ANALYZER,
+    path: entityPaths.ANALYZER,
     icon: ImageSearch,
-    component: Analyzer,
   },
   {
-    name: "Локации",
-    link: "locations",
+    title: entityNames.LOCATIONS,
+    path: entityPaths.LOCATIONS,
     icon: LocationOn,
-    component: LoadingComponent,
   },
   {
-    name: "Лаборатории",
-    link: "laboratories",
+    title: entityNames.LABS,
+    path: entityPaths.LABS,
     icon: Biotech,
-    component: LoadingComponent,
+  },
+];
+
+export interface EntityRouteConfig {
+  title: string;
+  path: EntityPathType;
+  pageComponent: React.ComponentType;
+  detailComponent: React.ComponentType;
+}
+export const entityRoutes: EntityRouteConfig[] = [
+  {
+    title: entityNames.RESEARCHERS,
+    path: entityPaths.RESEARCHERS,
+    pageComponent: ResearchersPage,
+    detailComponent: ResearcherDetailDialog,
+  },
+  {
+    title: entityNames.RESEARCHES,
+    path: entityPaths.RESEARCHES,
+    pageComponent: ResearchesPage,
+    detailComponent: ResearchDetailDialog,
+  },
+];
+// Special routes that don't follow the table+detail pattern
+export const standaloneRoutes: EntityRouteConfig[] = [
+  {
+    title: entityNames.ANALYZER,
+    path: "analyzer",
+    pageComponent: AnalyzerPage,
+    detailComponent: () => null, // analyzer has no detail dialog
   },
 ];
