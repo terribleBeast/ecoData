@@ -29,7 +29,7 @@ export const ResultTable = ({
         {data.rows.map((row, index) => (
           <TableRow key={index}>
             {row.map((value, index) => (
-              <TableCell key={index}>{value.probability}</TableCell>
+              <TableCell key={index}>{value}</TableCell>
             ))}
           </TableRow>
         ))}

@@ -1,24 +1,28 @@
+import { useEntityCRUD } from "@/shared/hooks/useEntityCRUD";
 import {
+  useCreateResearchMutation,
+  useDeleteResearchMutation,
+  useEditResearchMutation,
+  useLazyGetResearchByIdQuery,
   useGetResearchesQuery,
-  useLazyGetPredictionQuery,
-  useLazyGetResearchersByIdsQuery,
 } from "@/api/endpoints";
 
 export const useResearchesState = () => {
-  const {
-    data: researches = [],
-    isLoading,
-    isError,
-    error,
-  } = useGetResearchesQuery();
-  const [getPredictionResults] = useLazyGetPredictionQuery();
-  const [getResearchersByIds] = useLazyGetResearchersByIdsQuery();
+  const crud = useEntityCRUD(
+    useGetResearchesQuery,
+    useLazyGetResearchByIdQuery,
+    useCreateResearchMutation,
+    useEditResearchMutation,
+    useDeleteResearchMutation,
+    undefined,
+  );
+
   return {
-    researches,
-    isLoading,
-    isError,
-    error,
-    getResearchersByIds,
-    getPredictionResults,
+    researches: crud.items,
+    fetchedResearch: crud.fetchedItem,
+    createResearch: crud.create,
+    editResearch: crud.update,
+    deleteResearch: crud.remove,
+    state: crud.state,
   };
 };

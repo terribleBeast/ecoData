@@ -27,14 +27,14 @@ export const ResearchFullInfo = ({
         <Box sx={{ overflowY: "auto", maxHeight: "20vh" }}>
           {research.researchers.length > 0 ? (
             <List>
-              {research.researchers.map((researcher) => (
+              {research.researchers.map((researcher, index) => (
                 <ListItemButton
                   key={researcher.id}
                   component={RouterLink}
-                  to={`/researchers?researcher_id=${researcher.id}`}
+                  to={`/researchers/${researcher.id}`}
                 >
                   <Typography>
-                    {researcher.surname} {researcher.name[0]}.{" "}
+                    {index + 1}. {researcher.surname} {researcher.name[0]}.{" "}
                     {researcher.patronymic[0]}.
                   </Typography>
                 </ListItemButton>

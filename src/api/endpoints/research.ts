@@ -14,7 +14,13 @@ export const researchEndpoints = apiSlice.injectEndpoints({
       }): IResearchDataFull[] => {
         return response.data;
       },
-      transformErrorResponse: (response) => console.error(response.status),
+      providesTags: [{ type: "Researches", id: "LIST" }],
+    }),
+    getResearchById: builder.query<IResearchDataFull, number>({
+      query: (id) => `/researches/${id}`,
+      transformResponse: (response: { data: IResearchDataFull }) =>
+        response.data,
+      providesTags: (response, error, arg) => [{ type: "Researches", id: arg }],
     }),
     getResearchesByIds: builder.query<IResearchData[], number[]>({
       query: (ids) => `/researches?ids=${ids.join(",")}`,
@@ -23,7 +29,6 @@ export const researchEndpoints = apiSlice.injectEndpoints({
       }): IResearchData[] => {
         return response.data;
       },
-      transformErrorResponse: (response) => console.error(response.status),
     }),
     // TODO: now we get data from csv file
     getPrediction: builder.query<IPredictionTable, number>({
@@ -31,7 +36,32 @@ export const researchEndpoints = apiSlice.injectEndpoints({
       transformResponse: (response: {
         data: IPredictionTable;
       }): IPredictionTable => response.data,
-      transformErrorResponse: (response) => console.error(response.status),
+    }),
+    createResearch: builder.mutation<void, IResearchDataFull>({
+      query: (research) => ({
+        url: "/researches",
+        method: "POST",
+        body: research,
+      }),
+      invalidatesTags: ["Researches"],
+    }),
+    editResearch: builder.mutation<
+      IResearchDataFull,
+      Partial<IResearchDataFull>
+    >({
+      query: (research) => ({
+        url: `/researches/${research.id}`,
+        method: "PATCH",
+        body: research,
+      }),
+      invalidatesTags: (research) => [{ type: "Researches", id: research?.id }],
+    }),
+    deleteResearch: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/researches/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Researches", id: "LIST" }],
     }),
   }),
 });
@@ -41,4 +71,9 @@ export const {
   useLazyGetResearchesQuery,
   useGetResearchesQuery,
   useLazyGetPredictionQuery,
+  useLazyGetResearchByIdQuery,
+  useGetResearchByIdQuery,
+  useCreateResearchMutation,
+  useEditResearchMutation,
+  useDeleteResearchMutation,
 } = researchEndpoints;

@@ -19,16 +19,14 @@ export const researcherEndpoints = apiSlice.injectEndpoints({
       query: (id) => `/researchers/${id}`,
       transformResponse: (response: { data: IResearcherDataFull }) =>
         response.data,
-      transformErrorResponse: (response) => console.error(response.status),
       providesTags: (response, error, arg) => [
         { type: "Researchers", id: arg },
       ],
     }),
     getResearchersByIds: builder.query<IResearcherData[], number[]>({
-      query: (ids) => `/researchers/ids=${ids.join(",")}`,
+      query: (ids) => `/researchers?ids=${ids.join(",")}`,
       transformResponse: (response: { data: IResearcherData[] }) =>
         response.data,
-      transformErrorResponse: (response) => console.error(response.status),
     }),
 
     editResearcherFull: builder.mutation<
@@ -51,7 +49,6 @@ export const researcherEndpoints = apiSlice.injectEndpoints({
         method: "POST",
         body: credentials,
       }),
-      transformErrorResponse: (response) => console.error(response.status),
       invalidatesTags: ["Researchers"],
     }),
     deleteResearcher: builder.mutation<void, number>({
@@ -59,7 +56,6 @@ export const researcherEndpoints = apiSlice.injectEndpoints({
         url: `/researchers/${id}`,
         method: "DELETE",
       }),
-      transformErrorResponse: (response) => console.error(response.status),
       invalidatesTags: [{ type: "Researchers", id: "LIST" }],
     }),
   }),

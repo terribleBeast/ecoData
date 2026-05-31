@@ -1,5 +1,4 @@
 import type { IFormProps } from "@/shared/types/form";
-import type { ICheckExistUser } from "@/shared/types/user";
 import type { SubmitHandler } from "react-hook-form";
 
 export interface IAuthFormProps<T> extends IFormProps<T> {
