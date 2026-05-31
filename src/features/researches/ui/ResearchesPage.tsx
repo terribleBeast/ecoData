@@ -1,7 +1,7 @@
 import { Dialog } from "@mui/material";
-import { PageChapter } from "@/shared/components";
 import { ResearchesTable, ResearchFullInfo } from "../components";
 import { useResearchesPage } from "../hooks/useResearchesPage";
+import { PageChapter } from "@/shared/ui/layout";
 
 const ResearchesPage = () => {
   const {
@@ -23,7 +23,7 @@ const ResearchesPage = () => {
         {selectedResearch && <ResearchFullInfo research={selectedResearch} />}
       </Dialog>
 
-      <PageChapter title="Таблица исследований">
+      <PageChapter header={{ title: "Таблица исследований" }}>
         <ResearchesTable
           data={researches}
           handleSelectResearch={handleSelectResearch}

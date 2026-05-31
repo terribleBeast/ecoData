@@ -11,7 +11,6 @@ export const useResearchesState = () => {
     isError,
     error,
   } = useGetResearchesQuery();
-  console.log(isLoading);
   const [getPredictionResults] = useLazyGetPredictionQuery();
   const [getResearchersByIds] = useLazyGetResearchersByIdsQuery();
   return {

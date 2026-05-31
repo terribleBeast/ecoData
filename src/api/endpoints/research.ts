@@ -11,14 +11,18 @@ export const researchEndpoints = apiSlice.injectEndpoints({
       query: () => "/researches",
       transformResponse: (response: {
         data: IResearchDataFull[];
-      }): IResearchDataFull[] => response.data,
+      }): IResearchDataFull[] => {
+        return response.data;
+      },
       transformErrorResponse: (response) => console.error(response.status),
     }),
     getResearchesByIds: builder.query<IResearchData[], number[]>({
-      query: (ids) => `/researches/ids=${ids.join(",")}`,
+      query: (ids) => `/researches?ids=${ids.join(",")}`,
       transformResponse: (response: {
         data: IResearchData[];
-      }): IResearchData[] => response.data,
+      }): IResearchData[] => {
+        return response.data;
+      },
       transformErrorResponse: (response) => console.error(response.status),
     }),
     // TODO: now we get data from csv file

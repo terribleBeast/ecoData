@@ -16,7 +16,6 @@ export const ResearchesTable = ({
   handleSelectResearch: (research: IResearchDataFull) => void;
   isLoading: boolean;
 }) => {
-  console.log("Researches", data);
   const columns: MRT_ColumnDef<IResearchDataFull>[] = [
     {
       accessorKey: "id",
@@ -58,28 +57,6 @@ export const ResearchesTable = ({
       accessorKey: "status",
       header: "Статус",
     },
-    // {
-    //   accessorKey: "researchers_id",
-    //   header: "Исследователи",
-    //   Cell: ({ row }) => (
-    //     <Box sx={{ overflowY: "auto", maxHeight: "20vh" }}>
-    //       <List>
-    //         {row.original.researchers_id.map((item, index) => (
-    //           <ListItemButton
-    //             key={index}
-    //             href={`/researchers?researcher_id=${researches[item].id}`}
-    //           >
-    //             {index + 1}.&nbsp;
-    //             <Link>
-    //               {researches[item].surname} {researches[item].name[0]}.{" "}
-    //               {researches[item].patronymic[0]}.
-    //             </Link>
-    //           </ListItemButton>
-    //         ))}
-    //       </List>
-    //     </Box>
-    //   ),
-    // },
   ];
 
   const table = useMaterialReactTable({

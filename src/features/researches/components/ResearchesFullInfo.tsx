@@ -1,20 +1,17 @@
-import {
-  ChapterInfoTemplate,
-  DialogChapters,
-  DialogPanel,
-} from "@/shared/components";
+import { DialogPanel } from "@/shared/components";
 import type { IChapterData } from "@/shared/types";
-import { Box, Card, Link, List, ListItemButton } from "@mui/material";
+import { Box, Card, List, ListItemButton, Typography } from "@mui/material";
+import { Link as RouterLink } from "react-router";
 import { ResultTable } from "./PredictionResultTable";
 import type { ISelectedResearch } from "../types";
+import { DialogSection } from "@/shared/ui/layout";
+import { ChapterInfoTemplate } from "@/shared/ui/ChapterInfoTemplate";
 
 export const ResearchFullInfo = ({
   research,
 }: {
-  research: ISelectedResearch | null;
+  research: ISelectedResearch;
 }) => {
-  if (research === null) return;
-
   const chaptersInfo: IChapterData[] = [
     {
       title: "Общая информация",
@@ -28,20 +25,32 @@ export const ResearchFullInfo = ({
       title: "Участники",
       fields: (
         <Box sx={{ overflowY: "auto", maxHeight: "20vh" }}>
-          <List>
-            {research.researchers.map((researcher, index) => (
-              <ListItemButton
-                key={index}
-                href={`/researchers?researcher_id=${researcher.id}`}
-              >
-                {index + 1}.&nbsp;
-                <Link>
-                  {researcher.surname} {researcher.name[0]}.{" "}
-                  {researcher.patronymic[0]}.
-                </Link>
-              </ListItemButton>
-            ))}{" "}
-          </List>
+          {research.researchers.length > 0 ? (
+            <List>
+              {research.researchers.map((researcher) => (
+                <ListItemButton
+                  key={researcher.id}
+                  component={RouterLink}
+                  to={`/researchers?researcher_id=${researcher.id}`}
+                >
+                  <Typography>
+                    {researcher.surname} {researcher.name[0]}.{" "}
+                    {researcher.patronymic[0]}.
+                  </Typography>
+                </ListItemButton>
+              ))}
+            </List>
+          ) : (
+            <Typography
+              sx={{
+                padding: "0.5rem",
+                color: "text.secondary",
+                fontStyle: "italic",
+              }}
+            >
+              Нет участников
+            </Typography>
+          )}
         </Box>
       ),
     },
@@ -49,14 +58,14 @@ export const ResearchFullInfo = ({
 
   return (
     <DialogPanel>
-      <DialogChapters title="Таблица результатов">
+      <DialogSection title="Таблица результатов">
         <Card sx={{ overflowY: "auto", overflowX: "auto", maxHeight: "60vh" }}>
           <ResultTable data={research.results} isLoading={false} />
         </Card>
-      </DialogChapters>
-      <DialogChapters title="Данные об исследовании">
+      </DialogSection>
+      <DialogSection title="Данные об исследовании">
         <ChapterInfoTemplate chaptersInfo={chaptersInfo} />
-      </DialogChapters>
+      </DialogSection>
     </DialogPanel>
   );
 };
