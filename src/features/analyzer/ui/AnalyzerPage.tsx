@@ -1,8 +1,7 @@
-import { Box, Button, Dialog, Typography } from "@mui/material";
+import { Box, Dialog } from "@mui/material";
 import { useAnalyzerPage } from "../hooks/useAnalyzerPage";
 import { exportImagesToCsv } from "../utils";
 import { ImageStatus } from "@/shared/types/image";
-import { ChapterHeaderTemplate, PageChapter } from "@/shared/components";
 import {
   FileDragAndDrop,
   ImageFullInfo,
@@ -10,6 +9,8 @@ import {
   ClassifiersChapter,
   ClassifierMenu,
 } from "../components";
+import { PageChapter } from "@/shared/ui/layout/PageChapter";
+import { AnalyzerHeader } from "./AnalyzerHeader";
 
 const AnalyzerPage = () => {
   const {
@@ -46,44 +47,16 @@ const AnalyzerPage = () => {
       <ClassifiersChapter />
 
       <PageChapter
-        title={undefined}
-        headerComponent={
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <ChapterHeaderTemplate chapterTitle="Изображения" />
-            <Box sx={{ display: "flex", gap: "1rem" }}>
-              <Button
-                color="success"
-                variant="contained"
-                onClick={toggleFileMenu}
-              >
-                <Typography>
-                  {isFileMenuOpen ? "Закрыть" : "Добавить"}
-                </Typography>
-              </Button>
-              <Button
-                color="success"
-                variant="contained"
-                onClick={handleProcessImages}
-              >
-                <Typography>Обработать</Typography>
-              </Button>
-              <Button
-                href=""
-                color="success"
-                variant="contained"
-                onClick={handleDownloadResult}
-              >
-                <Typography>Выгрузить</Typography>
-              </Button>
-            </Box>
-          </Box>
-        }
+        header={{
+          component: (
+            <AnalyzerHeader
+              handleDownloadResult={handleDownloadResult}
+              handleProcessImages={handleProcessImages}
+              isFileMenuOpen={isFileMenuOpen}
+              toggleFileMenu={toggleFileMenu}
+            />
+          ),
+        }}
       >
         {isFileMenuOpen && (
           <Box sx={{ display: "flex" }}>
