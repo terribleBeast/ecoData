@@ -9,7 +9,6 @@ export const LoadingComponent = () => (
         fontWeight: 600,
         color: theme.palette.secondary.main,
       })}
-      style={{ fontSize: "18px" }}
     >
       Загрузка...
     </Typography>

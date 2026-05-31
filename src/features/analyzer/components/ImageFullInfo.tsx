@@ -25,8 +25,6 @@ const columns: MRT_ColumnDef<IPrediction>[] = [
   },
 ];
 export const ImageFullInfo = ({ image }: { image: IImageData }) => {
-  console.log("image FULL");
-
   const bestValue =
     image.predictions !== null && image.predictions !== undefined
       ? image.predictions.reduce((max, current) =>

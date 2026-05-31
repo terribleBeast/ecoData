@@ -1,13 +1,10 @@
 import { Box } from "@mui/material";
 import { useState } from "react";
-import {
-  ChapterContentTemplate,
-  ChapterHeaderTemplate,
-  ChapterInfoTemplate,
-  PageChapter,
-} from "@/shared/components/Templates";
+import { PageChapter } from "@/shared/ui/layout";
 import { classifiers, type IChapterData } from "@/shared/types";
 import { ClassifierDropdown } from "./ClassifierDropdown";
+import { ChapterHeaderTemplate } from "@/shared/ui/ChapterHeader";
+import { ChapterInfoTemplate } from "@/shared/ui/ChapterInfoTemplate";
 
 export const ClassifiersChapter = () => {
   const chaptersInfo: IChapterData[] = [];
@@ -26,21 +23,22 @@ export const ClassifiersChapter = () => {
 
   return (
     <PageChapter
-      title={undefined}
-      headerComponent={
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <ChapterHeaderTemplate chapterTitle={"Роды и сорта растений"} />
-          <ClassifierDropdown
-            onSelect={(classifier_index: number) =>
-              setSelectedGenus([chaptersInfo[classifier_index]])
-            }
-          />
-        </Box>
-      }
+      header={{
+        component: (
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <ChapterHeaderTemplate title={"Роды и сорта растений"} />
+            <ClassifierDropdown
+              onSelect={(classifier_index: number) =>
+                setSelectedGenus([chaptersInfo[classifier_index]])
+              }
+            />
+          </Box>
+        ),
+      }}
     >
-      <ChapterContentTemplate
-        content={<ChapterInfoTemplate chaptersInfo={selectedGenus} />}
-      />
+      <Box>
+        <ChapterInfoTemplate chaptersInfo={selectedGenus} />
+      </Box>
     </PageChapter>
   );
 };
