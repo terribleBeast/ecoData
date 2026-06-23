@@ -15,7 +15,7 @@ export const SubmitFormButton = ({
     color="success"
     fullWidth
     disabled={isLoading}
-    startIcon={isLoading ? <CircularProgress size={20} /> : undefined}
+    // startIcon={isLoading ? <CircularProgress size={20} /> : undefined}
     sx={(theme) => ({
       "&:hover": {
         backgroundColor: theme.palette.primary.dark,

@@ -1,33 +1,32 @@
-import { Box, Dialog } from "@mui/material";
+import { Dialog } from "@mui/material";
 import { useAnalyzerPage } from "../hooks/useAnalyzerPage";
 import { exportImagesToCsv } from "../utils";
-import { ImageStatus } from "@/shared/types/image";
 import {
-  FileDragAndDrop,
   ImageFullInfo,
   ImagesContainer,
   ClassifiersChapter,
-  ClassifierMenu,
 } from "../components";
 import { PageChapter } from "@/shared/ui/layout/PageChapter";
 import { AnalyzerHeader } from "./AnalyzerHeader";
+import { useClassifiers } from "../hooks/useClassifiers";
+import { useSelector } from "react-redux";
+import { selectGenus, selectImages, selectImagesCount } from "../analyzerSlice";
 
 const AnalyzerPage = () => {
+  const classifiersState = useClassifiers();
+  const images = useSelector(selectImages);
+  const selectedGenus = useSelector(selectGenus);
+  const imagesCount = useSelector(selectImagesCount);
+
   const {
-    images,
-    isFileMenuOpen,
     selectedImage,
-    selectedClassifier,
     addImages,
     deleteImage,
     updateImageStatus,
-    handleSelectClassifier,
-    toggleFileMenu,
     openImageFullInfo,
     closeImageFullInfo,
     handleProcessImages,
   } = useAnalyzerPage();
-
   const handleDownloadResult = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     exportImagesToCsv(images);
@@ -44,35 +43,28 @@ const AnalyzerPage = () => {
         {selectedImage && <ImageFullInfo image={selectedImage} />}
       </Dialog>
 
-      <ClassifiersChapter />
+      <ClassifiersChapter
+        selectedGenus={selectedGenus}
+        generaQuery={classifiersState.generaQuery}
+        classifiers={classifiersState.classifiers}
+        handleSelectGenera={classifiersState.handleSelectGenera}
+      />
 
       <PageChapter
         header={{
           component: (
             <AnalyzerHeader
+              imagesCount={imagesCount}
+              settedGenus={selectedGenus !== undefined}
               handleDownloadResult={handleDownloadResult}
               handleProcessImages={handleProcessImages}
-              isFileMenuOpen={isFileMenuOpen}
-              toggleFileMenu={toggleFileMenu}
+              // isFileMenuOpen={isFileMenuOpen}
             />
           ),
         }}
       >
-        {isFileMenuOpen && (
-          <Box sx={{ display: "flex" }}>
-            <Box sx={{ width: "80%" }}>
-              <FileDragAndDrop
-                onImagesAdded={addImages}
-                defaultStatus={ImageStatus.LOADING}
-                selectedClassifier={selectedClassifier}
-              />
-            </Box>
-            <Box sx={{ display: "flex", width: "20%" }}>
-              <ClassifierMenu onSelect={handleSelectClassifier} />
-            </Box>
-          </Box>
-        )}
         <ImagesContainer
+          addImages={addImages}
           images={images}
           onOpen={openImageFullInfo}
           onDelete={deleteImage}

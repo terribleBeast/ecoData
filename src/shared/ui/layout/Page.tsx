@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
 import { Outlet } from "react-router";
 
@@ -9,8 +9,10 @@ export const Page = React.memo(
         backgroundColor: theme.palette.backgroundPage,
         border: `1px solid ${theme.palette.border}`,
         borderRadius: "5px",
-        height: "100%",
+        height: "100dvh",
         width: "100%",
+        minHeight: "max-content",
+        minWidth: "max-content",
         margin: "1.5rem",
         padding: "1.5rem",
         display: "inline-block",

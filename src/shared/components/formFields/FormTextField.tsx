@@ -1,16 +1,10 @@
+import type { ICommonFieldProps } from "@/shared/types/form";
 import { TextField as MuiTextField } from "@mui/material";
-import type {
-  FieldErrors,
-  FieldValues,
-  Path,
-  RegisterOptions,
-  UseFormRegister,
-} from "react-hook-form";
+import type { FieldValues, Path, RegisterOptions } from "react-hook-form";
 
-interface IFormTextFieldProps<T extends FieldValues> {
-  isLoading: boolean;
-  errors: FieldErrors<T>;
-  register: UseFormRegister<T>;
+interface IFormTextFieldProps<
+  T extends FieldValues,
+> extends ICommonFieldProps<T> {
   name: Path<T>;
   label: string;
   type?: "text" | "email" | "password";
@@ -24,7 +18,6 @@ export const FormTextField = <T extends FieldValues>({
   register,
   name,
   label,
-
   type = "text",
   autoComplete,
   rules,
@@ -32,6 +25,7 @@ export const FormTextField = <T extends FieldValues>({
   <MuiTextField
     label={label}
     type={type}
+    multiline
     fullWidth
     autoComplete={autoComplete}
     disabled={isLoading}

@@ -9,7 +9,7 @@ import {
   useGetResearchersQuery,
 } from "@/api/endpoints";
 
-export const useResearchersState = () => {
+export const useResearchersCrud = () => {
   const crud = useEntityCRUD(
     useGetResearchersQuery,
     useLazyGetResearcherByIdQuery,
@@ -19,12 +19,5 @@ export const useResearchersState = () => {
     undefined,
   );
 
-  return {
-    researchers: crud.items,
-    fetchedResearcher: crud.fetchedItem,
-    createResearcherFull: crud.create,
-    editResearcherFull: crud.update,
-    deleteResearcher: crud.remove,
-    state: crud.state,
-  };
+  return { ...crud };
 };

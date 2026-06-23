@@ -8,7 +8,7 @@ import {
 import FormPage from "@/shared/components/FormPage";
 import { PhoneNumberField } from "@/shared/components/formFields/PhoneNumberField";
 import { RoleField } from "@/shared/components/formFields/RoleField";
-import type { IFormProps } from "@/shared/types/form";
+import type { ICommonFieldProps, IFormProps } from "@/shared/types/form";
 import type { IResearchData } from "@/shared/types/research";
 import { EntityForm } from "@/shared/ui/EntityForm";
 
@@ -33,7 +33,6 @@ export const ResearcherForm = ({
     register,
     control,
     handleSubmit,
-
     formState: { errors: formErrors },
   } = useForm<IResearcherDataFull>({
     mode: "onBlur",
@@ -43,6 +42,11 @@ export const ResearcherForm = ({
       researches_id: [],
     },
   });
+  const commonFieldProps: ICommonFieldProps<IResearcherDataFull> = {
+    isLoading: endpointState.isLoading,
+    errors: formErrors,
+    register: register,
+  };
 
   return (
     <FormPage>
@@ -54,9 +58,7 @@ export const ResearcherForm = ({
         onSubmit={handleSubmit(onSubmit)}
       >
         <FormTextField<IResearcherDataFull>
-          isLoading={endpointState.isLoading}
-          errors={formErrors}
-          register={register}
+          {...commonFieldProps}
           name="surname"
           label="Фамилия"
           autoComplete="family-name"
@@ -64,9 +66,7 @@ export const ResearcherForm = ({
         />
 
         <FormTextField<IResearcherDataFull>
-          isLoading={endpointState.isLoading}
-          errors={formErrors}
-          register={register}
+          {...commonFieldProps}
           name="name"
           label="Имя"
           autoComplete="given-name"
@@ -74,9 +74,7 @@ export const ResearcherForm = ({
         />
 
         <FormTextField<IResearcherDataFull>
-          isLoading={endpointState.isLoading}
-          errors={formErrors}
-          register={register}
+          {...commonFieldProps}
           name="patronymic"
           label="Отчество"
           autoComplete="additional-name"
@@ -84,9 +82,7 @@ export const ResearcherForm = ({
         />
 
         <FormTextField<IResearcherDataFull>
-          isLoading={endpointState.isLoading}
-          errors={formErrors}
-          register={register}
+          {...commonFieldProps}
           name="job"
           label="Работа"
         />
@@ -104,12 +100,7 @@ export const ResearcherForm = ({
           isLoading={endpointState.isLoading}
         />
 
-        <EmailField<IResearcherDataFull>
-          isLoading={endpointState.isLoading}
-          errors={formErrors}
-          register={register}
-          name="email"
-        />
+        <EmailField<IResearcherDataFull> {...commonFieldProps} name="email" />
       </EntityForm>
     </FormPage>
   );

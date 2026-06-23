@@ -1,5 +1,5 @@
 import { DataTable } from "@/shared/components/DataTable";
-import { useResearchesState } from "../hooks/useResearchesState";
+import { useResearchesCrud } from "../hooks/useResearchesCrud";
 import { useNavigate } from "react-router";
 import { IconButton, Typography } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
@@ -74,7 +74,7 @@ const researchColumns: MRT_ColumnDef<IResearchDataFull>[] = [
 ];
 
 const ResearchesPage = () => {
-  const { researches, state, deleteResearch } = useResearchesState();
+  const { items: researches, remove, queriesState } = useResearchesCrud();
   const navigate = useNavigate();
 
   return (
@@ -87,13 +87,13 @@ const ResearchesPage = () => {
       <DataTable
         columns={researchColumns}
         data={researches}
-        isLoading={state.isLoading}
+        isLoading={queriesState.list.isLoading}
         onRowClick={(row) => navigate(`/researches/${row.id}`)}
         meta={{
           onEdit: (research: IResearchDataFull) =>
             navigate(`/researches/${research.id}/edit`),
           onDelete: (research_id: number) => {
-            deleteResearch(research_id);
+            remove(research_id);
           },
         }}
       />

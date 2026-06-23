@@ -17,7 +17,7 @@ export const FormTemplate = ({
       <Typography
         sx={[
           formTitleStyle,
-          (theme) => ({ color: theme.palette.primary.main }),
+          // (theme) => ({ color: theme.palette.primary.main }),
         ]}
       >
         {title}

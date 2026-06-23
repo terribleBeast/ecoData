@@ -2,7 +2,7 @@
 
 import type { SerializedError } from "@reduxjs/toolkit";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { combineState, mutationState, queryState } from "./utils";
+import { mutationState, queryState } from "./utils";
 
 // ── Types ────────────────────────────────────────────────────────────────
 
@@ -67,12 +67,20 @@ export interface EntityCRUD<
   TCreateArg = TEntity,
 > {
   items: TEntity[];
-  fetchedItem: TEntity | undefined;
   get: (id: number) => void;
   create: (arg: TCreateArg) => Promise<unknown>;
   update: (arg: Partial<TEntity> & { id: number }) => Promise<unknown>;
   remove: (id: number) => unknown;
-  state: CrudState;
+
+  queriesState: {
+    list: CrudState;
+    detail: CrudState;
+  };
+  mutationsState: {
+    create: CrudState;
+    delete: CrudState;
+    update: CrudState;
+  };
 }
 
 // ── Core hook ────────────────────────────────────────────────────────────
@@ -113,21 +121,23 @@ export function useEntityCRUD<
   const [update, updateResult] = useUpdateMutation();
   const [remove, deleteResult] = useDeleteMutation();
 
-  const state = combineState([
-    queryState(listResult),
-    queryState(getResult),
-    mutationState(createResult),
-    mutationState(updateResult),
-    mutationState(deleteResult),
-  ]);
-
   return {
     items: listResult.data ?? [],
-    fetchedItem: getResult.data,
+
     get,
     create,
     update,
     remove,
-    state,
+
+    queriesState: {
+      list: queryState(listResult),
+      detail: queryState(getResult),
+    },
+
+    mutationsState: {
+      create: mutationState(createResult),
+      update: mutationState(updateResult),
+      delete: mutationState(deleteResult),
+    },
   };
 }

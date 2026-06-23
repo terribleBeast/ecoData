@@ -20,7 +20,9 @@ export const deriveErrorMessage = (
     const status = (err as { status: number | string }).status;
     if (status === "FETCH_ERROR" || status === "PARSING_ERROR")
       return "Не удалось подключиться к серверу";
-    return `Ошибка сервера (${status})`;
+
+    // TODO: Check display error message
+    return `Ошибка сервера (${status}) ${err.data}`;
   }
 
   // SerializedError (from rejectWithValue or custom middleware)

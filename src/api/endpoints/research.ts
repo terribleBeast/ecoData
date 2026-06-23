@@ -68,9 +68,11 @@ export const researchEndpoints = apiSlice.injectEndpoints({
 
 export const {
   useLazyGetResearchesByIdsQuery,
+  useGetResearchesByIdsQuery,
   useLazyGetResearchesQuery,
   useGetResearchesQuery,
   useLazyGetPredictionQuery,
+  useGetPredictionQuery,
   useLazyGetResearchByIdQuery,
   useGetResearchByIdQuery,
   useCreateResearchMutation,

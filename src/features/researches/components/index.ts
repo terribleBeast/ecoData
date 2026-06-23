@@ -1,3 +1,3 @@
 export * from "./PredictionResultTable";
-export * from "./ResearchesFullInfo";
+export * from "./ResearchFullInfo";
 export * from "./ResearcherMultiSelect";

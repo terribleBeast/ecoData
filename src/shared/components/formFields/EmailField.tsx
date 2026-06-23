@@ -1,16 +1,9 @@
 import { TextField } from "@mui/material";
-import type {
-  FieldErrors,
-  FieldValues,
-  Path,
-  UseFormRegister,
-} from "react-hook-form";
+import type { FieldValues, Path } from "react-hook-form";
 import { EMAIL_REGEX } from "../../utils";
+import type { ICommonFieldProps } from "@/shared/types/form";
 
-interface IEmailFieldProps<T extends FieldValues> {
-  isLoading: boolean;
-  errors: FieldErrors<T>;
-  register: UseFormRegister<T>;
+interface IEmailFieldProps<T extends FieldValues> extends ICommonFieldProps<T> {
   name: Path<T> extends never ? never : Path<T>;
   label?: string;
 }

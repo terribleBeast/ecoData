@@ -9,6 +9,7 @@ import {
 import { AuthFormTemplate } from "@/features/auth/components/AuthFormTemplate";
 import type { ICreateUser } from "@/shared/types/user";
 import type { IAuthFormProps } from "../types";
+import type { ICommonFieldProps } from "@/shared/types/form";
 
 const RegisterForm = ({
   endpointState,
@@ -29,6 +30,11 @@ const RegisterForm = ({
     reValidateMode: "onSubmit",
   });
 
+  const commonFieldProps: ICommonFieldProps<ICreateUser> = {
+    isLoading: endpointState.isLoading,
+    errors: errors,
+    register: register,
+  };
   return (
     <AuthFormTemplate
       title="Регистрация"
@@ -40,9 +46,7 @@ const RegisterForm = ({
       onSubmit={handleSubmit(onSubmit)}
     >
       <FormTextField<ICreateUser>
-        isLoading={endpointState.isLoading}
-        errors={errors}
-        register={register}
+        {...commonFieldProps}
         name="surname"
         label="Фамилия"
         autoComplete="family-name"
@@ -50,31 +54,22 @@ const RegisterForm = ({
       />
 
       <FormTextField<ICreateUser>
-        isLoading={endpointState.isLoading}
-        errors={errors}
-        register={register}
+        {...commonFieldProps}
         name="name"
         label="Имя"
-        autoComplete="name"
+        autoComplete="given-name"
         rules={{ required: "Имя обязательно" }}
       />
 
       <FormTextField<ICreateUser>
-        isLoading={endpointState.isLoading}
-        errors={errors}
-        register={register}
+        {...commonFieldProps}
         name="patronymic"
         label="Отчество"
         autoComplete="additional-name"
         rules={{ required: "Отчество обязательно" }}
       />
 
-      <EmailField<ICreateUser>
-        isLoading={endpointState.isLoading}
-        errors={errors}
-        register={register}
-        name="email"
-      />
+      <EmailField<ICreateUser> {...commonFieldProps} name="email" />
 
       <PasswordField<ICreateUser>
         isLoading={endpointState.isLoading}

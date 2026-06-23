@@ -9,7 +9,8 @@ export interface IResearcherDataFull extends IResearcherData {
   id: number;
   email: string;
   role: string;
-  job: string;
-  phoneNumber: string;
+  job?: string;
+  phoneNumber?: string;
   researches_id: number[];
+  lab_id?: number;
 }

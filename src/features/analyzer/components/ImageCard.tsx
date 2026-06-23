@@ -34,6 +34,7 @@ export const ImageCard = memo(
         sx={{
           padding: "0.5rem",
           width: "150px",
+          height: "250px",
           boxShadow: borderStyle,
           display: "flex",
           flexDirection: "column",

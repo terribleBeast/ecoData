@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-export const LoadingComponent = () => (
+export const LoadingState = () => (
   <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
     <Typography
       sx={(theme) => ({

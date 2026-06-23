@@ -1,5 +1,5 @@
 import { DataTable } from "@/shared/components/DataTable";
-import { useResearchersState } from "../hooks/useResearchersState";
+import { useResearchersCrud } from "../hooks/useResearchersCrud";
 import { useNavigate } from "react-router";
 import { IconButton, Typography } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
@@ -29,7 +29,7 @@ const researcherColumns: MRT_ColumnDef<IResearcherDataFull>[] = [
   },
   {
     accessorKey: "role",
-    header: "Статус",
+    header: "Роль",
   },
   {
     accessorKey: "job",
@@ -77,8 +77,8 @@ const researcherColumns: MRT_ColumnDef<IResearcherDataFull>[] = [
   },
 ];
 
-export const ResearchersPage = () => {
-  const { researchers, state, deleteResearcher } = useResearchersState();
+const ResearchersPage = () => {
+  const { items: researchers, remove, queriesState } = useResearchersCrud();
   const navigate = useNavigate();
 
   return (
@@ -91,16 +91,17 @@ export const ResearchersPage = () => {
       <DataTable
         columns={researcherColumns}
         data={researchers}
-        isLoading={state.isLoading}
+        isLoading={queriesState.list.isLoading}
         onRowClick={(row) => navigate(`/researchers/${row.id}`)}
         meta={{
           onEdit: (researcher: IResearcherDataFull) =>
             navigate(`/researchers/${researcher.id}/edit`),
           onDelete: (researcher_id: number) => {
-            deleteResearcher(researcher_id);
+            remove(researcher_id);
           },
         }}
       />
     </PageChapter>
   );
 };
+export default ResearchersPage;

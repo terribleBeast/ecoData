@@ -7,7 +7,7 @@ import {
   useGetResearchesQuery,
 } from "@/api/endpoints";
 
-export const useResearchesState = () => {
+export const useResearchesCrud = () => {
   const crud = useEntityCRUD(
     useGetResearchesQuery,
     useLazyGetResearchByIdQuery,
@@ -17,12 +17,5 @@ export const useResearchesState = () => {
     undefined,
   );
 
-  return {
-    researches: crud.items,
-    fetchedResearch: crud.fetchedItem,
-    createResearch: crud.create,
-    editResearch: crud.update,
-    deleteResearch: crud.remove,
-    state: crud.state,
-  };
+  return { ...crud };
 };

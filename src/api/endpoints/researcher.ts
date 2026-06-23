@@ -11,14 +11,17 @@ export const researcherEndpoints = apiSlice.injectEndpoints({
       transformResponse: (response: {
         data: IResearcherDataFull[];
       }): IResearcherDataFull[] => {
+        console.log(response.data);
         return response.data;
       },
       providesTags: [{ type: "Researchers", id: "LIST" }],
     }),
     getResearcherById: builder.query<IResearcherDataFull, number>({
       query: (id) => `/researchers/${id}`,
-      transformResponse: (response: { data: IResearcherDataFull }) =>
-        response.data,
+      transformResponse: (response: { data: IResearcherDataFull }) => {
+        console.log(response.data);
+        return response.data;
+      },
       providesTags: (response, error, arg) => [
         { type: "Researchers", id: arg },
       ],
@@ -65,6 +68,7 @@ export const {
   useLazyGetResearchersByIdsQuery,
   useGetResearcherByIdQuery,
   useLazyGetResearcherByIdQuery,
+  useGetResearchersByIdsQuery,
   useCreateResearcherFullMutation,
   useEditResearcherFullMutation,
   useDeleteResearcherMutation,

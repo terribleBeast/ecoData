@@ -1,62 +1,85 @@
-import { Content, Header, Footer } from "@/features/structure/ui/index.tsx";
-import { Routes, Route } from "react-router";
 import React, { Suspense, useMemo } from "react";
-import { entityRoutes, standaloneRoutes } from "@/app/routes.ts";
-import AuthForm from "@/features/auth/AuthPage.tsx";
-import { LoadingComponent, NotValidRouteComponent } from "@/shared/components";
+import { Routes, Route } from "react-router";
 import { Box } from "@mui/material";
-import { Page } from "@/shared/ui/layout/Page.tsx";
 
-const Home = React.lazy(() => import("./features/home/Home.tsx"));
+import { MainLayout } from "@/features/structure/ui/";
+import { entityRoutes, standaloneRoutes } from "@/app/routes";
+import { LoadingState, NotValidRouteComponent } from "@/shared/components";
+import { Page } from "@/shared/ui/layout/Page";
 
-const MainLayout = React.memo(() => (
-  <>
-    <Header />
-    <Content />
-    <Footer />
-  </>
-));
+const Home = React.lazy(() => import("@/features/home/Home"));
+const AuthForm = React.lazy(() => import("@/features/auth/AuthPage"));
 
 function App() {
   const entityRouteElements = useMemo(
     () =>
-      entityRoutes.map((item) => (
-        <Route
-          key={item.path}
-          path={item.path}
-          element={<Page title={item.title}>{<item.pageComponent />}</Page>}
-        >
-          <Route path=":id" element={<item.detailComponent />} />
-          <Route path=":id/edit" element={<item.detailComponent />} />
-          <Route path="new" element={<item.detailComponent />} />
-        </Route>
-      )),
+      entityRoutes.map((item) => {
+        const PageComponent = React.lazy(item.pageComponent);
+        const DetailComponent = item.detailComponent
+          ? React.lazy(item.detailComponent)
+          : null;
+
+        return (
+          <Route
+            key={item.path}
+            path={item.path}
+            element={
+              <Page title={item.title}>
+                <PageComponent />
+              </Page>
+            }
+          >
+            {DetailComponent && (
+              <>
+                <Route path=":id" element={<DetailComponent />} />
+                <Route path=":id/edit" element={<DetailComponent />} />
+                <Route path="new" element={<DetailComponent />} />
+              </>
+            )}
+          </Route>
+        );
+      }),
     [],
   );
-  const standaloneEntitiesElements = useMemo(
+
+  const standaloneRouteElements = useMemo(
     () =>
-      standaloneRoutes.map((route) => (
-        <Route
-          key={route.path}
-          path={route.path}
-          element={<route.pageComponent />}
-        />
-      )),
+      standaloneRoutes.map((item) => {
+        const PageComponent = React.lazy(item.pageComponent);
+        return (
+          <Route
+            key={item.path}
+            path={item.path}
+            element={
+              <Page title={item.title}>
+                <PageComponent />
+              </Page>
+            }
+          />
+        );
+      }),
     [],
   );
 
   return (
-    <Box sx={{ height: "100dvh", width: "100dvw" }}>
-      <Suspense fallback={<LoadingComponent />}>
+    <Box
+      sx={{
+        width: "100dvw",
+        minHeight: "100dvh",
+      }}
+    >
+      <Suspense fallback={<LoadingState />}>
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
-            {...entityRouteElements}
-            {...standaloneEntitiesElements}
-            {<Route path="*" element={<NotValidRouteComponent />} />}
+
+            {entityRouteElements}
+            {standaloneRouteElements}
+
+            <Route path="*" element={<NotValidRouteComponent />} />
           </Route>
 
-          <Route path="/auth" element={<AuthForm />}></Route>
+          <Route path="/auth" element={<AuthForm />} />
         </Routes>
       </Suspense>
     </Box>

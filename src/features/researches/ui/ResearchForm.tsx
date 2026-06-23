@@ -2,7 +2,7 @@ import type { IResearchDataFull } from "@/shared/types/research";
 import { useForm, Controller } from "react-hook-form";
 import { FormTextField } from "@/shared/components/formFields";
 import FormPage from "@/shared/components/FormPage";
-import type { IFormProps } from "@/shared/types/form";
+import type { ICommonFieldProps, IFormProps } from "@/shared/types/form";
 import type { IResearcherData } from "@/shared/types/researcher";
 import { EntityForm } from "@/shared/ui/EntityForm";
 import {
@@ -45,6 +45,11 @@ export const ResearchForm = ({
       researchers_id: [],
     },
   });
+  const commonFieldProps: ICommonFieldProps<IResearchDataFull> = {
+    isLoading: endpointState.isLoading,
+    errors: formErrors,
+    register: register,
+  };
 
   return (
     <FormPage>
@@ -56,18 +61,14 @@ export const ResearchForm = ({
         onSubmit={handleSubmit(onSubmit)}
       >
         <FormTextField<IResearchDataFull>
-          isLoading={endpointState.isLoading}
-          errors={formErrors}
-          register={register}
+          {...commonFieldProps}
           name="title"
           label="Название"
           rules={{ required: "Название обязательно" }}
         />
 
         <FormTextField<IResearchDataFull>
-          isLoading={endpointState.isLoading}
-          errors={formErrors}
-          register={register}
+          {...commonFieldProps}
           name="goal"
           label="Цель"
           rules={{ required: "Цель обязательна" }}

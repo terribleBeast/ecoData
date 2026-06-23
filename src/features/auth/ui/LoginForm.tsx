@@ -9,6 +9,7 @@ import {
   EmailField,
   PasswordField,
 } from "@/shared/components/formFields/index";
+import type { ICommonFieldProps } from "@/shared/types/form";
 
 const LoginForm = ({
   endpointState,
@@ -28,6 +29,12 @@ const LoginForm = ({
     reValidateMode: "onSubmit",
   });
 
+  const commonFieldProps: ICommonFieldProps<ICheckExistUser> = {
+    isLoading: endpointState.isLoading,
+    errors: errors,
+    register: register,
+  };
+
   return (
     <AuthFormTemplate
       title="Вход"
@@ -38,12 +45,7 @@ const LoginForm = ({
       onSwitchForm={onSwitchForm}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <EmailField<ICheckExistUser>
-        isLoading={endpointState.isLoading}
-        errors={errors}
-        register={register}
-        name="email"
-      />
+      <EmailField<ICheckExistUser> {...commonFieldProps} name="email" />
 
       <PasswordField<ICheckExistUser>
         isLoading={endpointState.isLoading}

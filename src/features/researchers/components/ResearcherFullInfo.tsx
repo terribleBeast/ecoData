@@ -1,15 +1,25 @@
-import { ListItemButton, List, Card, Typography } from "@mui/material";
+import { Card, Typography } from "@mui/material";
 import { DialogPanel } from "@/shared/components/DialogPanel";
 import type { IChapterData } from "@/shared/types";
-import type { ISelectedResearcher } from "../types";
-import { Link as RouterLink } from "react-router";
 import { DialogSection } from "@/shared/ui/layout";
 import { ChapterInfoTemplate } from "@/shared/ui/ChapterInfoTemplate";
+import type { IResearchData } from "@/shared/types/research";
+import type { IResearcherDataFull } from "@/shared/types/researcher";
+import { ResearchesList } from "./ResearchesList";
+
+const checkNull = (field: string | undefined) =>
+  field ? field : <Typography sx={{ fontStyle: "italic" }}> Нет </Typography>;
 
 export const ResearcherFullInfo = ({
   researcher,
+  researchesQuery,
 }: {
-  researcher: ISelectedResearcher;
+  researcher: IResearcherDataFull;
+  researchesQuery: {
+    data?: IResearchData[];
+    isLoading: boolean;
+    isError: boolean;
+  };
 }) => {
   const chaptersInfo: IChapterData[] = [
     {
@@ -28,8 +38,8 @@ export const ResearcherFullInfo = ({
           value: researcher.patronymic,
         },
         {
-          name: "Должность",
-          value: researcher.job,
+          name: "Работа",
+          value: checkNull(researcher.job),
         },
       ],
     },
@@ -42,41 +52,16 @@ export const ResearcherFullInfo = ({
         },
         {
           name: "Телефон",
-          value: researcher.phoneNumber,
+          value: checkNull(researcher.phoneNumber),
         },
       ],
     },
   ];
-  const hasResearches = researcher.researches.length > 0;
   return (
     <DialogPanel>
       <DialogSection title={"Исследования"}>
         <Card sx={{ overflowY: "auto", maxHeight: "60vh" }}>
-          {hasResearches ? (
-            <List>
-              {researcher.researches.map((item, index) => (
-                <ListItemButton
-                  component={RouterLink}
-                  to={`/researches/${item.id}`}
-                  key={index}
-                >
-                  <Typography>
-                    {index + 1}.&nbsp;{item.title}
-                  </Typography>
-                </ListItemButton>
-              ))}
-            </List>
-          ) : (
-            <Typography
-              sx={{
-                padding: "1rem",
-                color: "text.secondary",
-                fontStyle: "italic",
-              }}
-            >
-              Исследователь пока не участвует ни в одном исследовании
-            </Typography>
-          )}
+          <ResearchesList researchesQuery={researchesQuery} />
         </Card>
       </DialogSection>
       <DialogSection title="Профиль исследователя">

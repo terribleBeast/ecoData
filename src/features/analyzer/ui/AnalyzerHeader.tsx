@@ -1,41 +1,104 @@
+import { Button, Chip, Stack, Box, Typography } from "@mui/material";
+
 import { ChapterHeaderTemplate } from "@/shared/ui/ChapterHeader";
-import { Button, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { AvTimer, Check, Error } from "@mui/icons-material";
+
+type Props = {
+  imagesCount: {
+    all: number;
+    success: number;
+    error: number;
+    processing: number;
+  };
+  settedGenus: boolean;
+  handleProcessImages: () => void;
+  handleDownloadResult: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+};
+
+const CountImageLabel = ({ name }: { name: string }) => (
+  <Typography>{name}</Typography>
+);
 
 export const AnalyzerHeader = ({
+  imagesCount,
   handleProcessImages,
-  isFileMenuOpen,
-  toggleFileMenu,
   handleDownloadResult,
-}: {
-  handleDownloadResult: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-  handleProcessImages: () => void;
-  isFileMenuOpen: boolean;
-  toggleFileMenu: () => void;
-}) => (
+  settedGenus,
+}: Props) => (
   <Box
     sx={{
       display: "flex",
       justifyContent: "space-between",
-      alignItems: "center",
+      alignItems: "center ",
     }}
   >
-    <ChapterHeaderTemplate title="Изображения" />
-    <Box sx={{ display: "flex", gap: "1rem" }}>
-      <Button color="success" variant="contained" onClick={toggleFileMenu}>
-        <Typography>{isFileMenuOpen ? "Закрыть" : "Добавить"}</Typography>
+    <Box>
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
+        <ChapterHeaderTemplate
+          header={{
+            title: "Изображения",
+          }}
+        />
+
+        <Chip
+          label={imagesCount.all}
+          size="small"
+          color="success"
+          variant="outlined"
+        />
+      </Stack>
+      <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
+        <Box>
+          <Chip
+            avatar={<Check fontSize="small" />}
+            label={
+              <CountImageLabel name={`Обработано: ${imagesCount.success}`} />
+            }
+            size="medium"
+            color="success"
+            variant="outlined"
+          />
+          {/*<Typography>Обработано</Typography>*/}
+        </Box>
+        <Box>
+          <Chip
+            avatar={<AvTimer fontSize="small" />}
+            label={
+              <CountImageLabel name={`Ожидают: ${imagesCount.processing}`} />
+            }
+            size="medium"
+            color="warning"
+            variant="outlined"
+          />
+        </Box>
+        <Chip
+          avatar={<Error fontSize="small" />}
+          label={<CountImageLabel name={`Ошибок: ${imagesCount.error}`} />}
+          size="medium"
+          color="error"
+          variant="outlined"
+        />
+      </Stack>
+    </Box>
+
+    <Stack direction="row" spacing={2}>
+      <Button
+        color="success"
+        variant="contained"
+        disabled={!settedGenus}
+        onClick={handleProcessImages}
+      >
+        Обработать
       </Button>
-      <Button color="success" variant="contained" onClick={handleProcessImages}>
-        <Typography>Обработать</Typography>
-      </Button>
+
       <Button
         href=""
         color="success"
-        variant="contained"
+        variant="outlined"
         onClick={handleDownloadResult}
       >
-        <Typography>Выгрузить</Typography>
+        Выгрузить
       </Button>
-    </Box>
+    </Stack>
   </Box>
 );

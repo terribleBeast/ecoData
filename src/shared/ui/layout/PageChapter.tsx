@@ -18,6 +18,8 @@ export const PageChapter = ({ header, children }: PageChapterProps) => (
       paddingRight: "1.5rem",
       borderRadius: "8px",
       marginBottom: "2rem",
+      minHeight: "max-content",
+      minWidth: "max-content",
     })}
   >
     {"component" in header ? (

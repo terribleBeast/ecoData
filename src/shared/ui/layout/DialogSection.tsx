@@ -24,7 +24,7 @@ export const DialogSection = ({
         marginBottom: "1.5rem",
         fontWeight: 600,
         color: theme.palette.secondary.main,
-        alignSelf: "center",
+        textAlign: "center",
       })}
     >
       {title}
